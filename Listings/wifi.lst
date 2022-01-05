@@ -1,0 +1,1982 @@
+C51 COMPILER V9.60.0.0   WIFI                                                              01/05/2022 13:45:31 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE WIFI
+OBJECT MODULE PLACED IN .\Objects\wifi.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE Src\wifi.c LARGE OPTIMIZE(9,SPEED) BROWSE FLOATFUZZY(4) INCDIR(.\Inc) DE
+                    -BUG OBJECTEXTEND CODE LISTINCLUDE SYMBOLS PRINT(.\Listings\wifi.lst) OBJECT(.\Objects\wifi.obj)
+
+line level    source
+
+   1          /********************************************************************
+   2           **--------------文件信息---------------------------------------------
+   3           **文   件   名：wifi.h
+   4           **创 建  日 期：2022年1月5日
+   5           **最后修改日期：
+   6           **版 权 信  息: 云南兆富科技有限公司
+   7           **程   序   员：LHC
+   8           **版   本   号：V2.0
+   9           **描        述：WIFI驱动程序（RAK425）
+  10           **修 改 日  志:
+  11           *********************************************************************/
+  12          #include "wifi.h"
+   1      =1  /********************************************************************
+   2      =1   **--------------文件信息---------------------------------------------
+   3      =1   **文   件   名：wifi.h
+   4      =1   **创 建  日 期：2021年4月9日
+   5      =1   **最后修改日期：
+   6      =1   **版 权 信  息: 云南兆富科技有限公司
+   7      =1   **程   序   员：LHC
+   8      =1   **版   本   号：V3.0
+   9      =1   **描        述：WIFI驱动程序（USR-C215）
+  10      =1   **修 改 日  志:
+  11      =1   *********************************************************************/
+  12      =1  #ifndef _WIFI_H_
+  13      =1  #define _WIFI_H_
+  14      =1  
+  15      =1  #ifdef  __cplusplus
+           =1 extern "C" {
+           =1 #endif
+  18      =1  
+  19      =1  #include "config.h"
+   1      =2  #ifndef __CONFIG_H_
+   2      =2  #define __CONFIG_H_
+   3      =2  
+   4      =2  #include <STC8.H>
+   1      =3  #ifndef __STC8F_H_
+   2      =3  #define __STC8F_H_
+   3      =3  
+   4      =3  /////////////////////////////////////////////////
+   5      =3  
+   6      =3  //包含本头文件后,不用另外再包含"REG51.H"
+   7      =3  
+   8      =3  //内核特殊功能寄存器
+   9      =3  sfr ACC         =   0xe0;
+  10      =3  sfr B           =   0xf0;
+  11      =3  sfr PSW         =   0xd0;
+  12      =3  sbit CY         =   PSW^7;
+  13      =3  sbit AC         =   PSW^6;
+  14      =3  sbit F0         =   PSW^5;
+  15      =3  sbit RS1        =   PSW^4;
+  16      =3  sbit RS0        =   PSW^3;
+  17      =3  sbit OV         =   PSW^2;
+  18      =3  sbit P          =   PSW^0;
+  19      =3  sfr SP          =   0x81;
+C51 COMPILER V9.60.0.0   WIFI                                                              01/05/2022 13:45:31 PAGE 2   
+
+  20      =3  sfr DPL         =   0x82;
+  21      =3  sfr DPH         =   0x83;
+  22      =3  sfr TA          =   0xae;
+  23      =3  sfr DPS         =   0xe3;
+  24      =3  sfr DPL1        =   0xe4;
+  25      =3  sfr DPH1        =   0xe5;
+  26      =3  
+  27      =3  
+  28      =3  //I/O 口特殊功能寄存器
+  29      =3  sfr P0          =   0x80;
+  30      =3  sfr P1          =   0x90;
+  31      =3  sfr P2          =   0xa0;
+  32      =3  sfr P3          =   0xb0;
+  33      =3  sfr P4          =   0xc0;
+  34      =3  sfr P5          =   0xc8;
+  35      =3  sfr P6          =   0xe8;
+  36      =3  sfr P7          =   0xf8;
+  37      =3  sfr P0M0        =   0x94;
+  38      =3  sfr P0M1        =   0x93;
+  39      =3  sfr P1M0        =   0x92;
+  40      =3  sfr P1M1        =   0x91;
+  41      =3  sfr P2M0        =   0x96;
+  42      =3  sfr P2M1        =   0x95;
+  43      =3  sfr P3M0        =   0xb2;
+  44      =3  sfr P3M1        =   0xb1;
+  45      =3  sfr P4M0        =   0xb4;
+  46      =3  sfr P4M1        =   0xb3;
+  47      =3  sfr P5M0        =   0xca;
+  48      =3  sfr P5M1        =   0xc9;
+  49      =3  sfr P6M0        =   0xcc;
+  50      =3  sfr P6M1        =   0xcb;
+  51      =3  sfr P7M0        =   0xe2;
+  52      =3  sfr P7M1        =   0xe1;
+  53      =3  
+  54      =3  sbit P00        =   P0^0;
+  55      =3  sbit P01        =   P0^1;
+  56      =3  sbit P02        =   P0^2;
+  57      =3  sbit P03        =   P0^3;
+  58      =3  sbit P04        =   P0^4;
+  59      =3  sbit P05        =   P0^5;
+  60      =3  sbit P06        =   P0^6;
+  61      =3  sbit P07        =   P0^7;
+  62      =3  sbit P10        =   P1^0;
+  63      =3  sbit P11        =   P1^1;
+  64      =3  sbit P12        =   P1^2;
+  65      =3  sbit P13        =   P1^3;
+  66      =3  sbit P14        =   P1^4;
+  67      =3  sbit P15        =   P1^5;
+  68      =3  sbit P16        =   P1^6;
+  69      =3  sbit P17        =   P1^7;
+  70      =3  sbit P20        =   P2^0;
+  71      =3  sbit P21        =   P2^1;
+  72      =3  sbit P22        =   P2^2;
+  73      =3  sbit P23        =   P2^3;
+  74      =3  sbit P24        =   P2^4;
+  75      =3  sbit P25        =   P2^5;
+  76      =3  sbit P26        =   P2^6;
+  77      =3  sbit P27        =   P2^7;
+  78      =3  sbit P30        =   P3^0;
+  79      =3  sbit P31        =   P3^1;
+  80      =3  sbit P32        =   P3^2;
+  81      =3  sbit P33        =   P3^3;
+C51 COMPILER V9.60.0.0   WIFI                                                              01/05/2022 13:45:31 PAGE 3   
+
+  82      =3  sbit P34        =   P3^4;
+  83      =3  sbit P35        =   P3^5;
+  84      =3  sbit P36        =   P3^6;
+  85      =3  sbit P37        =   P3^7;
+  86      =3  sbit P40        =   P4^0;
+  87      =3  sbit P41        =   P4^1;
+  88      =3  sbit P42        =   P4^2;
+  89      =3  sbit P43        =   P4^3;
+  90      =3  sbit P44        =   P4^4;
+  91      =3  sbit P45        =   P4^5;
+  92      =3  sbit P46        =   P4^6;
+  93      =3  sbit P47        =   P4^7;
+  94      =3  sbit P50        =   P5^0;
+  95      =3  sbit P51        =   P5^1;
+  96      =3  sbit P52        =   P5^2;
+  97      =3  sbit P53        =   P5^3;
+  98      =3  sbit P54        =   P5^4;
+  99      =3  sbit P55        =   P5^5;
+ 100      =3  sbit P56        =   P5^6;
+ 101      =3  sbit P57        =   P5^7;
+ 102      =3  sbit P60        =   P6^0;
+ 103      =3  sbit P61        =   P6^1;
+ 104      =3  sbit P62        =   P6^2;
+ 105      =3  sbit P63        =   P6^3;
+ 106      =3  sbit P64        =   P6^4;
+ 107      =3  sbit P65        =   P6^5;
+ 108      =3  sbit P66        =   P6^6;
+ 109      =3  sbit P67        =   P6^7;
+ 110      =3  sbit P70        =   P7^0;
+ 111      =3  sbit P71        =   P7^1;
+ 112      =3  sbit P72        =   P7^2;
+ 113      =3  sbit P73        =   P7^3;
+ 114      =3  sbit P74        =   P7^4;
+ 115      =3  sbit P75        =   P7^5;
+ 116      =3  sbit P76        =   P7^6;
+ 117      =3  sbit P77        =   P7^7;
+ 118      =3  
+ 119      =3  //如下特殊功能寄存器位于扩展RAM区域
+ 120      =3  //访问这些寄存器,需先将P_SW2的BIT7设置为1,才可正常读写
+ 121      =3  #define P0PU        (*(unsigned char volatile xdata *)0xfe10)
+ 122      =3  #define P1PU        (*(unsigned char volatile xdata *)0xfe11)
+ 123      =3  #define P2PU        (*(unsigned char volatile xdata *)0xfe12)
+ 124      =3  #define P3PU        (*(unsigned char volatile xdata *)0xfe13)
+ 125      =3  #define P4PU        (*(unsigned char volatile xdata *)0xfe14)
+ 126      =3  #define P5PU        (*(unsigned char volatile xdata *)0xfe15)
+ 127      =3  #define P6PU        (*(unsigned char volatile xdata *)0xfe16)
+ 128      =3  #define P7PU        (*(unsigned char volatile xdata *)0xfe17)
+ 129      =3  #define P0NCS       (*(unsigned char volatile xdata *)0xfe18)
+ 130      =3  #define P1NCS       (*(unsigned char volatile xdata *)0xfe19)
+ 131      =3  #define P2NCS       (*(unsigned char volatile xdata *)0xfe1a)
+ 132      =3  #define P3NCS       (*(unsigned char volatile xdata *)0xfe1b)
+ 133      =3  #define P4NCS       (*(unsigned char volatile xdata *)0xfe1c)
+ 134      =3  #define P5NCS       (*(unsigned char volatile xdata *)0xfe1d)
+ 135      =3  #define P6NCS       (*(unsigned char volatile xdata *)0xfe1e)
+ 136      =3  #define P7NCS       (*(unsigned char volatile xdata *)0xfe1f)
+ 137      =3  
+ 138      =3  //系统管理特殊功能寄存器
+ 139      =3  sfr PCON        =   0x87;
+ 140      =3  #define SMOD        0x80
+ 141      =3  #define SMOD0       0x40
+ 142      =3  #define LVDF        0x20
+ 143      =3  #define POF         0x10
+C51 COMPILER V9.60.0.0   WIFI                                                              01/05/2022 13:45:31 PAGE 4   
+
+ 144      =3  #define GF1         0x08
+ 145      =3  #define GF0         0x04
+ 146      =3  #define PD          0x02
+ 147      =3  #define IDL         0x01
+ 148      =3  sfr AUXR        =   0x8e;
+ 149      =3  #define T0x12       0x80
+ 150      =3  #define T1x12       0x40
+ 151      =3  #define UART_M0x6   0x20
+ 152      =3  #define T2R         0x10
+ 153      =3  #define T2_CT       0x08
+ 154      =3  #define T2x12       0x04
+ 155      =3  #define EXTRAM      0x02
+ 156      =3  #define S1ST2       0x01
+ 157      =3  sfr AUXR2       =   0x97;
+ 158      =3  #define TXLNRX      0x10
+ 159      =3  sfr BUS_SPEED   =   0xa1;
+ 160      =3  sfr P_SW1       =   0xa2;
+ 161      =3  sfr P_SW2       =   0xba;
+ 162      =3  #define EAXFR       0x80
+ 163      =3  sfr VOCTRL      =   0xbb;
+ 164      =3  sfr RSTCFG      =   0xff;
+ 165      =3  
+ 166      =3  //如下特殊功能寄存器位于扩展RAM区域
+ 167      =3  //访问这些寄存器,需先将P_SW2的BIT7设置为1,才可正常读写
+ 168      =3  #define CKSEL       (*(unsigned char volatile xdata *)0xfe00)
+ 169      =3  #define CLKDIV      (*(unsigned char volatile xdata *)0xfe01)
+ 170      =3  #define IRC24MCR    (*(unsigned char volatile xdata *)0xfe02)
+ 171      =3  #define XOSCCR      (*(unsigned char volatile xdata *)0xfe03)
+ 172      =3  #define IRC32KCR    (*(unsigned char volatile xdata *)0xfe04)
+ 173      =3  
+ 174      =3  //中断特殊功能寄存器
+ 175      =3  sfr IE          =   0xa8;
+ 176      =3  sbit EA         =   IE^7;
+ 177      =3  sbit ELVD       =   IE^6;
+ 178      =3  sbit EADC       =   IE^5;
+ 179      =3  sbit ES         =   IE^4;
+ 180      =3  sbit ET1        =   IE^3;
+ 181      =3  sbit EX1        =   IE^2;
+ 182      =3  sbit ET0        =   IE^1;
+ 183      =3  sbit EX0        =   IE^0;
+ 184      =3  sfr IE2         =   0xaf;
+ 185      =3  #define ET4         0x40
+ 186      =3  #define ET3         0x20
+ 187      =3  #define ES4         0x10
+ 188      =3  #define ES3         0x08
+ 189      =3  #define ET2         0x04
+ 190      =3  #define ESPI        0x02
+ 191      =3  #define ES2         0x01
+ 192      =3  sfr IP          =   0xb8;
+ 193      =3  sbit PPCA       =   IP^7;
+ 194      =3  sbit PLVD       =   IP^6;
+ 195      =3  sbit PADC       =   IP^5;
+ 196      =3  sbit PS         =   IP^4;
+ 197      =3  sbit PT1        =   IP^3;
+ 198      =3  sbit PX1        =   IP^2;
+ 199      =3  sbit PT0        =   IP^1;
+ 200      =3  sbit PX0        =   IP^0;
+ 201      =3  sfr IP2         =   0xb5;
+ 202      =3  #define PI2C        0x40
+ 203      =3  #define PCMP        0x20
+ 204      =3  #define PX4         0x10
+ 205      =3  #define PPWMFD      0x08
+C51 COMPILER V9.60.0.0   WIFI                                                              01/05/2022 13:45:31 PAGE 5   
+
+ 206      =3  #define PPWM        0x04
+ 207      =3  #define PSPI        0x02
+ 208      =3  #define PS2         0x01
+ 209      =3  sfr IPH         =   0xb7;
+ 210      =3  #define PPCAH       0x80
+ 211      =3  #define PLVDH       0x40
+ 212      =3  #define PADCH       0x20
+ 213      =3  #define PSH         0x10
+ 214      =3  #define PT1H        0x08
+ 215      =3  #define PX1H        0x04
+ 216      =3  #define PT0H        0x02
+ 217      =3  #define PX0H        0x01
+ 218      =3  sfr IP2H        =   0xb6;
+ 219      =3  #define PI2CH       0x40
+ 220      =3  #define PCMPH       0x20
+ 221      =3  #define PX4H        0x10
+ 222      =3  #define PPWMFDH     0x08
+ 223      =3  #define PPWMH       0x04
+ 224      =3  #define PSPIH       0x02
+ 225      =3  #define PS2H        0x01
+ 226      =3  sfr INTCLKO     =   0x8f;
+ 227      =3  #define EX4         0x40
+ 228      =3  #define EX3         0x20
+ 229      =3  #define EX2         0x10
+ 230      =3  #define T2CLKO      0x04
+ 231      =3  #define T1CLKO      0x02
+ 232      =3  #define T0CLKO      0x01
+ 233      =3  sfr AUXINTIF    =   0xef;
+ 234      =3  #define INT4IF      0x40
+ 235      =3  #define INT3IF      0x20
+ 236      =3  #define INT2IF      0x10
+ 237      =3  #define T4IF        0x04
+ 238      =3  #define T3IF        0x02
+ 239      =3  #define T2IF        0x01
+ 240      =3  
+ 241      =3  //定时器特殊功能寄存器
+ 242      =3  sfr TCON        =   0x88;
+ 243      =3  sbit TF1        =   TCON^7;
+ 244      =3  sbit TR1        =   TCON^6;
+ 245      =3  sbit TF0        =   TCON^5;
+ 246      =3  sbit TR0        =   TCON^4;
+ 247      =3  sbit IE1        =   TCON^3;
+ 248      =3  sbit IT1        =   TCON^2;
+ 249      =3  sbit IE0        =   TCON^1;
+ 250      =3  sbit IT0        =   TCON^0;
+ 251      =3  sfr TMOD        =   0x89;
+ 252      =3  #define T1_GATE     0x80
+ 253      =3  #define T1_CT       0x40
+ 254      =3  #define T1_M1       0x20
+ 255      =3  #define T1_M0       0x10
+ 256      =3  #define T0_GATE     0x08
+ 257      =3  #define T0_CT       0x04
+ 258      =3  #define T0_M1       0x02
+ 259      =3  #define T0_M0       0x01
+ 260      =3  sfr TL0         =   0x8a;
+ 261      =3  sfr TL1         =   0x8b;
+ 262      =3  sfr TH0         =   0x8c;
+ 263      =3  sfr TH1         =   0x8d;
+ 264      =3  sfr T4T3M       =   0xd1;
+ 265      =3  #define T4R         0x80
+ 266      =3  #define T4_CT       0x40
+ 267      =3  #define T4x12       0x20
+C51 COMPILER V9.60.0.0   WIFI                                                              01/05/2022 13:45:31 PAGE 6   
+
+ 268      =3  #define T4CLKO      0x10
+ 269      =3  #define T3R         0x08
+ 270      =3  #define T3_CT       0x04
+ 271      =3  #define T3x12       0x02
+ 272      =3  #define T3CLKO      0x01
+ 273      =3  sfr T4H         =   0xd2;
+ 274      =3  sfr T4L         =   0xd3;
+ 275      =3  sfr T3H         =   0xd4;
+ 276      =3  sfr T3L         =   0xd5;
+ 277      =3  sfr T2H         =   0xd6;
+ 278      =3  sfr T2L         =   0xd7;
+ 279      =3  sfr TH4         =   0xd2;
+ 280      =3  sfr TL4         =   0xd3;
+ 281      =3  sfr TH3         =   0xd4;
+ 282      =3  sfr TL3         =   0xd5;
+ 283      =3  sfr TH2         =   0xd6;
+ 284      =3  sfr TL2         =   0xd7;
+ 285      =3  sfr WKTCL       =   0xaa;
+ 286      =3  sfr WKTCH       =   0xab;
+ 287      =3  #define WKTEN       0x80
+ 288      =3  sfr WDT_CONTR   =   0xc1;
+ 289      =3  #define WDT_FLAG    0x80
+ 290      =3  #define EN_WDT      0x20
+ 291      =3  #define CLR_WDT     0x10
+ 292      =3  #define IDL_WDT     0x08
+ 293      =3  
+ 294      =3  //串行口特殊功能寄存器
+ 295      =3  sfr SCON        =   0x98;
+ 296      =3  sbit SM0        =   SCON^7;
+ 297      =3  sbit SM1        =   SCON^6;
+ 298      =3  sbit SM2        =   SCON^5;
+ 299      =3  sbit REN        =   SCON^4;
+ 300      =3  sbit TB8        =   SCON^3;
+ 301      =3  sbit RB8        =   SCON^2;
+ 302      =3  sbit TI         =   SCON^1;
+ 303      =3  sbit RI         =   SCON^0;
+ 304      =3  sfr SBUF        =   0x99;
+ 305      =3  sfr S2CON       =   0x9a;
+ 306      =3  #define S2SM0       0x80
+ 307      =3  #define S2ST4       0x40
+ 308      =3  #define S2SM2       0x20
+ 309      =3  #define S2REN       0x10
+ 310      =3  #define S2TB8       0x08
+ 311      =3  #define S2RB8       0x04
+ 312      =3  #define S2TI        0x02
+ 313      =3  #define S2RI        0x01
+ 314      =3  sfr S2BUF       =   0x9b;
+ 315      =3  sfr S3CON       =   0xac;
+ 316      =3  #define S3SM0       0x80
+ 317      =3  #define S3ST4       0x40
+ 318      =3  #define S3SM2       0x20
+ 319      =3  #define S3REN       0x10
+ 320      =3  #define S3TB8       0x08
+ 321      =3  #define S3RB8       0x04
+ 322      =3  #define S3TI        0x02
+ 323      =3  #define S3RI        0x01
+ 324      =3  sfr S3BUF       =   0xad;
+ 325      =3  sfr S4CON       =   0x84;
+ 326      =3  #define S4SM0       0x80
+ 327      =3  #define S4ST4       0x40
+ 328      =3  #define S4SM2       0x20
+ 329      =3  #define S4REN       0x10
+C51 COMPILER V9.60.0.0   WIFI                                                              01/05/2022 13:45:31 PAGE 7   
+
+ 330      =3  #define S4TB8       0x08
+ 331      =3  #define S4RB8       0x04
+ 332      =3  #define S4TI        0x02
+ 333      =3  #define S4RI        0x01
+ 334      =3  sfr S4BUF       =   0x85;
+ 335      =3  sfr SADDR       =   0xa9;
+ 336      =3  sfr SADEN       =   0xb9;
+ 337      =3  
+ 338      =3  //ADC 特殊功能寄存器
+ 339      =3  sfr ADC_CONTR   =   0xbc;
+ 340      =3  #define ADC_POWER   0x80
+ 341      =3  #define ADC_START   0x40
+ 342      =3  #define ADC_FLAG    0x20
+ 343      =3  sfr ADC_RES     =   0xbd;
+ 344      =3  sfr ADC_RESL    =   0xbe;
+ 345      =3  sfr ADCCFG      =   0xde;
+ 346      =3  #define ADC_RESFMT  0x20
+ 347      =3  
+ 348      =3  //SPI 特殊功能寄存器
+ 349      =3  sfr SPSTAT      =   0xcd;
+ 350      =3  #define SPIF        0x80
+ 351      =3  #define WCOL        0x40
+ 352      =3  sfr SPCTL       =   0xce;
+ 353      =3  #define SSIG        0x80
+ 354      =3  #define SPEN        0x40
+ 355      =3  #define DORD        0x20
+ 356      =3  #define MSTR        0x10
+ 357      =3  #define CPOL        0x08
+ 358      =3  #define CPHA        0x04
+ 359      =3  sfr SPDAT       =   0xcf;
+ 360      =3  
+ 361      =3  //IAP/ISP 特殊功能寄存器
+ 362      =3  sfr IAP_DATA    =   0xc2;
+ 363      =3  sfr IAP_ADDRH   =   0xc3;
+ 364      =3  sfr IAP_ADDRL   =   0xc4;
+ 365      =3  sfr IAP_CMD     =   0xc5;
+ 366      =3  #define IAP_IDL     0x00
+ 367      =3  #define IAP_READ    0x01
+ 368      =3  #define IAP_WRITE   0x02
+ 369      =3  #define IAP_ERASE   0x03
+ 370      =3  sfr IAP_TRIG    =   0xc6;
+ 371      =3  sfr IAP_CONTR   =   0xc7;
+ 372      =3  #define IAPEN       0x80
+ 373      =3  #define SWBS        0x40
+ 374      =3  #define SWRST       0x20
+ 375      =3  #define CMD_FAIL    0x10
+ 376      =3  sfr ISP_DATA    =   0xc2;
+ 377      =3  sfr ISP_ADDRH   =   0xc3;
+ 378      =3  sfr ISP_ADDRL   =   0xc4;
+ 379      =3  sfr ISP_CMD     =   0xc5;
+ 380      =3  sfr ISP_TRIG    =   0xc6;
+ 381      =3  sfr ISP_CONTR   =   0xc7;
+ 382      =3  
+ 383      =3  //比较器特殊功能寄存器
+ 384      =3  sfr CMPCR1      =   0xe6;
+ 385      =3  #define CMPEN       0x80
+ 386      =3  #define CMPIF       0x40
+ 387      =3  #define PIE         0x20
+ 388      =3  #define NIE         0x10
+ 389      =3  #define PIS         0x08
+ 390      =3  #define NIS         0x04
+ 391      =3  #define CMPOE       0x02
+C51 COMPILER V9.60.0.0   WIFI                                                              01/05/2022 13:45:31 PAGE 8   
+
+ 392      =3  #define CMPRES      0x01
+ 393      =3  sfr CMPCR2      =   0xe7;
+ 394      =3  #define INVCMPO     0x80
+ 395      =3  #define DISFLT      0x40
+ 396      =3  
+ 397      =3  //PCA/PWM 特殊功能寄存器
+ 398      =3  sfr CCON        =   0xd8;
+ 399      =3  sbit CF         =   CCON^7;
+ 400      =3  sbit CR         =   CCON^6;
+ 401      =3  sbit CCF3       =   CCON^3;
+ 402      =3  sbit CCF2       =   CCON^2;
+ 403      =3  sbit CCF1       =   CCON^1;
+ 404      =3  sbit CCF0       =   CCON^0;
+ 405      =3  sfr CMOD        =   0xd9;
+ 406      =3  #define CIDL        0x80
+ 407      =3  #define ECF         0x01
+ 408      =3  sfr CL          =   0xe9;
+ 409      =3  sfr CH          =   0xf9;
+ 410      =3  sfr CCAPM0      =   0xda;
+ 411      =3  #define ECOM0       0x40
+ 412      =3  #define CCAPP0      0x20
+ 413      =3  #define CCAPN0      0x10
+ 414      =3  #define MAT0        0x08
+ 415      =3  #define TOG0        0x04
+ 416      =3  #define PWM0        0x02
+ 417      =3  #define ECCF0       0x01
+ 418      =3  sfr CCAPM1      =   0xdb;
+ 419      =3  #define ECOM1       0x40
+ 420      =3  #define CCAPP1      0x20
+ 421      =3  #define CCAPN1      0x10
+ 422      =3  #define MAT1        0x08
+ 423      =3  #define TOG1        0x04
+ 424      =3  #define PWM1        0x02
+ 425      =3  #define ECCF1       0x01
+ 426      =3  sfr CCAPM2      =   0xdc;
+ 427      =3  #define ECOM2       0x40
+ 428      =3  #define CCAPP2      0x20
+ 429      =3  #define CCAPN2      0x10
+ 430      =3  #define MAT2        0x08
+ 431      =3  #define TOG2        0x04
+ 432      =3  #define PWM2        0x02
+ 433      =3  #define ECCF2       0x01
+ 434      =3  sfr CCAPM3      =   0xdd;
+ 435      =3  #define ECOM3       0x40
+ 436      =3  #define CCAPP3      0x20
+ 437      =3  #define CCAPN3      0x10
+ 438      =3  #define MAT3        0x08
+ 439      =3  #define TOG3        0x04
+ 440      =3  #define PWM3        0x02
+ 441      =3  #define ECCF3       0x01
+ 442      =3  sfr CCAP0L      =   0xea;
+ 443      =3  sfr CCAP1L      =   0xeb;
+ 444      =3  sfr CCAP2L      =   0xec;
+ 445      =3  sfr CCAP3L      =   0xed;
+ 446      =3  sfr CCAP0H      =   0xfa;
+ 447      =3  sfr CCAP1H      =   0xfb;
+ 448      =3  sfr CCAP2H      =   0xfc;
+ 449      =3  sfr CCAP3H      =   0xfd;
+ 450      =3  sfr PCA_PWM0    =   0xf2;
+ 451      =3  sfr PCA_PWM1    =   0xf3;
+ 452      =3  sfr PCA_PWM2    =   0xf4;
+ 453      =3  sfr PCA_PWM3    =   0xf5;
+C51 COMPILER V9.60.0.0   WIFI                                                              01/05/2022 13:45:31 PAGE 9   
+
+ 454      =3  
+ 455      =3  //增强型PWM波形发生器特殊功能寄存器
+ 456      =3  sfr PWMCFG      =   0xf1;
+ 457      =3  #define CBIF        0x80
+ 458      =3  #define ETADC       0x40
+ 459      =3  sfr PWMIF       =   0xf6;
+ 460      =3  #define C7IF        0x80
+ 461      =3  #define C6IF        0x40
+ 462      =3  #define C5IF        0x20
+ 463      =3  #define C4IF        0x10
+ 464      =3  #define C3IF        0x08
+ 465      =3  #define C2IF        0x04
+ 466      =3  #define C1IF        0x02
+ 467      =3  #define C0IF        0x01
+ 468      =3  sfr PWMFDCR     =   0xf7;
+ 469      =3  #define INVCMP      0x80
+ 470      =3  #define INVIO       0x40
+ 471      =3  #define ENFD        0x20
+ 472      =3  #define FLTFLIO     0x10
+ 473      =3  #define EFDI        0x08
+ 474      =3  #define FDCMP       0x04
+ 475      =3  #define FDIO        0x02
+ 476      =3  #define FDIF        0x01
+ 477      =3  sfr PWMCR       =   0xfe;
+ 478      =3  #define ENPWM       0x80
+ 479      =3  #define ECBI        0x40
+ 480      =3  
+ 481      =3  //如下特殊功能寄存器位于扩展RAM区域
+ 482      =3  //访问这些寄存器,需先将P_SW2的BIT7设置为1,才可正常读写
+ 483      =3  #define PWMC        (*(unsigned int  volatile xdata *)0xfff0)
+ 484      =3  #define PWMCH       (*(unsigned char volatile xdata *)0xfff0)
+ 485      =3  #define PWMCL       (*(unsigned char volatile xdata *)0xfff1)
+ 486      =3  #define PWMCKS      (*(unsigned char volatile xdata *)0xfff2)
+ 487      =3  #define TADCP       (*(unsigned char volatile xdata *)0xfff3)
+ 488      =3  #define TADCPH      (*(unsigned char volatile xdata *)0xfff3)
+ 489      =3  #define TADCPL      (*(unsigned char volatile xdata *)0xfff4)
+ 490      =3  #define PWM0T1      (*(unsigned int  volatile xdata *)0xff00)
+ 491      =3  #define PWM0T1H     (*(unsigned char volatile xdata *)0xff00)
+ 492      =3  #define PWM0T1L     (*(unsigned char volatile xdata *)0xff01)
+ 493      =3  #define PWM0T2      (*(unsigned int  volatile xdata *)0xff02)
+ 494      =3  #define PWM0T2H     (*(unsigned char volatile xdata *)0xff02)
+ 495      =3  #define PWM0T2L     (*(unsigned char volatile xdata *)0xff03)
+ 496      =3  #define PWM0CR      (*(unsigned char volatile xdata *)0xff04)
+ 497      =3  #define PWM0HLD     (*(unsigned char volatile xdata *)0xff05)
+ 498      =3  #define PWM1T1      (*(unsigned int  volatile xdata *)0xff10)
+ 499      =3  #define PWM1T1H     (*(unsigned char volatile xdata *)0xff10)
+ 500      =3  #define PWM1T1L     (*(unsigned char volatile xdata *)0xff11)
+ 501      =3  #define PWM1T2      (*(unsigned int  volatile xdata *)0xff12)
+ 502      =3  #define PWM1T2H     (*(unsigned char volatile xdata *)0xff12)
+ 503      =3  #define PWM1T2L     (*(unsigned char volatile xdata *)0xff13)
+ 504      =3  #define PWM1CR      (*(unsigned char volatile xdata *)0xff14)
+ 505      =3  #define PWM1HLD     (*(unsigned char volatile xdata *)0xff15)
+ 506      =3  #define PWM2T1      (*(unsigned int  volatile xdata *)0xff20)
+ 507      =3  #define PWM2T1H     (*(unsigned char volatile xdata *)0xff20)
+ 508      =3  #define PWM2T1L     (*(unsigned char volatile xdata *)0xff21)
+ 509      =3  #define PWM2T2      (*(unsigned int  volatile xdata *)0xff22)
+ 510      =3  #define PWM2T2H     (*(unsigned char volatile xdata *)0xff22)
+ 511      =3  #define PWM2T2L     (*(unsigned char volatile xdata *)0xff23)
+ 512      =3  #define PWM2CR      (*(unsigned char volatile xdata *)0xff24)
+ 513      =3  #define PWM2HLD     (*(unsigned char volatile xdata *)0xff25)
+ 514      =3  #define PWM3T1      (*(unsigned int  volatile xdata *)0xff30)
+ 515      =3  #define PWM3T1H     (*(unsigned char volatile xdata *)0xff30)
+C51 COMPILER V9.60.0.0   WIFI                                                              01/05/2022 13:45:31 PAGE 10  
+
+ 516      =3  #define PWM3T1L     (*(unsigned char volatile xdata *)0xff31)
+ 517      =3  #define PWM3T2      (*(unsigned int  volatile xdata *)0xff32)
+ 518      =3  #define PWM3T2H     (*(unsigned char volatile xdata *)0xff32)
+ 519      =3  #define PWM3T2L     (*(unsigned char volatile xdata *)0xff33)
+ 520      =3  #define PWM3CR      (*(unsigned char volatile xdata *)0xff34)
+ 521      =3  #define PWM3HLD     (*(unsigned char volatile xdata *)0xff35)
+ 522      =3  #define PWM4T1      (*(unsigned int  volatile xdata *)0xff40)
+ 523      =3  #define PWM4T1H     (*(unsigned char volatile xdata *)0xff40)
+ 524      =3  #define PWM4T1L     (*(unsigned char volatile xdata *)0xff41)
+ 525      =3  #define PWM4T2      (*(unsigned int  volatile xdata *)0xff42)
+ 526      =3  #define PWM4T2H     (*(unsigned char volatile xdata *)0xff42)
+ 527      =3  #define PWM4T2L     (*(unsigned char volatile xdata *)0xff43)
+ 528      =3  #define PWM4CR      (*(unsigned char volatile xdata *)0xff44)
+ 529      =3  #define PWM4HLD     (*(unsigned char volatile xdata *)0xff45)
+ 530      =3  #define PWM5T1      (*(unsigned int  volatile xdata *)0xff50)
+ 531      =3  #define PWM5T1H     (*(unsigned char volatile xdata *)0xff50)
+ 532      =3  #define PWM5T1L     (*(unsigned char volatile xdata *)0xff51)
+ 533      =3  #define PWM5T2      (*(unsigned int  volatile xdata *)0xff52)
+ 534      =3  #define PWM5T2H     (*(unsigned char volatile xdata *)0xff52)
+ 535      =3  #define PWM5T2L     (*(unsigned char volatile xdata *)0xff53)
+ 536      =3  #define PWM5CR      (*(unsigned char volatile xdata *)0xff54)
+ 537      =3  #define PWM5HLD     (*(unsigned char volatile xdata *)0xff55)
+ 538      =3  #define PWM6T1      (*(unsigned int  volatile xdata *)0xff60)
+ 539      =3  #define PWM6T1H     (*(unsigned char volatile xdata *)0xff60)
+ 540      =3  #define PWM6T1L     (*(unsigned char volatile xdata *)0xff61)
+ 541      =3  #define PWM6T2      (*(unsigned int  volatile xdata *)0xff62)
+ 542      =3  #define PWM6T2H     (*(unsigned char volatile xdata *)0xff62)
+ 543      =3  #define PWM6T2L     (*(unsigned char volatile xdata *)0xff63)
+ 544      =3  #define PWM6CR      (*(unsigned char volatile xdata *)0xff64)
+ 545      =3  #define PWM6HLD     (*(unsigned char volatile xdata *)0xff65)
+ 546      =3  #define PWM7T1      (*(unsigned int  volatile xdata *)0xff70)
+ 547      =3  #define PWM7T1H     (*(unsigned char volatile xdata *)0xff70)
+ 548      =3  #define PWM7T1L     (*(unsigned char volatile xdata *)0xff71)
+ 549      =3  #define PWM7T2      (*(unsigned int  volatile xdata *)0xff72)
+ 550      =3  #define PWM7T2H     (*(unsigned char volatile xdata *)0xff72)
+ 551      =3  #define PWM7T2L     (*(unsigned char volatile xdata *)0xff73)
+ 552      =3  #define PWM7CR      (*(unsigned char volatile xdata *)0xff74)
+ 553      =3  #define PWM7HLD     (*(unsigned char volatile xdata *)0xff75)
+ 554      =3  
+ 555      =3  //I2C特殊功能寄存器
+ 556      =3  //如下特殊功能寄存器位于扩展RAM区域
+ 557      =3  //访问这些寄存器,需先将P_SW2的BIT7设置为1,才可正常读写
+ 558      =3  #define I2CCFG      (*(unsigned char volatile xdata *)0xfe80)
+ 559      =3  #define ENI2C       0x80
+ 560      =3  #define MSSL        0x40
+ 561      =3  #define I2CMSCR     (*(unsigned char volatile xdata *)0xfe81)
+ 562      =3  #define EMSI        0x80
+ 563      =3  #define I2CMSST     (*(unsigned char volatile xdata *)0xfe82)
+ 564      =3  #define MSBUSY      0x80
+ 565      =3  #define MSIF        0x40
+ 566      =3  #define MSACKI      0x02
+ 567      =3  #define MSACKO      0x01
+ 568      =3  #define I2CSLCR     (*(unsigned char volatile xdata *)0xfe83)
+ 569      =3  #define ESTAI       0x40
+ 570      =3  #define ERXI        0x20
+ 571      =3  #define ETXI        0x10
+ 572      =3  #define ESTOI       0x08
+ 573      =3  #define SLRST       0x01
+ 574      =3  #define I2CSLST     (*(unsigned char volatile xdata *)0xfe84)
+ 575      =3  #define SLBUSY      0x80
+ 576      =3  #define STAIF       0x40
+ 577      =3  #define RXIF        0x20
+C51 COMPILER V9.60.0.0   WIFI                                                              01/05/2022 13:45:31 PAGE 11  
+
+ 578      =3  #define TXIF        0x10
+ 579      =3  #define STOIF       0x08
+ 580      =3  #define TXING       0x04
+ 581      =3  #define SLACKI      0x02
+ 582      =3  #define SLACKO      0x01
+ 583      =3  #define I2CSLADR    (*(unsigned char volatile xdata *)0xfe85)
+ 584      =3  #define I2CTXD      (*(unsigned char volatile xdata *)0xfe86)
+ 585      =3  #define I2CRXD      (*(unsigned char volatile xdata *)0xfe87)
+ 586      =3  
+ 587      =3  /////////////////////////////////////////////////
+ 588      =3  
+ 589      =3  #endif
+ 590      =3  
+   5      =2  #include <stdio.h>
+   1      =3  /*--------------------------------------------------------------------------
+   2      =3  STDIO.H
+   3      =3  
+   4      =3  Prototypes for standard I/O functions.
+   5      =3  Copyright (c) 1988-2002 Keil Elektronik GmbH and Keil Software, Inc.
+   6      =3  All rights reserved.
+   7      =3  --------------------------------------------------------------------------*/
+   8      =3  
+   9      =3  #ifndef __STDIO_H__
+  10      =3  #define __STDIO_H__
+  11      =3  
+  12      =3  #ifndef EOF
+  13      =3   #define EOF -1
+  14      =3  #endif
+  15      =3  
+  16      =3  #ifndef NULL
+  17      =3   #define NULL ((void *) 0)
+  18      =3  #endif
+  19      =3  
+  20      =3  #ifndef _SIZE_T
+  21      =3   #define _SIZE_T
+  22      =3   typedef unsigned int size_t;
+  23      =3  #endif
+  24      =3  
+  25      =3  #pragma SAVE
+  26      =3  #pragma REGPARMS
+  27      =3  extern char _getkey (void);
+  28      =3  extern char getchar (void);
+  29      =3  extern char ungetchar (char);
+  30      =3  extern char putchar (char);
+  31      =3  extern int printf   (const char *, ...);
+  32      =3  extern int sprintf  (char *, const char *, ...);
+  33      =3  extern int vprintf  (const char *, char *);
+  34      =3  extern int vsprintf (char *, const char *, char *);
+  35      =3  extern char *gets (char *, int n);
+  36      =3  extern int scanf (const char *, ...);
+  37      =3  extern int sscanf (char *, const char *, ...);
+  38      =3  extern int puts (const char *);
+  39      =3  
+  40      =3  #pragma RESTORE
+  41      =3  
+  42      =3  #endif
+  43      =3  
+   6      =2  #include <intrins.h>
+   1      =3  /*--------------------------------------------------------------------------
+   2      =3  INTRINS.H
+   3      =3  
+   4      =3  Intrinsic functions for C51.
+C51 COMPILER V9.60.0.0   WIFI                                                              01/05/2022 13:45:31 PAGE 12  
+
+   5      =3  Copyright (c) 1988-2010 Keil Elektronik GmbH and ARM Germany GmbH
+   6      =3  All rights reserved.
+   7      =3  --------------------------------------------------------------------------*/
+   8      =3  
+   9      =3  #ifndef __INTRINS_H__
+  10      =3  #define __INTRINS_H__
+  11      =3  
+  12      =3  #pragma SAVE
+  13      =3  
+  14      =3  #if defined (__CX2__)
+           =3 #pragma FUNCTIONS(STATIC)
+           =3 /* intrinsic functions are reentrant, but need static attribute */
+           =3 #endif
+  18      =3  
+  19      =3  extern void          _nop_     (void);
+  20      =3  extern bit           _testbit_ (bit);
+  21      =3  extern unsigned char _cror_    (unsigned char, unsigned char);
+  22      =3  extern unsigned int  _iror_    (unsigned int,  unsigned char);
+  23      =3  extern unsigned long _lror_    (unsigned long, unsigned char);
+  24      =3  extern unsigned char _crol_    (unsigned char, unsigned char);
+  25      =3  extern unsigned int  _irol_    (unsigned int,  unsigned char);
+  26      =3  extern unsigned long _lrol_    (unsigned long, unsigned char);
+  27      =3  extern unsigned char _chkfloat_(float);
+  28      =3  #if defined (__CX2__)
+           =3 extern int           abs       (int);
+           =3 extern void          _illop_   (void);
+           =3 #endif
+  32      =3  #if !defined (__CX2__)
+  33      =3  extern void          _push_    (unsigned char _sfr);
+  34      =3  extern void          _pop_     (unsigned char _sfr);
+  35      =3  #endif
+  36      =3  
+  37      =3  #pragma RESTORE
+  38      =3  
+  39      =3  #endif
+  40      =3  
+   7      =2  #include <string.h>
+   1      =3  /*--------------------------------------------------------------------------
+   2      =3  STRING.H
+   3      =3  
+   4      =3  String functions.
+   5      =3  Copyright (c) 1988-2008 Keil Elektronik GmbH and Keil Software, Inc.
+   6      =3  Copyright (c) 2008-2016 ARM Germany GmbH
+   7      =3  All rights reserved.
+   8      =3  --------------------------------------------------------------------------*/
+   9      =3  
+  10      =3  #ifndef __STRING_H__
+  11      =3  #define __STRING_H__
+  12      =3  
+  13      =3  #ifndef _SIZE_T
+           =3  #define _SIZE_T
+           =3  typedef unsigned int size_t;
+           =3 #endif
+  17      =3  
+  18      =3  #ifndef NULL
+           =3  #define NULL ((void *)0)
+           =3 #endif
+  21      =3  
+  22      =3  #pragma SAVE
+  23      =3  #pragma REGPARMS
+  24      =3  extern char  *strcat  (char *s1, const char *s2);
+  25      =3  extern char  *strncat (char *s1, const char *s2, size_t n);
+C51 COMPILER V9.60.0.0   WIFI                                                              01/05/2022 13:45:31 PAGE 13  
+
+  26      =3  
+  27      =3  extern char   strcmp  (const char *s1, const char *s2);
+  28      =3  extern char   strncmp (const char *s1, const char *s2, size_t n);
+  29      =3  
+  30      =3  extern char  *strcpy  (char *s1, const char *s2);
+  31      =3  extern char  *strncpy (char *s1, const char *s2, size_t n);
+  32      =3  
+  33      =3  extern size_t strlen  (const char *);
+  34      =3  
+  35      =3  extern char  *strchr  (const char *s, char c);
+  36      =3  extern int    strpos  (const char *s, char c);
+  37      =3  extern char  *strrchr (const char *s, char c);
+  38      =3  extern int    strrpos (const char *s, char c);
+  39      =3  
+  40      =3  extern size_t strspn  (const char *s, const char *set);
+  41      =3  extern size_t strcspn (const char *s, const char *set);
+  42      =3  extern char  *strpbrk (const char *s, const char *set);
+  43      =3  extern char  *strrpbrk(const char *s, const char *set);
+  44      =3  extern char  *strstr  (const char *s, const char *sub);
+  45      =3  extern char  *strtok  (char *str, const char *set);
+  46      =3  
+  47      =3  extern char   memcmp  (const void *s1, const void *s2, size_t n);
+  48      =3  extern void  *memcpy  (void *s1, const void *s2, size_t n);
+  49      =3  extern void  *memchr  (const void *s, char val, size_t n);
+  50      =3  extern void  *memccpy (void *s1, const void *s2, char val, size_t n);
+  51      =3  extern void  *memmove (void *s1, const void *s2, size_t n);
+  52      =3  extern void  *memset  (void *s, char val, size_t n);
+  53      =3  #pragma RESTORE
+  54      =3  
+  55      =3  #endif
+   8      =2  #include <stdlib.h>
+   1      =3  /*--------------------------------------------------------------------------
+   2      =3  STDLIB.H
+   3      =3  
+   4      =3  Standard functions.
+   5      =3  Copyright (c) 1988-2008 Keil Elektronik GmbH and Keil Software, Inc.
+   6      =3  Copyright (c) 2008-2016 ARM Germany GmbH
+   7      =3  All rights reserved.
+   8      =3  --------------------------------------------------------------------------*/
+   9      =3  
+  10      =3  #ifndef __STDLIB_H__
+  11      =3  #define __STDLIB_H__
+  12      =3  
+  13      =3  #ifndef _SIZE_T
+           =3  #define _SIZE_T
+           =3  typedef unsigned int size_t;
+           =3 #endif
+  17      =3  
+  18      =3  #ifndef NULL
+           =3  #define NULL ((void *)0)
+           =3 #endif
+  21      =3  
+  22      =3  #ifndef _WCHAR_T_DEFINED_
+  23      =3  #define _WCHAR_T_DEFINED_
+  24      =3  typedef char wchar_t;
+  25      =3  #endif
+  26      =3  
+  27      =3  #if defined (__CX2__)
+           =3 #ifndef _DIV_T_DEFINED
+           =3 typedef struct _div_t {
+           =3         int quot;
+           =3         int rem;
+C51 COMPILER V9.60.0.0   WIFI                                                              01/05/2022 13:45:31 PAGE 14  
+
+           =3 } div_t;
+           =3 typedef struct _ldiv_t {
+           =3         long quot;
+           =3         long rem;
+           =3 } ldiv_t;
+           =3 #define _DIV_T_DEFINED
+           =3 #endif // _DIV_T_DEFINED
+           =3 #endif // __CX2__
+  40      =3  
+  41      =3  #ifndef RAND_MAX
+  42      =3   #define RAND_MAX  32767u
+  43      =3  #endif
+  44      =3  
+  45      =3  #if defined (__CX2__)
+           =3 #pragma SAVE
+           =3 #pragma FUNCTIONS(STATIC)
+           =3 /* intrinsic functions are reentrant, but need static attribute */
+           =3 extern int    abs  (int   val);
+           =3 #pragma RESTORE
+           =3 #endif // __CX2__
+  52      =3  
+  53      =3  #pragma SAVE
+  54      =3  #pragma REGPARMS
+  55      =3  
+  56      =3  extern char   cabs (char  val);
+  57      =3  #if !defined (__CX2__)
+  58      =3  extern int    abs  (int   val);
+  59      =3  #endif // __CX2__
+  60      =3  extern long   labs (long  val);
+  61      =3  
+  62      =3  extern float  atof (const char *s1);
+  63      =3  extern long   atol (const char *s1);
+  64      =3  extern int    atoi (const char *s1);
+  65      =3  extern int    rand (void);
+  66      =3  extern void   srand (unsigned int seed);
+  67      =3  
+  68      =3  #ifdef _DIV_T_DEFINED
+           =3 extern div_t  __div (int numer, int denom);
+           =3 #define div(numer,denom)  __div((numer),(denom));
+           =3 extern ldiv_t ldiv (long numer, long denom);
+           =3 #endif // _DIV_T_DEFINED
+  73      =3  
+  74      =3  extern float         strtod  (const char *nptr, char **endptr);
+  75      =3  extern long          strtol  (const char *nptr, char **endptr, unsigned char base);
+  76      =3  extern unsigned long strtoul (const char *nptr, char **endptr, unsigned char base);
+  77      =3  
+  78      =3  #define _MALLOC_MEM_    xdata
+  79      =3  
+  80      =3  extern void init_mempool          (void _MALLOC_MEM_ *p, size_t size);
+  81      =3  extern void _MALLOC_MEM_ *malloc  (size_t size);
+  82      =3  extern void free                  (void _MALLOC_MEM_ *p);
+  83      =3  extern void _MALLOC_MEM_ *realloc (void _MALLOC_MEM_ *p, size_t size);
+  84      =3  extern void _MALLOC_MEM_ *calloc  (size_t nmemb, size_t size);
+  85      =3  
+  86      =3  #if defined (__CX2__)
+           =3 extern void abort(void);
+           =3 #endif // __CX2__
+  89      =3  
+  90      =3  #pragma RESTORE
+  91      =3  
+  92      =3  #endif // __STDLIB_H__
+   9      =2  #include <string.h>
+C51 COMPILER V9.60.0.0   WIFI                                                              01/05/2022 13:45:31 PAGE 15  
+
+   1      =3  /*--------------------------------------------------------------------------
+   2      =3  STRING.H
+   3      =3  
+   4      =3  String functions.
+   5      =3  Copyright (c) 1988-2008 Keil Elektronik GmbH and Keil Software, Inc.
+   6      =3  Copyright (c) 2008-2016 ARM Germany GmbH
+   7      =3  All rights reserved.
+   8      =3  --------------------------------------------------------------------------*/
+   9      =3  
+  10      =3  #ifndef __STRING_H__
+           =3 #define __STRING_H__
+           =3 
+           =3 #ifndef _SIZE_T
+           =3  #define _SIZE_T
+           =3  typedef unsigned int size_t;
+           =3 #endif
+           =3 
+           =3 #ifndef NULL
+           =3  #define NULL ((void *)0)
+           =3 #endif
+           =3 
+           =3 #pragma SAVE
+           =3 #pragma REGPARMS
+           =3 extern char  *strcat  (char *s1, const char *s2);
+           =3 extern char  *strncat (char *s1, const char *s2, size_t n);
+           =3 
+           =3 extern char   strcmp  (const char *s1, const char *s2);
+           =3 extern char   strncmp (const char *s1, const char *s2, size_t n);
+           =3 
+           =3 extern char  *strcpy  (char *s1, const char *s2);
+           =3 extern char  *strncpy (char *s1, const char *s2, size_t n);
+           =3 
+           =3 extern size_t strlen  (const char *);
+           =3 
+           =3 extern char  *strchr  (const char *s, char c);
+           =3 extern int    strpos  (const char *s, char c);
+           =3 extern char  *strrchr (const char *s, char c);
+           =3 extern int    strrpos (const char *s, char c);
+           =3 
+           =3 extern size_t strspn  (const char *s, const char *set);
+           =3 extern size_t strcspn (const char *s, const char *set);
+           =3 extern char  *strpbrk (const char *s, const char *set);
+           =3 extern char  *strrpbrk(const char *s, const char *set);
+           =3 extern char  *strstr  (const char *s, const char *sub);
+           =3 extern char  *strtok  (char *str, const char *set);
+           =3 
+           =3 extern char   memcmp  (const void *s1, const void *s2, size_t n);
+           =3 extern void  *memcpy  (void *s1, const void *s2, size_t n);
+           =3 extern void  *memchr  (const void *s, char val, size_t n);
+           =3 extern void  *memccpy (void *s1, const void *s2, char val, size_t n);
+           =3 extern void  *memmove (void *s1, const void *s2, size_t n);
+           =3 extern void  *memset  (void *s, char val, size_t n);
+           =3 #pragma RESTORE
+           =3 
+           =3 #endif
+  10      =2  #include <absacc.h> //可直接操作内存地址
+   1      =3  /*--------------------------------------------------------------------------
+   2      =3  ABSACC.H
+   3      =3  
+   4      =3  Direct access to 8051, extended 8051 and NXP 8051MX memory areas.
+   5      =3  Copyright (c) 1988-2010 Keil Elektronik GmbH and ARM Germany GmbH
+   6      =3  All rights reserved.
+C51 COMPILER V9.60.0.0   WIFI                                                              01/05/2022 13:45:31 PAGE 16  
+
+   7      =3  --------------------------------------------------------------------------*/
+   8      =3  
+   9      =3  #ifndef __ABSACC_H__
+  10      =3  #define __ABSACC_H__
+  11      =3  
+  12      =3  #define CBYTE ((unsigned char volatile code  *) 0)
+  13      =3  #define DBYTE ((unsigned char volatile data  *) 0)
+  14      =3  #if !defined (__CX2__)
+  15      =3  #define PBYTE ((unsigned char volatile pdata *) 0)
+  16      =3  #endif
+  17      =3  #define XBYTE ((unsigned char volatile xdata *) 0)
+  18      =3  
+  19      =3  #define CWORD ((unsigned int volatile code  *) 0)
+  20      =3  #define DWORD ((unsigned int volatile data  *) 0)
+  21      =3  #if !defined (__CX2__)
+  22      =3  #define PWORD ((unsigned int volatile pdata *) 0)
+  23      =3  #endif
+  24      =3  #define XWORD ((unsigned int volatile xdata *) 0)
+  25      =3  
+  26      =3  
+  27      =3  #if defined (__CX51__) || defined (__CX2__)
+           =3 #define FVAR(object, addr)   (*((object volatile far *) (addr)))
+           =3 #define FARRAY(object, base) ((object volatile far *) (base))
+           =3 #define FCVAR(object, addr)   (*((object const far *) (addr)))
+           =3 #define FCARRAY(object, base) ((object const far *) (base))
+           =3 #else
+  33      =3  #define FVAR(object, addr)    (*((object volatile far *) ((addr)+0x10000L)))
+  34      =3  #define FCVAR(object, addr)   (*((object const far *) ((addr)+0x810000L)))
+  35      =3  #define FARRAY(object, base)  ((object volatile far *) ((base)+0x10000L))
+  36      =3  #define FCARRAY(object, base) ((object const far *) ((base)+0x810000L))
+  37      =3  #endif
+  38      =3  
+  39      =3  #if defined (__CX2__)
+           =3 #define HBYTE ((unsigned char volatile huge *)  0)
+           =3 #define HWORD ((unsigned int volatile huge *)  0)
+           =3 #define HVAR(object, addr)   (*((object volatile huge *) (addr)))
+           =3 #define HARRAY(object, base) ((object volatile huge *) (base))
+           =3 #endif
+  45      =3  
+  46      =3  #define CVAR(object, addr)   (*((object volatile code *) (addr)))
+  47      =3  #define CARRAY(object, base) ((object volatile code *) (base))
+  48      =3  #define DVAR(object, addr)   (*((object volatile data *) (addr)))
+  49      =3  #define DARRAY(object, base) ((object volatile data *) (base))
+  50      =3  #define XVAR(object, addr)   (*((object volatile xdata *) (addr)))
+  51      =3  #define XARRAY(object, base) ((object volatile xdata *) (base))
+  52      =3  
+  53      =3  #endif
+  11      =2  #include <stdarg.h>
+   1      =3  /*--------------------------------------------------------------------------
+   2      =3  STDARG.H
+   3      =3  
+   4      =3  Prototypes for variable argument lists.
+   5      =3  Copyright (c) 1988-2008 Keil Elektronik GmbH and Keil Software, Inc.
+   6      =3  Copyright (c) 2008-2016 ARM Germany GmbH
+   7      =3  All rights reserved.
+   8      =3  --------------------------------------------------------------------------*/
+   9      =3  
+  10      =3  #ifndef __STDARG_H__
+  11      =3  #define __STDARG_H__
+  12      =3  
+  13      =3  #ifndef __CX2__
+  14      =3  #ifndef NULL
+C51 COMPILER V9.60.0.0   WIFI                                                              01/05/2022 13:45:31 PAGE 17  
+
+           =3  #define NULL ((void *)0)
+           =3 #endif
+  17      =3  #endif
+  18      =3  
+  19      =3  #ifndef _VA_LIST_DEFINED
+  20      =3  typedef char *va_list;
+  21      =3  #define _VA_LIST_DEFINED
+  22      =3  #endif
+  23      =3  
+  24      =3  #if defined __CX2__ && __CX2__ >= 558
+           =3   #define va_start(ap,v) ap = _va_start_ (&v, sizeof(v))
+           =3   extern void *_va_start_ (void *ap, int sz);   // intrinsic
+           =3 #else
+  28      =3    #define va_start(ap,v) ap = (va_list)&v + sizeof(v)
+  29      =3  #endif
+  30      =3  
+  31      =3  #define va_arg(ap,t) (((t *)ap)++[0])
+  32      =3  #define va_end(ap)   (ap = (va_list)0)
+  33      =3  
+  34      =3  #endif
+  12      =2  
+  13      =2  
+  14      =2  /**********************布尔变量定义**********************/
+  15      =2  #define true  1
+  16      =2  #define false 0
+  17      =2  /**********************布尔变量定义**********************/
+  18      =2  
+  19      =2  /***********************************API配置接口***********************************/
+  20      =2  /*使用外部晶振*/
+  21      =2  #define EXTERNAL_CRYSTAL 0 
+  22      =2  /*调试是否启用串口*/
+  23      =2  #define USE_PRINTF_DEBUG 0 
+  24      =2  /*调试选项*/
+  25      =2  #define DEBUGGING    0
+  26      =2  /*迪文屏幕使用CRC校验*/
+  27      =2  #define USING_CRC 1
+  28      =2  
+  29      =2  #define COUNTMAX     65536U
+  30      =2  
+  31      =2  /*消除编译器未使用变量警告*/
+  32      =2  #define UNUSED_VARIABLE(x)      ((void)(x))
+  33      =2  #define UNUSED_PARAMETER(x) UNUSED_VARIABLE(x)
+  34      =2  
+  35      =2  //(1/FOSC)*count =times(us)->count = time*FOSC/1000(ms)
+  36      =2  #define FOSC         27000000UL//11059200UL
+  37      =2  /*1ms(时钟频率越高，所能产生的时间越小)*/  
+  38      =2  #define TIMES        10U  
+  39      =2  /*定时器模式选择*/
+  40      =2  #define TIMER_MODE   12U
+  41      =2  /*定时器分频系数，默认为一分频*/  
+  42      =2  #define TIME_DIV     1U  
+  43      =2  #define T12_MODE (TIMES * FOSC / 1000 / 12 / TIME_DIV) 
+  44      =2  #define T1_MODE  (TIMES * FOSC/ 1000 / TIME_DIV)
+  45      =2  #define TIMERS_OVERFLOW (COUNTMAX * 1000 * TIMER_MODE * TIME_DIV) / FOSC
+  46      =2  
+  47      =2  #define OPEN_GLOBAL_OUTAGE()  (EA = 1 << 0)
+  48      =2  #define CLOSE_GLOBAL_OUTAGE() (EA = 0 << 0)
+  49      =2  /*判断延时数是否超出硬件允许范围*/
+  50      =2  #if(TIMES > TIMERS_OVERFLOW)
+           =2 #error The timer cannot generate the current duration!
+           =2 #endif
+  53      =2  /***********************************API配置接口***********************************/
+C51 COMPILER V9.60.0.0   WIFI                                                              01/05/2022 13:45:31 PAGE 18  
+
+  54      =2  
+  55      =2  /***********************************常用的数据类型***********************************/
+  56      =2  typedef unsigned char  uint8_t;
+  57      =2  typedef signed char    int8_t;
+  58      =2  typedef unsigned short int  uint16_t;
+  59      =2  typedef unsigned long  uint32_t;
+  60      =2  typedef signed long    int32_t;
+  61      =2  typedef volatile       __IO;   
+  62      =2  
+  63      =2  /***********************************常用的数据类型***********************************/
+  64      =2  
+  65      =2  /***********************************系统上电参数***********************************/
+  66      =2  #define DEFAULT_SYSTEM_PARAMETER  "\xFF\xFF\xFF\xFF\x02\x01\x00\x84\x50"
+  67      =2  
+  68      =2  /***********************************系统上电参数***********************************/
+  69      =2  
+  70      =2  /***********************************结构体的妙用 ***********************************/
+  71      =2  /*获得结构体(TYPE)的变量成员(MEMBER)在此结构体中的偏移量*/ 
+  72      =2  #define offsetof(TYPE, MEMBER) ((size_t) &((TYPE *)0)->MEMBER)
+  73      =2  /*根据"结构体(type)变量"中的"域成员变量(member)的指针(ptr)"来获取指向整个结构体
+             -变量的指针*/ 
+  74      =2  #define container_of(ptr, type, member) ({ \
+  75      =2          const typeof( ((type *)0)->member ) *__mptr = (ptr); \
+  76      =2          (type *)( (char *)__mptr - offsetof(type,member) );}) 
+  77      =2  /***********************************结构体的妙用 ***********************************/
+  78      =2  
+  79      =2  
+  80      =2  extern const uint8_t g_TimerNumbers;
+  81      =2  /***********************************函数声明***********************************/
+  82      =2  void  Gpio_Init(void);
+  83      =2  /***********************************函数声明***********************************/
+  84      =2  #endif
+  20      =1  
+  21      =1  /*定义WIFI模块相关引脚*/
+  22      =1  #define WIFI_RESET              P23
+  23      =1  #define WIFI_RELOAD             P20
+  24      =1  
+  25      =1  /*定义设备ID*/
+  26      =1  #define DRIVERS_ID "32"
+  27      =1  /*定义热点ID*/
+  28      =1  #define AP_ID "ChargerPlus"
+  29      =1  /*转化为字符串*/
+  30      =1  #define SWITCH_STR(S) #S
+  31      =1  /*拼接一个宏定义和字符串*/
+  32      =1  #define STR_MCRO() ("AT+WAP=" AP_ID ",NONE\r\n")
+  33      =1  /*连接两个字符串S1、S2*/
+  34      =1  #define STR_CONNECT(S1,S2) (S1##""##S2)
+  35      =1  /*当前设备热点名称*/
+  36      =1  #define AP_NAME  STR_MCRO()//"AT+WAP=PLC7_AP,NONE\r\n"
+  37      =1  /*当前设备云平台设备号*/
+  38      =1  #define CLOUD_ID "AT+REGCLOUD=000196390000000000" DRIVERS_ID ",SkdGAzyl\r\n"
+  39      =1  /*当前WIFI模块工作方式*/
+  40      =1  #define AP_STA_MODE "AT+WMODE=APSTA\r\n"
+  41      =1  #define STA_MODE "AT+WMODE=APSTA\r\n"
+  42      =1  /*进入透传模式命令*/
+  43      =1  #define ENTM_CMD "AT+ENTM\r\n"
+  44      =1  /*模块重启命令*/
+  45      =1  #define RESTART_CMD "AT+Z\r\n"
+  46      =1  
+  47      =1  typedef unsigned char (*event)(void);
+  48      =1  typedef struct
+  49      =1  {
+C51 COMPILER V9.60.0.0   WIFI                                                              01/05/2022 13:45:31 PAGE 19  
+
+  50      =1          char* pSend;
+  51      =1          char* pRecv;
+  52      =1          uint16_t WaitTimes;
+  53      =1          event pFunc;
+  54      =1  }AT_Command;
+  55      =1  
+  56      =1  void AT_SetWap(char* ssid,char* key);
+  57      =1  void AT_SetWsta(char* ssid,char* key);
+  58      =1  
+  59      =1  
+  60      =1  /**
+  61      =1   * @brief       初始化WIFI模块
+  62      =1   * @details     
+  63      =1   * @param       None
+  64      =1   * @retval      None
+  65      =1   */
+  66      =1  extern void Wifi_Init(void);
+  67      =1  
+  68      =1  /**
+  69      =1   * @brief       WIFI模块启停
+  70      =1   * @details     
+  71      =1   * @param       status:状态
+  72      =1   * @retval      None
+  73      =1   */
+  74      =1  extern void Wifi_Enable(uint8_t status);
+  75      =1  
+  76      =1  /**
+  77      =1   * @brief       WIFI模块执行指令表中特定指令
+  78      =1   * @details     
+  79      =1   * @param       None
+  80      =1   * @retval      None
+  81      =1   */
+  82      =1  static void Exe_Appoint_Cmd(uint8_t *str, uint16_t times);
+  83      =1  
+  84      =1  /**
+  85      =1   * @brief       打开WIFI模块热点
+  86      =1   * @details     
+  87      =1   * @param       None
+  88      =1   * @retval      None
+  89      =1   */
+  90      =1  extern void Wifi_Open_Ap(void);
+  91      =1  
+  92      =1  /**
+  93      =1   * @brief       关闭WIFI模块热点
+  94      =1   * @details     
+  95      =1   * @param       None
+  96      =1   * @retval      None
+  97      =1   */
+  98      =1  extern void Wifi_Close_Ap(void);
+  99      =1  
+ 100      =1  #ifdef  __cplusplus
+           =1 }
+           =1 #endif
+ 103      =1  
+ 104      =1  #endif  /* _WIFI_H_ */
+ 105      =1  
+  13          #include "usart.h"
+   1      =1  #ifndef __USART_H
+   2      =1  #define __USART_H
+   3      =1           
+   4      =1  #include "config.h"      
+   1      =2  #ifndef __CONFIG_H_
+C51 COMPILER V9.60.0.0   WIFI                                                              01/05/2022 13:45:31 PAGE 20  
+
+           =2 #define __CONFIG_H_
+           =2 
+           =2 #include <STC8.H>
+           =2 #include <stdio.h>
+           =2 #include <intrins.h>
+           =2 #include <string.h>
+           =2 #include <stdlib.h>
+           =2 #include <string.h>
+           =2 #include <absacc.h> //可直接操作内存地址
+           =2 #include <stdarg.h>
+           =2 
+           =2 
+           =2 /**********************布尔变量定义**********************/
+           =2 #define true  1
+           =2 #define false 0
+           =2 /**********************布尔变量定义**********************/
+           =2 
+           =2 /***********************************API配置接口***********************************/
+           =2 /*使用外部晶振*/
+           =2 #define EXTERNAL_CRYSTAL 0 
+           =2 /*调试是否启用串口*/
+           =2 #define USE_PRINTF_DEBUG 0 
+           =2 /*调试选项*/
+           =2 #define DEBUGGING    0
+           =2 /*迪文屏幕使用CRC校验*/
+           =2 #define USING_CRC 1
+           =2 
+           =2 #define COUNTMAX     65536U
+           =2 
+           =2 /*消除编译器未使用变量警告*/
+           =2 #define UNUSED_VARIABLE(x)      ((void)(x))
+           =2 #define UNUSED_PARAMETER(x) UNUSED_VARIABLE(x)
+           =2 
+           =2 //(1/FOSC)*count =times(us)->count = time*FOSC/1000(ms)
+           =2 #define FOSC         27000000UL//11059200UL
+           =2 /*1ms(时钟频率越高，所能产生的时间越小)*/  
+           =2 #define TIMES        10U  
+           =2 /*定时器模式选择*/
+           =2 #define TIMER_MODE   12U
+           =2 /*定时器分频系数，默认为一分频*/  
+           =2 #define TIME_DIV     1U  
+           =2 #define T12_MODE (TIMES * FOSC / 1000 / 12 / TIME_DIV) 
+           =2 #define T1_MODE  (TIMES * FOSC/ 1000 / TIME_DIV)
+           =2 #define TIMERS_OVERFLOW (COUNTMAX * 1000 * TIMER_MODE * TIME_DIV) / FOSC
+           =2 
+           =2 #define OPEN_GLOBAL_OUTAGE()  (EA = 1 << 0)
+           =2 #define CLOSE_GLOBAL_OUTAGE() (EA = 0 << 0)
+           =2 /*判断延时数是否超出硬件允许范围*/
+           =2 #if(TIMES > TIMERS_OVERFLOW)
+           =2 #error The timer cannot generate the current duration!
+           =2 #endif
+           =2 /***********************************API配置接口***********************************/
+           =2 
+           =2 /***********************************常用的数据类型***********************************/
+           =2 typedef unsigned char  uint8_t;
+           =2 typedef signed char    int8_t;
+           =2 typedef unsigned short int  uint16_t;
+           =2 typedef unsigned long  uint32_t;
+           =2 typedef signed long    int32_t;
+           =2 typedef volatile       __IO;   
+           =2 
+           =2 /***********************************常用的数据类型***********************************/
+C51 COMPILER V9.60.0.0   WIFI                                                              01/05/2022 13:45:31 PAGE 21  
+
+           =2 
+           =2 /***********************************系统上电参数***********************************/
+           =2 #define DEFAULT_SYSTEM_PARAMETER  "\xFF\xFF\xFF\xFF\x02\x01\x00\x84\x50"
+           =2 
+           =2 /***********************************系统上电参数***********************************/
+           =2 
+           =2 /***********************************结构体的妙用 ***********************************/
+           =2 /*获得结构体(TYPE)的变量成员(MEMBER)在此结构体中的偏移量*/ 
+           =2 #define offsetof(TYPE, MEMBER) ((size_t) &((TYPE *)0)->MEMBER)
+           =2 /*根据"结构体(type)变量"中的"域成员变量(member)的指针(ptr)"来获取指向整个结构体
+             -变量的指针*/ 
+           =2 #define container_of(ptr, type, member) ({ \
+           =2         const typeof( ((type *)0)->member ) *__mptr = (ptr); \
+           =2         (type *)( (char *)__mptr - offsetof(type,member) );}) 
+           =2 /***********************************结构体的妙用 ***********************************/
+           =2 
+           =2 
+           =2 extern const uint8_t g_TimerNumbers;
+           =2 /***********************************函数声明***********************************/
+           =2 void  Gpio_Init(void);
+           =2 /***********************************函数声明***********************************/
+           =2 #endif
+   5      =1           
+   6      =1  
+   7      =1  //以下宏定义用于改变串口的输出引脚
+   8      =1  //串口1默认是p30 p31  以下定义的是串口1的切换
+   9      =1  // P_SW1 = 0xa2   P_SW2 = 0xba
+  10      =1  
+  11      =1  
+  12      =1  #define USART1_USE_P30_P31         P_SW1 = 0x00
+  13      =1  #define USART1_USE_P36_P37         P_SW1 = 0x40
+  14      =1  #define USART1_USE_P16_P17         P_SW1 = 0x80
+  15      =1  #define USART1_USE_P43_P44         P_SW1 = 0xC0
+  16      =1  
+  17      =1  //串口2的默认输出引脚为       P10 P11
+  18      =1  
+  19      =1  #define USART2_USE_P10_P11         P_SW2 = 0x00
+  20      =1  #define USART2_USE_P40_P42         P_SW2 = 0x01
+  21      =1  
+  22      =1  //串口3的默认输出引脚是 P00 P01
+  23      =1  
+  24      =1  #define USART3_USE_P00_P01         P_SW2 = 0x00
+  25      =1  #define USART3_USE_P50_P51         P_SW2 = 0x02
+  26      =1  
+  27      =1  //串口4的默认输出引脚为 P02 P03
+  28      =1  #define USART3_USE_P02_P03         P_SW1 = 0x00
+  29      =1  #define USART3_USE_P52_P53         P_SW1 = 0x04
+  30      =1  
+  31      =1  
+  32      =1  //*******************外加485芯片的定义*******************//
+  33      =1  #define USART3_EN                       P36
+  34      =1  //******************************************************//
+  35      =1  
+  36      =1  
+  37      =1  
+  38      =1  #define USEING_PRINTF 0
+  39      =1  
+  40      =1  /***********************************常用通讯波特率***********************************/
+  41      =1  #define BAUD_921600  921600UL
+  42      =1  #define BAUD_115200  115200UL
+  43      =1  #define BAUD_57600       57600UL
+  44      =1  #define BAUD_56000       56000UL
+C51 COMPILER V9.60.0.0   WIFI                                                              01/05/2022 13:45:31 PAGE 22  
+
+  45      =1  #define BAUD_38400       38400UL
+  46      =1  #define BAUD_19200   19200UL
+  47      =1  #define BAUD_14400   14400UL
+  48      =1  #define BAUD_9600    9600UL
+  49      =1  #define BAUD_4800    4800UL
+  50      =1  #define BAUD_2400    2400UL
+  51      =1  #define BAUD_1200    1200UL
+  52      =1  /***********************************常用通讯波特率***********************************/
+  53      =1  
+  54      =1  #define UART_DIV 4
+  55      =1  #define UART_BYTE_SENDOVERTIME (uint16_t)5000U
+  56      =1  
+  57      =1  #define BRT_1T(BAUD)  (COUNTMAX-FOSC/BAUD/UART_DIV) //1T
+  58      =1  #define BRT_12T(BAUD) (COUNTMAX-FOSC/BAUD/UART_DIV/12) //12T
+  59      =1  
+  60      =1  
+  61      =1  typedef enum
+  62      =1  {
+  63      =1          UART1 = 0x01,
+  64      =1          UART2,
+  65      =1          UART3,
+  66      =1          UART4
+  67      =1  }Uart_TypsDef;
+  68      =1  
+  69      =1  
+  70      =1  typedef struct //串口中断优先级
+  71      =1  {
+  72      =1          uint8_t Register_IP;
+  73      =1          uint8_t Register_IPH;
+  74      =1  }UART_NVIC_TypeDef;
+  75      =1  
+  76      =1  typedef struct
+  77      =1  {
+  78      =1          Uart_TypsDef Instance;
+  79      =1          uint8_t Register_SCON;
+  80      =1          uint8_t Uart_Mode;
+  81      =1          uint16_t Uart_Count;
+  82      =1          uint8_t RunUart_Enable:1;
+  83      =1          uint8_t Interrupt_Enable;
+  84      =1          uint8_t Register_AUXR;
+  85      =1          uint8_t Uartx_busy:1; //串口接收占用标志
+  86      =1          UART_NVIC_TypeDef Uart_NVIC;
+  87      =1  }Uart_HandleTypeDef;
+  88      =1  
+  89      =1  
+  90      =1  void Uart_Base_MspInit(Uart_HandleTypeDef *uart_baseHandle);
+  91      =1  extern void Uart1_Init(void);
+  92      =1  extern void Uart2_Init(void);
+  93      =1  extern void Uart3_Init(void);
+  94      =1  extern void Uart4_Init(void);
+  95      =1  
+  96      =1  
+  97      =1  void Uartx_SendStr(Uart_HandleTypeDef *const Uart, uint8_t *p, uint8_t length, uint16_t time_out);
+  98      =1  void Busy_Await(Uart_HandleTypeDef *const Uart, uint16_t overtime);
+  99      =1  void Uartx_Printf(Uart_HandleTypeDef *const uart, const char *format, ...);
+ 100      =1  
+ 101      =1  extern Uart_HandleTypeDef Uart1; //串口1句柄
+ 102      =1  extern Uart_HandleTypeDef Uart2; //串口2句柄
+ 103      =1  extern Uart_HandleTypeDef Uart3; //串口3句柄
+ 104      =1  extern Uart_HandleTypeDef Uart4; //串口4句柄
+ 105      =1  
+ 106      =1  #endif
+C51 COMPILER V9.60.0.0   WIFI                                                              01/05/2022 13:45:31 PAGE 23  
+
+  14          
+  15          extern void Delay_Ms(uint16_t ms);
+  16          /*USR-C210模块AT指令列表*/
+  17          const AT_Command code Wifi_Cmd[] =
+  18          {
+  19                  /*WIFI模块推出透传模式进入AT指令模式*/
+  20                  {"+++", "a", 100U,  NULL},
+  21                  /*WIFI模块响应后，主动发送”a“*/
+  22                  {"a",   "+Ok", 20U, NULL},
+  23                  /*关闭回显*/ 
+  24                  //{"AT+E=OFF\r\n", "+OK", 500},           
+  25                  /*显示SSID*/ 
+  26                  //{"AT+HSSID = OFF\r\n", "+OK", 500}, 
+  27                  /*WIFI工作模式：AP + STA*/ 
+  28                  {AP_STA_MODE, "+OK", 20U, NULL},        
+  29                  /*设置路由器名称*/ 
+  30                  {AP_NAME, "+OK", 20U, NULL},
+  31                  /*设置心跳数据:www.ynpax.com*/ 
+  32                  {"AT+HEARTDT=7777772E796E7061782E636F6D\r\n", "+OK", 20U, NULL},   
+  33                  /*SSID和密码不能程序输入，需要在现场根据用户方的WIFI设置通过WEB方式修改*/
+  34                  /*设置WIFI登录SSID，密码*/ 
+  35                  {"AT+WSTA=union,*!ynzfkj20091215!*\r\n", "+OK", 20U, NULL}, 
+  36                  /*透传云设置*/       
+  37                  {"AT+REGENA=CLOUD,FIRST\r\n", "+OK", 20U, NULL},
+  38                  /*设置STOCKA参数*/
+  39                  {"AT+SOCKA=TCPC,cloud.usr.cn,15000\r\n", "+OK", 20U, NULL},
+  40                  /*设置搜索服务器和端口*/
+  41                  {"AT+SEARCH=15000,cloud.usr.cn\r\n", "+OK", 20U, NULL},
+  42                  /*透传云ID，透传云密码*/  
+  43                  {CLOUD_ID, "+OK", 20U, NULL},
+  44                  /*设置DHCP*/ 
+  45                  {"AT+WANN=DHCP\r\n", "+OK", 20U, NULL},
+  46                  /*软件重启USR-C210*/
+  47                  {"AT+Z\r\n", "+OK", 20U, NULL},  
+  48                  /*设置透传模式*/     
+  49                  // {"AT+ENTM\r\n", "+OK", 50U, NULL}    
+  50          };
+  51          
+  52          #define WIFI_CMDSIZE sizeof(Wifi_Cmd) / sizeof(AT_Command)
+  53          
+  54          
+  55          /**
+  56           * @brief       WIFI模块启停
+  57           * @details     
+  58           * @param       status:状态
+  59           * @retval      None
+  60           */
+  61          void Wifi_Enable(uint8_t status)
+  62          {
+  63   1              switch(status)
+  64   1              {
+  65   2                      case true:
+  66   2                      {
+  67   3                              WIFI_RESET  = 1;
+  68   3                      }break;
+  69   2                      case false:
+  70   2                      {
+  71   3                              WIFI_RESET  = 0;
+  72   3                      }break;
+  73   2                      default : break;
+  74   2              }
+  75   1      }
+C51 COMPILER V9.60.0.0   WIFI                                                              01/05/2022 13:45:31 PAGE 24  
+
+  76          
+  77          /**
+  78           * @brief       初始化WIFI模块
+  79           * @details     WIFI模块复位需要一定延时；在退出透传模式时延时必须>500ms,每条指令�
+             -�间隔必须>100ms
+  80           * @param       None
+  81           * @retval      None
+  82           */
+  83          void Wifi_Init(void)
+  84          {
+  85   1              uint8_t i = 0;
+  86   1      
+  87   1              /*先复位WIFI*/
+  88   1              WIFI_RESET  = 0;
+  89   1              WIFI_RELOAD = 1;
+  90   1              /*等待模块复位*/
+  91   1              Delay_Ms(100);
+  92   1              WIFI_RESET  = 1;
+  93   1      
+  94   1              for(i = 0; i < WIFI_CMDSIZE; i++)
+  95   1              {
+  96   2                      // Uartx_SendStr(&Uart2, (uint8_t *)Wifi_Cmd[i].pSend, strlen(Wifi_Cmd[i].pSend));
+  97   2                      // /*执行对应的等待时间*/
+  98   2                      // Delay_ms(Wifi_Cmd[i].WaitTimes);
+  99   2                      Exe_Appoint_Cmd((uint8_t *)Wifi_Cmd[i].pSend, Wifi_Cmd[i].WaitTimes);
+ 100   2              }
+ 101   1      }
+ 102          
+ 103          /**
+ 104           * @brief       WIFI模块执行指令表中特定指令
+ 105           * @details     
+ 106           * @param       None
+ 107           * @retval      None
+ 108           */
+ 109          static void Exe_Appoint_Cmd(uint8_t *str, uint16_t times)
+ 110          {
+ 111   1              if((str != NULL) && (times))
+ 112   1              {
+ 113   2                      Uartx_SendStr(&Uart2, str, strlen(str), UART_BYTE_SENDOVERTIME);
+ 114   2                      Delay_Ms(times);
+ 115   2              }
+ 116   1      }
+ 117          
+ 118          
+ 119          /**
+ 120           * @brief       WIFI模块退出透传模式
+ 121           * @details     
+ 122           * @param       None
+ 123           * @retval      None
+ 124           */
+ 125          static void Wifi_Exit_Trt(void)
+ 126          {
+ 127   1              
+ 128   1              uint8_t i = 0;
+ 129   1      
+ 130   1              for(i = 0; i < 2U; i++)
+ 131   1              {
+ 132   2                      if((Wifi_Cmd[i].pSend != '\0') && (Wifi_Cmd[i].WaitTimes))
+ 133   2                      {
+ 134   3                              // Uartx_SendStr(&Uart2, (uint8_t *)Wifi_Cmd[i].pSend, strlen(Wifi_Cmd[i].pSend));
+ 135   3                              // /*执行对应的等待时间*/
+ 136   3                              // Delay_ms(Wifi_Cmd[i].WaitTimes);
+C51 COMPILER V9.60.0.0   WIFI                                                              01/05/2022 13:45:31 PAGE 25  
+
+ 137   3                              Exe_Appoint_Cmd((uint8_t *)Wifi_Cmd[i].pSend, Wifi_Cmd[i].WaitTimes);
+ 138   3                      }
+ 139   2              }
+ 140   1      }
+ 141          
+ 142          /**
+ 143           * @brief       打开WIFI模块热点
+ 144           * @details     
+ 145           * @param       None
+ 146           * @retval      None
+ 147           */
+ 148          void Wifi_Open_Ap(void)
+ 149          {
+ 150   1              /*退出透传模式*/
+ 151   1              Wifi_Exit_Trt();
+ 152   1              /*发送配置指令*/
+ 153   1              Exe_Appoint_Cmd(AP_STA_MODE, 200);
+ 154   1              /*进入透传模式*/
+ 155   1              Exe_Appoint_Cmd(ENTM_CMD, 200);
+ 156   1              /*重启模块*/
+ 157   1              Exe_Appoint_Cmd(RESTART_CMD, 200);
+ 158   1      }
+ 159          
+ 160          /**
+ 161           * @brief       关闭WIFI模块热点
+ 162           * @details     
+ 163           * @param       None
+ 164           * @retval      None
+ 165           */
+ 166          void Wifi_Close_Ap(void)
+ 167          {       
+ 168   1              /*退出透传模式*/
+ 169   1              Wifi_Exit_Trt();
+ 170   1              /*发送配置指令*/
+ 171   1              Exe_Appoint_Cmd(STA_MODE, 200);
+ 172   1              /*进入透传模式*/
+ 173   1              Exe_Appoint_Cmd(ENTM_CMD, 200);
+ 174   1              /*重启模块*/
+ 175   1              Exe_Appoint_Cmd(RESTART_CMD, 200);
+ 176   1      }
+C51 COMPILER V9.60.0.0   WIFI                                                              01/05/2022 13:45:31 PAGE 26  
+
+ASSEMBLY LISTING OF GENERATED OBJECT CODE
+
+
+             ; FUNCTION Com0015 (BEGIN)
+0000         L?0022:
+0000 75F00B            MOV     B,#0BH
+0003 A4                MUL     AB
+0004 2400        R     ADD     A,#LOW Wifi_Cmd
+0006 F582              MOV     DPL,A
+0008 E4                CLR     A
+0009 3400        R     ADDC    A,#HIGH Wifi_Cmd
+000B F583              MOV     DPH,A
+000D E4                CLR     A
+000E 93                MOVC    A,@A+DPTR
+000F FB                MOV     R3,A
+0010 7401              MOV     A,#01H
+0012 93                MOVC    A,@A+DPTR
+0013 FA                MOV     R2,A
+0014 7402              MOV     A,#02H
+0016 93                MOVC    A,@A+DPTR
+0017 F9                MOV     R1,A
+0018 22                RET     
+0019         L?0023:
+0019 7A00        R     MOV     R2,#HIGH ?SC_10
+001B 7900        R     MOV     R1,#LOW ?SC_10
+001D         L?0024:
+001D 7BFF              MOV     R3,#0FFH
+001F 7DC8              MOV     R5,#0C8H
+0021 7C00              MOV     R4,#00H
+0023 22                RET     
+0024         L?0025:
+0024 75F00B            MOV     B,#0BH
+0027 A4                MUL     AB
+0028 2400        R     ADD     A,#LOW Wifi_Cmd+06H
+002A F582              MOV     DPL,A
+002C E4                CLR     A
+002D 3400        R     ADDC    A,#HIGH Wifi_Cmd+06H
+002F F583              MOV     DPH,A
+0031 E4                CLR     A
+0032 93                MOVC    A,@A+DPTR
+0033 FC                MOV     R4,A
+0034 7401              MOV     A,#01H
+0036 93                MOVC    A,@A+DPTR
+0037 FD                MOV     R5,A
+0038 22                RET     
+0039         L?0026:
+0039 7A00        R     MOV     R2,#HIGH ?SC_281
+003B 7900        R     MOV     R1,#LOW ?SC_281
+003D         L?0027:
+003D 7BFF              MOV     R3,#0FFH
+003F 7DC8              MOV     R5,#0C8H
+0041 7C00              MOV     R4,#00H
+0043 22                RET     
+0044         L?0028:
+0044 900000      R     MOV     DPTR,#str
+0047 E0                MOVX    A,@DPTR
+0048 FB                MOV     R3,A
+0049 A3                INC     DPTR
+004A E0                MOVX    A,@DPTR
+004B FA                MOV     R2,A
+004C A3                INC     DPTR
+004D E0                MOVX    A,@DPTR
+C51 COMPILER V9.60.0.0   WIFI                                                              01/05/2022 13:45:31 PAGE 27  
+
+004E 22                RET     
+             ; FUNCTION Com0015 (END)
+
+             ; FUNCTION _Wifi_Enable (BEGIN)
+                                           ; SOURCE LINE # 61
+;---- Variable 'status' assigned to Register 'R7' ----
+                                           ; SOURCE LINE # 62
+                                           ; SOURCE LINE # 63
+0000 EF                MOV     A,R7
+0001 6006              JZ      ?C0003
+0003 14                DEC     A
+0004 7005              JNZ     ?C0005
+                                           ; SOURCE LINE # 64
+                                           ; SOURCE LINE # 65
+0006         ?C0002:
+                                           ; SOURCE LINE # 66
+                                           ; SOURCE LINE # 67
+0006 D2A3              SETB    P23
+                                           ; SOURCE LINE # 68
+0008 22                RET     
+                                           ; SOURCE LINE # 69
+0009         ?C0003:
+                                           ; SOURCE LINE # 70
+                                           ; SOURCE LINE # 71
+0009 C2A3              CLR     P23
+                                           ; SOURCE LINE # 72
+                                           ; SOURCE LINE # 73
+                                           ; SOURCE LINE # 74
+                                           ; SOURCE LINE # 75
+000B         ?C0005:
+000B 22                RET     
+             ; FUNCTION _Wifi_Enable (END)
+
+             ; FUNCTION Wifi_Init (BEGIN)
+                                           ; SOURCE LINE # 83
+                                           ; SOURCE LINE # 84
+                                           ; SOURCE LINE # 85
+0000 E4                CLR     A
+0001 900000      R     MOV     DPTR,#i
+0004 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 88
+0005 C2A3              CLR     P23
+                                           ; SOURCE LINE # 89
+0007 D2A0              SETB    P20
+                                           ; SOURCE LINE # 91
+0009 7F64              MOV     R7,#064H
+000B FE                MOV     R6,A
+000C 120000      E     LCALL   _Delay_Ms
+                                           ; SOURCE LINE # 92
+000F D2A3              SETB    P23
+                                           ; SOURCE LINE # 94
+0011 E4                CLR     A
+0012 900000      R     MOV     DPTR,#i
+0015 F0                MOVX    @DPTR,A
+0016         ?C0006:
+0016 900000      R     MOV     DPTR,#i
+0019 E0                MOVX    A,@DPTR
+001A C3                CLR     C
+001B 940C              SUBB    A,#0CH
+001D 7480              MOV     A,#080H
+001F 9480              SUBB    A,#080H
+0021 5014              JNC     ?C0009
+C51 COMPILER V9.60.0.0   WIFI                                                              01/05/2022 13:45:31 PAGE 28  
+
+                                           ; SOURCE LINE # 95
+                                           ; SOURCE LINE # 99
+0023 E0                MOVX    A,@DPTR
+0024 FF                MOV     R7,A
+0025 120000      R     LCALL   L?0022
+0028 EF                MOV     A,R7
+0029 120000      R     LCALL   L?0025
+002C 120000      R     LCALL   _Exe_Appoint_Cmd
+                                           ; SOURCE LINE # 100
+002F 900000      R     MOV     DPTR,#i
+0032 E0                MOVX    A,@DPTR
+0033 04                INC     A
+0034 F0                MOVX    @DPTR,A
+0035 80DF              SJMP    ?C0006
+                                           ; SOURCE LINE # 101
+0037         ?C0009:
+0037 22                RET     
+             ; FUNCTION Wifi_Init (END)
+
+             ; FUNCTION _Exe_Appoint_Cmd (BEGIN)
+                                           ; SOURCE LINE # 109
+0000 900000      R     MOV     DPTR,#str
+0003 EB                MOV     A,R3
+0004 F0                MOVX    @DPTR,A
+0005 A3                INC     DPTR
+0006 EA                MOV     A,R2
+0007 F0                MOVX    @DPTR,A
+0008 A3                INC     DPTR
+0009 E9                MOV     A,R1
+000A F0                MOVX    @DPTR,A
+000B A3                INC     DPTR
+000C EC                MOV     A,R4
+000D F0                MOVX    @DPTR,A
+000E A3                INC     DPTR
+000F ED                MOV     A,R5
+0010 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 110
+                                           ; SOURCE LINE # 111
+0011 120000      R     LCALL   L?0028
+0014 4A                ORL     A,R2
+0015 4B                ORL     A,R3
+0016 6047              JZ      ?C0011
+0018 A3                INC     DPTR
+0019 E0                MOVX    A,@DPTR
+001A 7002              JNZ     ?C0020
+001C A3                INC     DPTR
+001D E0                MOVX    A,@DPTR
+001E         ?C0020:
+001E 603F              JZ      ?C0011
+                                           ; SOURCE LINE # 112
+                                           ; SOURCE LINE # 113
+0020 120000      R     LCALL   L?0028
+0023 F9                MOV     R1,A
+0024 120000      E     LCALL   _strlen
+0027 900000      E     MOV     DPTR,#?_Uartx_SendStr?BYTE+06H
+002A EF                MOV     A,R7
+002B F0                MOVX    @DPTR,A
+002C 900000      R     MOV     DPTR,#str
+002F E0                MOVX    A,@DPTR
+0030 F9                MOV     R1,A
+0031 A3                INC     DPTR
+0032 E0                MOVX    A,@DPTR
+C51 COMPILER V9.60.0.0   WIFI                                                              01/05/2022 13:45:31 PAGE 29  
+
+0033 FA                MOV     R2,A
+0034 A3                INC     DPTR
+0035 E0                MOVX    A,@DPTR
+0036 900000      E     MOV     DPTR,#?_Uartx_SendStr?BYTE+03H
+0039 C9                XCH     A,R1
+003A F0                MOVX    @DPTR,A
+003B A3                INC     DPTR
+003C EA                MOV     A,R2
+003D F0                MOVX    @DPTR,A
+003E A3                INC     DPTR
+003F E9                MOV     A,R1
+0040 F0                MOVX    @DPTR,A
+0041 900000      E     MOV     DPTR,#?_Uartx_SendStr?BYTE+07H
+0044 7413              MOV     A,#013H
+0046 F0                MOVX    @DPTR,A
+0047 A3                INC     DPTR
+0048 7488              MOV     A,#088H
+004A F0                MOVX    @DPTR,A
+004B 7B01              MOV     R3,#01H
+004D 7A00        E     MOV     R2,#HIGH Uart2
+004F 7900        E     MOV     R1,#LOW Uart2
+0051 120000      E     LCALL   _Uartx_SendStr
+                                           ; SOURCE LINE # 114
+0054 900000      R     MOV     DPTR,#times
+0057 E0                MOVX    A,@DPTR
+0058 FE                MOV     R6,A
+0059 A3                INC     DPTR
+005A E0                MOVX    A,@DPTR
+005B FF                MOV     R7,A
+005C 120000      E     LCALL   _Delay_Ms
+                                           ; SOURCE LINE # 115
+                                           ; SOURCE LINE # 116
+005F         ?C0011:
+005F 22                RET     
+             ; FUNCTION _Exe_Appoint_Cmd (END)
+
+             ; FUNCTION Wifi_Exit_Trt (BEGIN)
+                                           ; SOURCE LINE # 125
+                                           ; SOURCE LINE # 126
+                                           ; SOURCE LINE # 128
+0000 E4                CLR     A
+0001 900000      R     MOV     DPTR,#i
+0004 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 130
+0005 F0                MOVX    @DPTR,A
+0006         ?C0012:
+0006 900000      R     MOV     DPTR,#i
+0009 E0                MOVX    A,@DPTR
+000A FF                MOV     R7,A
+000B C3                CLR     C
+000C 9402              SUBB    A,#02H
+000E E4                CLR     A
+000F 9400              SUBB    A,#00H
+0011 501C              JNC     ?C0016
+                                           ; SOURCE LINE # 131
+                                           ; SOURCE LINE # 132
+0013 EF                MOV     A,R7
+0014 120000      R     LCALL   L?0022
+0017 4A                ORL     A,R2
+0018 600D              JZ      ?C0014
+001A 900000      R     MOV     DPTR,#i
+001D E0                MOVX    A,@DPTR
+C51 COMPILER V9.60.0.0   WIFI                                                              01/05/2022 13:45:31 PAGE 30  
+
+001E 120000      R     LCALL   L?0025
+0021 4C                ORL     A,R4
+0022 6003              JZ      ?C0014
+                                           ; SOURCE LINE # 133
+                                           ; SOURCE LINE # 137
+0024 120000      R     LCALL   _Exe_Appoint_Cmd
+                                           ; SOURCE LINE # 138
+                                           ; SOURCE LINE # 139
+0027         ?C0014:
+0027 900000      R     MOV     DPTR,#i
+002A E0                MOVX    A,@DPTR
+002B 04                INC     A
+002C F0                MOVX    @DPTR,A
+002D 80D7              SJMP    ?C0012
+                                           ; SOURCE LINE # 140
+002F         ?C0016:
+002F 22                RET     
+             ; FUNCTION Wifi_Exit_Trt (END)
+
+             ; FUNCTION Wifi_Open_Ap (BEGIN)
+                                           ; SOURCE LINE # 148
+                                           ; SOURCE LINE # 149
+                                           ; SOURCE LINE # 151
+0000 120000      R     LCALL   Wifi_Exit_Trt
+                                           ; SOURCE LINE # 153
+0003 120000      R     LCALL   L?0023
+0006 120000      R     LCALL   _Exe_Appoint_Cmd
+                                           ; SOURCE LINE # 155
+0009 7A00        R     MOV     R2,#HIGH ?SC_288
+000B 7900        R     MOV     R1,#LOW ?SC_288
+000D 120000      R     LCALL   L?0024
+0010 120000      R     LCALL   _Exe_Appoint_Cmd
+                                           ; SOURCE LINE # 157
+0013 120000      R     LCALL   L?0026
+0016 020000      R     LJMP    _Exe_Appoint_Cmd
+             ; FUNCTION Wifi_Open_Ap (END)
+
+             ; FUNCTION Wifi_Close_Ap (BEGIN)
+                                           ; SOURCE LINE # 166
+                                           ; SOURCE LINE # 167
+                                           ; SOURCE LINE # 169
+0000 120000      R     LCALL   Wifi_Exit_Trt
+                                           ; SOURCE LINE # 171
+0003 120000      R     LCALL   L?0023
+0006 120000      R     LCALL   _Exe_Appoint_Cmd
+                                           ; SOURCE LINE # 173
+0009 7A00        R     MOV     R2,#HIGH ?SC_288
+000B 7900        R     MOV     R1,#LOW ?SC_288
+000D 120000      R     LCALL   L?0027
+0010 120000      R     LCALL   _Exe_Appoint_Cmd
+                                           ; SOURCE LINE # 175
+0013 120000      R     LCALL   L?0026
+0016 020000      R     LJMP    _Exe_Appoint_Cmd
+             ; FUNCTION Wifi_Close_Ap (END)
+
+C51 COMPILER V9.60.0.0   WIFI                                                              01/05/2022 13:45:31 PAGE 31  
+
+NAME                                    CLASS   MSPACE  TYPE    OFFSET  SIZE
+====                                    =====   ======  ====    ======  ====
+
+
+uint16_t . . . . . . . . . . . . . . .  TYPEDEF  -----  U_INT    -----  2
+P0 . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0080H  1
+P1 . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0090H  1
+P2 . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00A0H  1
+P3 . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00B0H  1
+P4 . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00C0H  1
+Uart_HandleTypeDef . . . . . . . . . .  TYPEDEF  -----  STRUCT   -----  11
+  Instance . . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0000H  1
+  Register_SCON. . . . . . . . . . . .  MEMBER   -----  U_CHAR   0001H  1
+  Uart_Mode. . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0002H  1
+  Uart_Count . . . . . . . . . . . . .  MEMBER   -----  U_INT    0003H  2
+  RunUart_Enable . . . . . . . . . . .  MEMBER   -----  FIELD    0005H  1.0
+  Interrupt_Enable . . . . . . . . . .  MEMBER   -----  U_CHAR   0006H  1
+  Register_AUXR. . . . . . . . . . . .  MEMBER   -----  U_CHAR   0007H  1
+  Uartx_busy . . . . . . . . . . . . .  MEMBER   -----  FIELD    0008H  1.0
+  Uart_NVIC. . . . . . . . . . . . . .  MEMBER   -----  STRUCT   0009H  2
+P5 . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00C8H  1
+P6 . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00E8H  1
+Wifi_Cmd . . . . . . . . . . . . . . .  PUBLIC   CODE   ARRAY    012AH  132
+int32_t. . . . . . . . . . . . . . . .  TYPEDEF  -----  LONG     -----  4
+P7 . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00F8H  1
+Wifi_Init. . . . . . . . . . . . . . .  PUBLIC   CODE   PROC     0000H  -----
+  i. . . . . . . . . . . . . . . . . .  AUTO     XDATA  U_CHAR   0000H  1
+IE . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00A8H  1
+size_t . . . . . . . . . . . . . . . .  TYPEDEF  -----  U_INT    -----  2
+_Delay_Ms. . . . . . . . . . . . . . .  EXTERN   CODE   PROC     -----  -----
+Wifi_Open_Ap . . . . . . . . . . . . .  PUBLIC   CODE   PROC     0000H  -----
+IP . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00B8H  1
+_strlen. . . . . . . . . . . . . . . .  EXTERN   CODE   PROC     -----  -----
+CCON . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00D8H  1
+event. . . . . . . . . . . . . . . . .  TYPEDEF  -----  PTR      -----  3
+Wifi_Exit_Trt. . . . . . . . . . . . .  STATIC   CODE   PROC     0000H  -----
+  i. . . . . . . . . . . . . . . . . .  AUTO     XDATA  U_CHAR   0000H  1
+P20. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00A0H  1
+SCON . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0098H  1
+TCON . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0088H  1
+P23. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00A3H  1
+AT_Command . . . . . . . . . . . . . .  TYPEDEF  -----  STRUCT   -----  11
+  pSend. . . . . . . . . . . . . . . .  MEMBER   -----  PTR      0000H  3
+  pRecv. . . . . . . . . . . . . . . .  MEMBER   -----  PTR      0003H  3
+  WaitTimes. . . . . . . . . . . . . .  MEMBER   -----  U_INT    0006H  2
+  pFunc. . . . . . . . . . . . . . . .  MEMBER   -----  PTR      0008H  3
+_Wifi_Enable . . . . . . . . . . . . .  PUBLIC   CODE   PROC     0000H  -----
+  status . . . . . . . . . . . . . . .  * REG *  DATA   U_CHAR   0007H  1
+_Uartx_SendStr . . . . . . . . . . . .  EXTERN   CODE   PROC     -----  -----
+Uart_TypsDef . . . . . . . . . . . . .  TYPEDEF  -----  U_CHAR   -----  1
+uint8_t. . . . . . . . . . . . . . . .  TYPEDEF  -----  U_CHAR   -----  1
+Uart2. . . . . . . . . . . . . . . . .  EXTERN   XDATA  STRUCT   -----  11
+__IO . . . . . . . . . . . . . . . . .  TYPEDEF  -----  INT      -----  2
+_Exe_Appoint_Cmd . . . . . . . . . . .  STATIC   CODE   PROC     0000H  -----
+  str. . . . . . . . . . . . . . . . .  AUTO     XDATA  PTR      0000H  3
+  times. . . . . . . . . . . . . . . .  AUTO     XDATA  U_INT    0003H  2
+int8_t . . . . . . . . . . . . . . . .  TYPEDEF  -----  CHAR     -----  1
+UART_NVIC_TypeDef. . . . . . . . . . .  TYPEDEF  -----  STRUCT   -----  2
+  Register_IP. . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0000H  1
+  Register_IPH . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0001H  1
+wchar_t. . . . . . . . . . . . . . . .  TYPEDEF  -----  CHAR     -----  1
+C51 COMPILER V9.60.0.0   WIFI                                                              01/05/2022 13:45:31 PAGE 32  
+
+NAME                                    CLASS   MSPACE  TYPE    OFFSET  SIZE
+====                                    =====   ======  ====    ======  ====
+
+
+UART1. . . . . . . . . . . . . . . . .  E_CONST  -----  U_CHAR   -----  1
+UART2. . . . . . . . . . . . . . . . .  E_CONST  -----  U_CHAR   -----  1
+UART3. . . . . . . . . . . . . . . . .  E_CONST  -----  U_CHAR   -----  1
+UART4. . . . . . . . . . . . . . . . .  E_CONST  -----  U_CHAR   -----  1
+va_list. . . . . . . . . . . . . . . .  TYPEDEF  -----  PTR      -----  3
+PSW. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00D0H  1
+Wifi_Close_Ap. . . . . . . . . . . . .  PUBLIC   CODE   PROC     0000H  -----
+uint32_t . . . . . . . . . . . . . . .  TYPEDEF  -----  U_LONG   -----  4
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    341    ----
+   CONSTANT SIZE    =    430    ----
+   XDATA SIZE       =   ----       7
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

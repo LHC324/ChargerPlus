@@ -1,0 +1,2549 @@
+C51 COMPILER V9.60.0.0   SC8913                                                            01/05/2022 14:26:36 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE SC8913
+OBJECT MODULE PLACED IN .\Objects\SC8913.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE Src\SC8913.C LARGE OPTIMIZE(9,SPEED) BROWSE FLOATFUZZY(4) INCDIR(.\Inc) 
+                    -DEBUG OBJECTEXTEND CODE LISTINCLUDE SYMBOLS PRINT(.\Listings\SC8913.lst) OBJECT(.\Objects\SC8913.obj)
+
+line level    source
+
+   1          #include "SC8913.h"
+   1      =1  #ifndef __SC8913_H
+   2      =1  #define __SC8913_H
+   3      =1  
+   4      =1  #ifdef __cplusplus
+           =1 extern "C" {
+           =1 #endif
+   7      =1  #include "IIC.h"
+   1      =2  #ifndef __I2C_H
+   2      =2  #define __I2C_H
+   3      =2  
+   4      =2  #ifdef __cplusplus
+           =2 extern "C" {
+           =2 #endif
+   7      =2  #include "config.h"
+   1      =3  #ifndef __CONFIG_H_
+   2      =3  #define __CONFIG_H_
+   3      =3  
+   4      =3  #include <STC8.H>
+   1      =4  #ifndef __STC8F_H_
+   2      =4  #define __STC8F_H_
+   3      =4  
+   4      =4  /////////////////////////////////////////////////
+   5      =4  
+   6      =4  //包含本头文件后,不用另外再包含"REG51.H"
+   7      =4  
+   8      =4  //内核特殊功能寄存器
+   9      =4  sfr ACC         =   0xe0;
+  10      =4  sfr B           =   0xf0;
+  11      =4  sfr PSW         =   0xd0;
+  12      =4  sbit CY         =   PSW^7;
+  13      =4  sbit AC         =   PSW^6;
+  14      =4  sbit F0         =   PSW^5;
+  15      =4  sbit RS1        =   PSW^4;
+  16      =4  sbit RS0        =   PSW^3;
+  17      =4  sbit OV         =   PSW^2;
+  18      =4  sbit P          =   PSW^0;
+  19      =4  sfr SP          =   0x81;
+  20      =4  sfr DPL         =   0x82;
+  21      =4  sfr DPH         =   0x83;
+  22      =4  sfr TA          =   0xae;
+  23      =4  sfr DPS         =   0xe3;
+  24      =4  sfr DPL1        =   0xe4;
+  25      =4  sfr DPH1        =   0xe5;
+  26      =4  
+  27      =4  
+  28      =4  //I/O 口特殊功能寄存器
+  29      =4  sfr P0          =   0x80;
+  30      =4  sfr P1          =   0x90;
+  31      =4  sfr P2          =   0xa0;
+  32      =4  sfr P3          =   0xb0;
+  33      =4  sfr P4          =   0xc0;
+  34      =4  sfr P5          =   0xc8;
+  35      =4  sfr P6          =   0xe8;
+C51 COMPILER V9.60.0.0   SC8913                                                            01/05/2022 14:26:36 PAGE 2   
+
+  36      =4  sfr P7          =   0xf8;
+  37      =4  sfr P0M0        =   0x94;
+  38      =4  sfr P0M1        =   0x93;
+  39      =4  sfr P1M0        =   0x92;
+  40      =4  sfr P1M1        =   0x91;
+  41      =4  sfr P2M0        =   0x96;
+  42      =4  sfr P2M1        =   0x95;
+  43      =4  sfr P3M0        =   0xb2;
+  44      =4  sfr P3M1        =   0xb1;
+  45      =4  sfr P4M0        =   0xb4;
+  46      =4  sfr P4M1        =   0xb3;
+  47      =4  sfr P5M0        =   0xca;
+  48      =4  sfr P5M1        =   0xc9;
+  49      =4  sfr P6M0        =   0xcc;
+  50      =4  sfr P6M1        =   0xcb;
+  51      =4  sfr P7M0        =   0xe2;
+  52      =4  sfr P7M1        =   0xe1;
+  53      =4  
+  54      =4  sbit P00        =   P0^0;
+  55      =4  sbit P01        =   P0^1;
+  56      =4  sbit P02        =   P0^2;
+  57      =4  sbit P03        =   P0^3;
+  58      =4  sbit P04        =   P0^4;
+  59      =4  sbit P05        =   P0^5;
+  60      =4  sbit P06        =   P0^6;
+  61      =4  sbit P07        =   P0^7;
+  62      =4  sbit P10        =   P1^0;
+  63      =4  sbit P11        =   P1^1;
+  64      =4  sbit P12        =   P1^2;
+  65      =4  sbit P13        =   P1^3;
+  66      =4  sbit P14        =   P1^4;
+  67      =4  sbit P15        =   P1^5;
+  68      =4  sbit P16        =   P1^6;
+  69      =4  sbit P17        =   P1^7;
+  70      =4  sbit P20        =   P2^0;
+  71      =4  sbit P21        =   P2^1;
+  72      =4  sbit P22        =   P2^2;
+  73      =4  sbit P23        =   P2^3;
+  74      =4  sbit P24        =   P2^4;
+  75      =4  sbit P25        =   P2^5;
+  76      =4  sbit P26        =   P2^6;
+  77      =4  sbit P27        =   P2^7;
+  78      =4  sbit P30        =   P3^0;
+  79      =4  sbit P31        =   P3^1;
+  80      =4  sbit P32        =   P3^2;
+  81      =4  sbit P33        =   P3^3;
+  82      =4  sbit P34        =   P3^4;
+  83      =4  sbit P35        =   P3^5;
+  84      =4  sbit P36        =   P3^6;
+  85      =4  sbit P37        =   P3^7;
+  86      =4  sbit P40        =   P4^0;
+  87      =4  sbit P41        =   P4^1;
+  88      =4  sbit P42        =   P4^2;
+  89      =4  sbit P43        =   P4^3;
+  90      =4  sbit P44        =   P4^4;
+  91      =4  sbit P45        =   P4^5;
+  92      =4  sbit P46        =   P4^6;
+  93      =4  sbit P47        =   P4^7;
+  94      =4  sbit P50        =   P5^0;
+  95      =4  sbit P51        =   P5^1;
+  96      =4  sbit P52        =   P5^2;
+  97      =4  sbit P53        =   P5^3;
+C51 COMPILER V9.60.0.0   SC8913                                                            01/05/2022 14:26:36 PAGE 3   
+
+  98      =4  sbit P54        =   P5^4;
+  99      =4  sbit P55        =   P5^5;
+ 100      =4  sbit P56        =   P5^6;
+ 101      =4  sbit P57        =   P5^7;
+ 102      =4  sbit P60        =   P6^0;
+ 103      =4  sbit P61        =   P6^1;
+ 104      =4  sbit P62        =   P6^2;
+ 105      =4  sbit P63        =   P6^3;
+ 106      =4  sbit P64        =   P6^4;
+ 107      =4  sbit P65        =   P6^5;
+ 108      =4  sbit P66        =   P6^6;
+ 109      =4  sbit P67        =   P6^7;
+ 110      =4  sbit P70        =   P7^0;
+ 111      =4  sbit P71        =   P7^1;
+ 112      =4  sbit P72        =   P7^2;
+ 113      =4  sbit P73        =   P7^3;
+ 114      =4  sbit P74        =   P7^4;
+ 115      =4  sbit P75        =   P7^5;
+ 116      =4  sbit P76        =   P7^6;
+ 117      =4  sbit P77        =   P7^7;
+ 118      =4  
+ 119      =4  //如下特殊功能寄存器位于扩展RAM区域
+ 120      =4  //访问这些寄存器,需先将P_SW2的BIT7设置为1,才可正常读写
+ 121      =4  #define P0PU        (*(unsigned char volatile xdata *)0xfe10)
+ 122      =4  #define P1PU        (*(unsigned char volatile xdata *)0xfe11)
+ 123      =4  #define P2PU        (*(unsigned char volatile xdata *)0xfe12)
+ 124      =4  #define P3PU        (*(unsigned char volatile xdata *)0xfe13)
+ 125      =4  #define P4PU        (*(unsigned char volatile xdata *)0xfe14)
+ 126      =4  #define P5PU        (*(unsigned char volatile xdata *)0xfe15)
+ 127      =4  #define P6PU        (*(unsigned char volatile xdata *)0xfe16)
+ 128      =4  #define P7PU        (*(unsigned char volatile xdata *)0xfe17)
+ 129      =4  #define P0NCS       (*(unsigned char volatile xdata *)0xfe18)
+ 130      =4  #define P1NCS       (*(unsigned char volatile xdata *)0xfe19)
+ 131      =4  #define P2NCS       (*(unsigned char volatile xdata *)0xfe1a)
+ 132      =4  #define P3NCS       (*(unsigned char volatile xdata *)0xfe1b)
+ 133      =4  #define P4NCS       (*(unsigned char volatile xdata *)0xfe1c)
+ 134      =4  #define P5NCS       (*(unsigned char volatile xdata *)0xfe1d)
+ 135      =4  #define P6NCS       (*(unsigned char volatile xdata *)0xfe1e)
+ 136      =4  #define P7NCS       (*(unsigned char volatile xdata *)0xfe1f)
+ 137      =4  
+ 138      =4  //系统管理特殊功能寄存器
+ 139      =4  sfr PCON        =   0x87;
+ 140      =4  #define SMOD        0x80
+ 141      =4  #define SMOD0       0x40
+ 142      =4  #define LVDF        0x20
+ 143      =4  #define POF         0x10
+ 144      =4  #define GF1         0x08
+ 145      =4  #define GF0         0x04
+ 146      =4  #define PD          0x02
+ 147      =4  #define IDL         0x01
+ 148      =4  sfr AUXR        =   0x8e;
+ 149      =4  #define T0x12       0x80
+ 150      =4  #define T1x12       0x40
+ 151      =4  #define UART_M0x6   0x20
+ 152      =4  #define T2R         0x10
+ 153      =4  #define T2_CT       0x08
+ 154      =4  #define T2x12       0x04
+ 155      =4  #define EXTRAM      0x02
+ 156      =4  #define S1ST2       0x01
+ 157      =4  sfr AUXR2       =   0x97;
+ 158      =4  #define TXLNRX      0x10
+ 159      =4  sfr BUS_SPEED   =   0xa1;
+C51 COMPILER V9.60.0.0   SC8913                                                            01/05/2022 14:26:36 PAGE 4   
+
+ 160      =4  sfr P_SW1       =   0xa2;
+ 161      =4  sfr P_SW2       =   0xba;
+ 162      =4  #define EAXFR       0x80
+ 163      =4  sfr VOCTRL      =   0xbb;
+ 164      =4  sfr RSTCFG      =   0xff;
+ 165      =4  
+ 166      =4  //如下特殊功能寄存器位于扩展RAM区域
+ 167      =4  //访问这些寄存器,需先将P_SW2的BIT7设置为1,才可正常读写
+ 168      =4  #define CKSEL       (*(unsigned char volatile xdata *)0xfe00)
+ 169      =4  #define CLKDIV      (*(unsigned char volatile xdata *)0xfe01)
+ 170      =4  #define IRC24MCR    (*(unsigned char volatile xdata *)0xfe02)
+ 171      =4  #define XOSCCR      (*(unsigned char volatile xdata *)0xfe03)
+ 172      =4  #define IRC32KCR    (*(unsigned char volatile xdata *)0xfe04)
+ 173      =4  
+ 174      =4  //中断特殊功能寄存器
+ 175      =4  sfr IE          =   0xa8;
+ 176      =4  sbit EA         =   IE^7;
+ 177      =4  sbit ELVD       =   IE^6;
+ 178      =4  sbit EADC       =   IE^5;
+ 179      =4  sbit ES         =   IE^4;
+ 180      =4  sbit ET1        =   IE^3;
+ 181      =4  sbit EX1        =   IE^2;
+ 182      =4  sbit ET0        =   IE^1;
+ 183      =4  sbit EX0        =   IE^0;
+ 184      =4  sfr IE2         =   0xaf;
+ 185      =4  #define ET4         0x40
+ 186      =4  #define ET3         0x20
+ 187      =4  #define ES4         0x10
+ 188      =4  #define ES3         0x08
+ 189      =4  #define ET2         0x04
+ 190      =4  #define ESPI        0x02
+ 191      =4  #define ES2         0x01
+ 192      =4  sfr IP          =   0xb8;
+ 193      =4  sbit PPCA       =   IP^7;
+ 194      =4  sbit PLVD       =   IP^6;
+ 195      =4  sbit PADC       =   IP^5;
+ 196      =4  sbit PS         =   IP^4;
+ 197      =4  sbit PT1        =   IP^3;
+ 198      =4  sbit PX1        =   IP^2;
+ 199      =4  sbit PT0        =   IP^1;
+ 200      =4  sbit PX0        =   IP^0;
+ 201      =4  sfr IP2         =   0xb5;
+ 202      =4  #define PI2C        0x40
+ 203      =4  #define PCMP        0x20
+ 204      =4  #define PX4         0x10
+ 205      =4  #define PPWMFD      0x08
+ 206      =4  #define PPWM        0x04
+ 207      =4  #define PSPI        0x02
+ 208      =4  #define PS2         0x01
+ 209      =4  sfr IPH         =   0xb7;
+ 210      =4  #define PPCAH       0x80
+ 211      =4  #define PLVDH       0x40
+ 212      =4  #define PADCH       0x20
+ 213      =4  #define PSH         0x10
+ 214      =4  #define PT1H        0x08
+ 215      =4  #define PX1H        0x04
+ 216      =4  #define PT0H        0x02
+ 217      =4  #define PX0H        0x01
+ 218      =4  sfr IP2H        =   0xb6;
+ 219      =4  #define PI2CH       0x40
+ 220      =4  #define PCMPH       0x20
+ 221      =4  #define PX4H        0x10
+C51 COMPILER V9.60.0.0   SC8913                                                            01/05/2022 14:26:36 PAGE 5   
+
+ 222      =4  #define PPWMFDH     0x08
+ 223      =4  #define PPWMH       0x04
+ 224      =4  #define PSPIH       0x02
+ 225      =4  #define PS2H        0x01
+ 226      =4  sfr INTCLKO     =   0x8f;
+ 227      =4  #define EX4         0x40
+ 228      =4  #define EX3         0x20
+ 229      =4  #define EX2         0x10
+ 230      =4  #define T2CLKO      0x04
+ 231      =4  #define T1CLKO      0x02
+ 232      =4  #define T0CLKO      0x01
+ 233      =4  sfr AUXINTIF    =   0xef;
+ 234      =4  #define INT4IF      0x40
+ 235      =4  #define INT3IF      0x20
+ 236      =4  #define INT2IF      0x10
+ 237      =4  #define T4IF        0x04
+ 238      =4  #define T3IF        0x02
+ 239      =4  #define T2IF        0x01
+ 240      =4  
+ 241      =4  //定时器特殊功能寄存器
+ 242      =4  sfr TCON        =   0x88;
+ 243      =4  sbit TF1        =   TCON^7;
+ 244      =4  sbit TR1        =   TCON^6;
+ 245      =4  sbit TF0        =   TCON^5;
+ 246      =4  sbit TR0        =   TCON^4;
+ 247      =4  sbit IE1        =   TCON^3;
+ 248      =4  sbit IT1        =   TCON^2;
+ 249      =4  sbit IE0        =   TCON^1;
+ 250      =4  sbit IT0        =   TCON^0;
+ 251      =4  sfr TMOD        =   0x89;
+ 252      =4  #define T1_GATE     0x80
+ 253      =4  #define T1_CT       0x40
+ 254      =4  #define T1_M1       0x20
+ 255      =4  #define T1_M0       0x10
+ 256      =4  #define T0_GATE     0x08
+ 257      =4  #define T0_CT       0x04
+ 258      =4  #define T0_M1       0x02
+ 259      =4  #define T0_M0       0x01
+ 260      =4  sfr TL0         =   0x8a;
+ 261      =4  sfr TL1         =   0x8b;
+ 262      =4  sfr TH0         =   0x8c;
+ 263      =4  sfr TH1         =   0x8d;
+ 264      =4  sfr T4T3M       =   0xd1;
+ 265      =4  #define T4R         0x80
+ 266      =4  #define T4_CT       0x40
+ 267      =4  #define T4x12       0x20
+ 268      =4  #define T4CLKO      0x10
+ 269      =4  #define T3R         0x08
+ 270      =4  #define T3_CT       0x04
+ 271      =4  #define T3x12       0x02
+ 272      =4  #define T3CLKO      0x01
+ 273      =4  sfr T4H         =   0xd2;
+ 274      =4  sfr T4L         =   0xd3;
+ 275      =4  sfr T3H         =   0xd4;
+ 276      =4  sfr T3L         =   0xd5;
+ 277      =4  sfr T2H         =   0xd6;
+ 278      =4  sfr T2L         =   0xd7;
+ 279      =4  sfr TH4         =   0xd2;
+ 280      =4  sfr TL4         =   0xd3;
+ 281      =4  sfr TH3         =   0xd4;
+ 282      =4  sfr TL3         =   0xd5;
+ 283      =4  sfr TH2         =   0xd6;
+C51 COMPILER V9.60.0.0   SC8913                                                            01/05/2022 14:26:36 PAGE 6   
+
+ 284      =4  sfr TL2         =   0xd7;
+ 285      =4  sfr WKTCL       =   0xaa;
+ 286      =4  sfr WKTCH       =   0xab;
+ 287      =4  #define WKTEN       0x80
+ 288      =4  sfr WDT_CONTR   =   0xc1;
+ 289      =4  #define WDT_FLAG    0x80
+ 290      =4  #define EN_WDT      0x20
+ 291      =4  #define CLR_WDT     0x10
+ 292      =4  #define IDL_WDT     0x08
+ 293      =4  
+ 294      =4  //串行口特殊功能寄存器
+ 295      =4  sfr SCON        =   0x98;
+ 296      =4  sbit SM0        =   SCON^7;
+ 297      =4  sbit SM1        =   SCON^6;
+ 298      =4  sbit SM2        =   SCON^5;
+ 299      =4  sbit REN        =   SCON^4;
+ 300      =4  sbit TB8        =   SCON^3;
+ 301      =4  sbit RB8        =   SCON^2;
+ 302      =4  sbit TI         =   SCON^1;
+ 303      =4  sbit RI         =   SCON^0;
+ 304      =4  sfr SBUF        =   0x99;
+ 305      =4  sfr S2CON       =   0x9a;
+ 306      =4  #define S2SM0       0x80
+ 307      =4  #define S2ST4       0x40
+ 308      =4  #define S2SM2       0x20
+ 309      =4  #define S2REN       0x10
+ 310      =4  #define S2TB8       0x08
+ 311      =4  #define S2RB8       0x04
+ 312      =4  #define S2TI        0x02
+ 313      =4  #define S2RI        0x01
+ 314      =4  sfr S2BUF       =   0x9b;
+ 315      =4  sfr S3CON       =   0xac;
+ 316      =4  #define S3SM0       0x80
+ 317      =4  #define S3ST4       0x40
+ 318      =4  #define S3SM2       0x20
+ 319      =4  #define S3REN       0x10
+ 320      =4  #define S3TB8       0x08
+ 321      =4  #define S3RB8       0x04
+ 322      =4  #define S3TI        0x02
+ 323      =4  #define S3RI        0x01
+ 324      =4  sfr S3BUF       =   0xad;
+ 325      =4  sfr S4CON       =   0x84;
+ 326      =4  #define S4SM0       0x80
+ 327      =4  #define S4ST4       0x40
+ 328      =4  #define S4SM2       0x20
+ 329      =4  #define S4REN       0x10
+ 330      =4  #define S4TB8       0x08
+ 331      =4  #define S4RB8       0x04
+ 332      =4  #define S4TI        0x02
+ 333      =4  #define S4RI        0x01
+ 334      =4  sfr S4BUF       =   0x85;
+ 335      =4  sfr SADDR       =   0xa9;
+ 336      =4  sfr SADEN       =   0xb9;
+ 337      =4  
+ 338      =4  //ADC 特殊功能寄存器
+ 339      =4  sfr ADC_CONTR   =   0xbc;
+ 340      =4  #define ADC_POWER   0x80
+ 341      =4  #define ADC_START   0x40
+ 342      =4  #define ADC_FLAG    0x20
+ 343      =4  sfr ADC_RES     =   0xbd;
+ 344      =4  sfr ADC_RESL    =   0xbe;
+ 345      =4  sfr ADCCFG      =   0xde;
+C51 COMPILER V9.60.0.0   SC8913                                                            01/05/2022 14:26:36 PAGE 7   
+
+ 346      =4  #define ADC_RESFMT  0x20
+ 347      =4  
+ 348      =4  //SPI 特殊功能寄存器
+ 349      =4  sfr SPSTAT      =   0xcd;
+ 350      =4  #define SPIF        0x80
+ 351      =4  #define WCOL        0x40
+ 352      =4  sfr SPCTL       =   0xce;
+ 353      =4  #define SSIG        0x80
+ 354      =4  #define SPEN        0x40
+ 355      =4  #define DORD        0x20
+ 356      =4  #define MSTR        0x10
+ 357      =4  #define CPOL        0x08
+ 358      =4  #define CPHA        0x04
+ 359      =4  sfr SPDAT       =   0xcf;
+ 360      =4  
+ 361      =4  //IAP/ISP 特殊功能寄存器
+ 362      =4  sfr IAP_DATA    =   0xc2;
+ 363      =4  sfr IAP_ADDRH   =   0xc3;
+ 364      =4  sfr IAP_ADDRL   =   0xc4;
+ 365      =4  sfr IAP_CMD     =   0xc5;
+ 366      =4  #define IAP_IDL     0x00
+ 367      =4  #define IAP_READ    0x01
+ 368      =4  #define IAP_WRITE   0x02
+ 369      =4  #define IAP_ERASE   0x03
+ 370      =4  sfr IAP_TRIG    =   0xc6;
+ 371      =4  sfr IAP_CONTR   =   0xc7;
+ 372      =4  #define IAPEN       0x80
+ 373      =4  #define SWBS        0x40
+ 374      =4  #define SWRST       0x20
+ 375      =4  #define CMD_FAIL    0x10
+ 376      =4  sfr ISP_DATA    =   0xc2;
+ 377      =4  sfr ISP_ADDRH   =   0xc3;
+ 378      =4  sfr ISP_ADDRL   =   0xc4;
+ 379      =4  sfr ISP_CMD     =   0xc5;
+ 380      =4  sfr ISP_TRIG    =   0xc6;
+ 381      =4  sfr ISP_CONTR   =   0xc7;
+ 382      =4  
+ 383      =4  //比较器特殊功能寄存器
+ 384      =4  sfr CMPCR1      =   0xe6;
+ 385      =4  #define CMPEN       0x80
+ 386      =4  #define CMPIF       0x40
+ 387      =4  #define PIE         0x20
+ 388      =4  #define NIE         0x10
+ 389      =4  #define PIS         0x08
+ 390      =4  #define NIS         0x04
+ 391      =4  #define CMPOE       0x02
+ 392      =4  #define CMPRES      0x01
+ 393      =4  sfr CMPCR2      =   0xe7;
+ 394      =4  #define INVCMPO     0x80
+ 395      =4  #define DISFLT      0x40
+ 396      =4  
+ 397      =4  //PCA/PWM 特殊功能寄存器
+ 398      =4  sfr CCON        =   0xd8;
+ 399      =4  sbit CF         =   CCON^7;
+ 400      =4  sbit CR         =   CCON^6;
+ 401      =4  sbit CCF3       =   CCON^3;
+ 402      =4  sbit CCF2       =   CCON^2;
+ 403      =4  sbit CCF1       =   CCON^1;
+ 404      =4  sbit CCF0       =   CCON^0;
+ 405      =4  sfr CMOD        =   0xd9;
+ 406      =4  #define CIDL        0x80
+ 407      =4  #define ECF         0x01
+C51 COMPILER V9.60.0.0   SC8913                                                            01/05/2022 14:26:36 PAGE 8   
+
+ 408      =4  sfr CL          =   0xe9;
+ 409      =4  sfr CH          =   0xf9;
+ 410      =4  sfr CCAPM0      =   0xda;
+ 411      =4  #define ECOM0       0x40
+ 412      =4  #define CCAPP0      0x20
+ 413      =4  #define CCAPN0      0x10
+ 414      =4  #define MAT0        0x08
+ 415      =4  #define TOG0        0x04
+ 416      =4  #define PWM0        0x02
+ 417      =4  #define ECCF0       0x01
+ 418      =4  sfr CCAPM1      =   0xdb;
+ 419      =4  #define ECOM1       0x40
+ 420      =4  #define CCAPP1      0x20
+ 421      =4  #define CCAPN1      0x10
+ 422      =4  #define MAT1        0x08
+ 423      =4  #define TOG1        0x04
+ 424      =4  #define PWM1        0x02
+ 425      =4  #define ECCF1       0x01
+ 426      =4  sfr CCAPM2      =   0xdc;
+ 427      =4  #define ECOM2       0x40
+ 428      =4  #define CCAPP2      0x20
+ 429      =4  #define CCAPN2      0x10
+ 430      =4  #define MAT2        0x08
+ 431      =4  #define TOG2        0x04
+ 432      =4  #define PWM2        0x02
+ 433      =4  #define ECCF2       0x01
+ 434      =4  sfr CCAPM3      =   0xdd;
+ 435      =4  #define ECOM3       0x40
+ 436      =4  #define CCAPP3      0x20
+ 437      =4  #define CCAPN3      0x10
+ 438      =4  #define MAT3        0x08
+ 439      =4  #define TOG3        0x04
+ 440      =4  #define PWM3        0x02
+ 441      =4  #define ECCF3       0x01
+ 442      =4  sfr CCAP0L      =   0xea;
+ 443      =4  sfr CCAP1L      =   0xeb;
+ 444      =4  sfr CCAP2L      =   0xec;
+ 445      =4  sfr CCAP3L      =   0xed;
+ 446      =4  sfr CCAP0H      =   0xfa;
+ 447      =4  sfr CCAP1H      =   0xfb;
+ 448      =4  sfr CCAP2H      =   0xfc;
+ 449      =4  sfr CCAP3H      =   0xfd;
+ 450      =4  sfr PCA_PWM0    =   0xf2;
+ 451      =4  sfr PCA_PWM1    =   0xf3;
+ 452      =4  sfr PCA_PWM2    =   0xf4;
+ 453      =4  sfr PCA_PWM3    =   0xf5;
+ 454      =4  
+ 455      =4  //增强型PWM波形发生器特殊功能寄存器
+ 456      =4  sfr PWMCFG      =   0xf1;
+ 457      =4  #define CBIF        0x80
+ 458      =4  #define ETADC       0x40
+ 459      =4  sfr PWMIF       =   0xf6;
+ 460      =4  #define C7IF        0x80
+ 461      =4  #define C6IF        0x40
+ 462      =4  #define C5IF        0x20
+ 463      =4  #define C4IF        0x10
+ 464      =4  #define C3IF        0x08
+ 465      =4  #define C2IF        0x04
+ 466      =4  #define C1IF        0x02
+ 467      =4  #define C0IF        0x01
+ 468      =4  sfr PWMFDCR     =   0xf7;
+ 469      =4  #define INVCMP      0x80
+C51 COMPILER V9.60.0.0   SC8913                                                            01/05/2022 14:26:36 PAGE 9   
+
+ 470      =4  #define INVIO       0x40
+ 471      =4  #define ENFD        0x20
+ 472      =4  #define FLTFLIO     0x10
+ 473      =4  #define EFDI        0x08
+ 474      =4  #define FDCMP       0x04
+ 475      =4  #define FDIO        0x02
+ 476      =4  #define FDIF        0x01
+ 477      =4  sfr PWMCR       =   0xfe;
+ 478      =4  #define ENPWM       0x80
+ 479      =4  #define ECBI        0x40
+ 480      =4  
+ 481      =4  //如下特殊功能寄存器位于扩展RAM区域
+ 482      =4  //访问这些寄存器,需先将P_SW2的BIT7设置为1,才可正常读写
+ 483      =4  #define PWMC        (*(unsigned int  volatile xdata *)0xfff0)
+ 484      =4  #define PWMCH       (*(unsigned char volatile xdata *)0xfff0)
+ 485      =4  #define PWMCL       (*(unsigned char volatile xdata *)0xfff1)
+ 486      =4  #define PWMCKS      (*(unsigned char volatile xdata *)0xfff2)
+ 487      =4  #define TADCP       (*(unsigned char volatile xdata *)0xfff3)
+ 488      =4  #define TADCPH      (*(unsigned char volatile xdata *)0xfff3)
+ 489      =4  #define TADCPL      (*(unsigned char volatile xdata *)0xfff4)
+ 490      =4  #define PWM0T1      (*(unsigned int  volatile xdata *)0xff00)
+ 491      =4  #define PWM0T1H     (*(unsigned char volatile xdata *)0xff00)
+ 492      =4  #define PWM0T1L     (*(unsigned char volatile xdata *)0xff01)
+ 493      =4  #define PWM0T2      (*(unsigned int  volatile xdata *)0xff02)
+ 494      =4  #define PWM0T2H     (*(unsigned char volatile xdata *)0xff02)
+ 495      =4  #define PWM0T2L     (*(unsigned char volatile xdata *)0xff03)
+ 496      =4  #define PWM0CR      (*(unsigned char volatile xdata *)0xff04)
+ 497      =4  #define PWM0HLD     (*(unsigned char volatile xdata *)0xff05)
+ 498      =4  #define PWM1T1      (*(unsigned int  volatile xdata *)0xff10)
+ 499      =4  #define PWM1T1H     (*(unsigned char volatile xdata *)0xff10)
+ 500      =4  #define PWM1T1L     (*(unsigned char volatile xdata *)0xff11)
+ 501      =4  #define PWM1T2      (*(unsigned int  volatile xdata *)0xff12)
+ 502      =4  #define PWM1T2H     (*(unsigned char volatile xdata *)0xff12)
+ 503      =4  #define PWM1T2L     (*(unsigned char volatile xdata *)0xff13)
+ 504      =4  #define PWM1CR      (*(unsigned char volatile xdata *)0xff14)
+ 505      =4  #define PWM1HLD     (*(unsigned char volatile xdata *)0xff15)
+ 506      =4  #define PWM2T1      (*(unsigned int  volatile xdata *)0xff20)
+ 507      =4  #define PWM2T1H     (*(unsigned char volatile xdata *)0xff20)
+ 508      =4  #define PWM2T1L     (*(unsigned char volatile xdata *)0xff21)
+ 509      =4  #define PWM2T2      (*(unsigned int  volatile xdata *)0xff22)
+ 510      =4  #define PWM2T2H     (*(unsigned char volatile xdata *)0xff22)
+ 511      =4  #define PWM2T2L     (*(unsigned char volatile xdata *)0xff23)
+ 512      =4  #define PWM2CR      (*(unsigned char volatile xdata *)0xff24)
+ 513      =4  #define PWM2HLD     (*(unsigned char volatile xdata *)0xff25)
+ 514      =4  #define PWM3T1      (*(unsigned int  volatile xdata *)0xff30)
+ 515      =4  #define PWM3T1H     (*(unsigned char volatile xdata *)0xff30)
+ 516      =4  #define PWM3T1L     (*(unsigned char volatile xdata *)0xff31)
+ 517      =4  #define PWM3T2      (*(unsigned int  volatile xdata *)0xff32)
+ 518      =4  #define PWM3T2H     (*(unsigned char volatile xdata *)0xff32)
+ 519      =4  #define PWM3T2L     (*(unsigned char volatile xdata *)0xff33)
+ 520      =4  #define PWM3CR      (*(unsigned char volatile xdata *)0xff34)
+ 521      =4  #define PWM3HLD     (*(unsigned char volatile xdata *)0xff35)
+ 522      =4  #define PWM4T1      (*(unsigned int  volatile xdata *)0xff40)
+ 523      =4  #define PWM4T1H     (*(unsigned char volatile xdata *)0xff40)
+ 524      =4  #define PWM4T1L     (*(unsigned char volatile xdata *)0xff41)
+ 525      =4  #define PWM4T2      (*(unsigned int  volatile xdata *)0xff42)
+ 526      =4  #define PWM4T2H     (*(unsigned char volatile xdata *)0xff42)
+ 527      =4  #define PWM4T2L     (*(unsigned char volatile xdata *)0xff43)
+ 528      =4  #define PWM4CR      (*(unsigned char volatile xdata *)0xff44)
+ 529      =4  #define PWM4HLD     (*(unsigned char volatile xdata *)0xff45)
+ 530      =4  #define PWM5T1      (*(unsigned int  volatile xdata *)0xff50)
+ 531      =4  #define PWM5T1H     (*(unsigned char volatile xdata *)0xff50)
+C51 COMPILER V9.60.0.0   SC8913                                                            01/05/2022 14:26:36 PAGE 10  
+
+ 532      =4  #define PWM5T1L     (*(unsigned char volatile xdata *)0xff51)
+ 533      =4  #define PWM5T2      (*(unsigned int  volatile xdata *)0xff52)
+ 534      =4  #define PWM5T2H     (*(unsigned char volatile xdata *)0xff52)
+ 535      =4  #define PWM5T2L     (*(unsigned char volatile xdata *)0xff53)
+ 536      =4  #define PWM5CR      (*(unsigned char volatile xdata *)0xff54)
+ 537      =4  #define PWM5HLD     (*(unsigned char volatile xdata *)0xff55)
+ 538      =4  #define PWM6T1      (*(unsigned int  volatile xdata *)0xff60)
+ 539      =4  #define PWM6T1H     (*(unsigned char volatile xdata *)0xff60)
+ 540      =4  #define PWM6T1L     (*(unsigned char volatile xdata *)0xff61)
+ 541      =4  #define PWM6T2      (*(unsigned int  volatile xdata *)0xff62)
+ 542      =4  #define PWM6T2H     (*(unsigned char volatile xdata *)0xff62)
+ 543      =4  #define PWM6T2L     (*(unsigned char volatile xdata *)0xff63)
+ 544      =4  #define PWM6CR      (*(unsigned char volatile xdata *)0xff64)
+ 545      =4  #define PWM6HLD     (*(unsigned char volatile xdata *)0xff65)
+ 546      =4  #define PWM7T1      (*(unsigned int  volatile xdata *)0xff70)
+ 547      =4  #define PWM7T1H     (*(unsigned char volatile xdata *)0xff70)
+ 548      =4  #define PWM7T1L     (*(unsigned char volatile xdata *)0xff71)
+ 549      =4  #define PWM7T2      (*(unsigned int  volatile xdata *)0xff72)
+ 550      =4  #define PWM7T2H     (*(unsigned char volatile xdata *)0xff72)
+ 551      =4  #define PWM7T2L     (*(unsigned char volatile xdata *)0xff73)
+ 552      =4  #define PWM7CR      (*(unsigned char volatile xdata *)0xff74)
+ 553      =4  #define PWM7HLD     (*(unsigned char volatile xdata *)0xff75)
+ 554      =4  
+ 555      =4  //I2C特殊功能寄存器
+ 556      =4  //如下特殊功能寄存器位于扩展RAM区域
+ 557      =4  //访问这些寄存器,需先将P_SW2的BIT7设置为1,才可正常读写
+ 558      =4  #define I2CCFG      (*(unsigned char volatile xdata *)0xfe80)
+ 559      =4  #define ENI2C       0x80
+ 560      =4  #define MSSL        0x40
+ 561      =4  #define I2CMSCR     (*(unsigned char volatile xdata *)0xfe81)
+ 562      =4  #define EMSI        0x80
+ 563      =4  #define I2CMSST     (*(unsigned char volatile xdata *)0xfe82)
+ 564      =4  #define MSBUSY      0x80
+ 565      =4  #define MSIF        0x40
+ 566      =4  #define MSACKI      0x02
+ 567      =4  #define MSACKO      0x01
+ 568      =4  #define I2CSLCR     (*(unsigned char volatile xdata *)0xfe83)
+ 569      =4  #define ESTAI       0x40
+ 570      =4  #define ERXI        0x20
+ 571      =4  #define ETXI        0x10
+ 572      =4  #define ESTOI       0x08
+ 573      =4  #define SLRST       0x01
+ 574      =4  #define I2CSLST     (*(unsigned char volatile xdata *)0xfe84)
+ 575      =4  #define SLBUSY      0x80
+ 576      =4  #define STAIF       0x40
+ 577      =4  #define RXIF        0x20
+ 578      =4  #define TXIF        0x10
+ 579      =4  #define STOIF       0x08
+ 580      =4  #define TXING       0x04
+ 581      =4  #define SLACKI      0x02
+ 582      =4  #define SLACKO      0x01
+ 583      =4  #define I2CSLADR    (*(unsigned char volatile xdata *)0xfe85)
+ 584      =4  #define I2CTXD      (*(unsigned char volatile xdata *)0xfe86)
+ 585      =4  #define I2CRXD      (*(unsigned char volatile xdata *)0xfe87)
+ 586      =4  
+ 587      =4  /////////////////////////////////////////////////
+ 588      =4  
+ 589      =4  #endif
+ 590      =4  
+   5      =3  #include <stdio.h>
+   1      =4  /*--------------------------------------------------------------------------
+   2      =4  STDIO.H
+C51 COMPILER V9.60.0.0   SC8913                                                            01/05/2022 14:26:36 PAGE 11  
+
+   3      =4  
+   4      =4  Prototypes for standard I/O functions.
+   5      =4  Copyright (c) 1988-2002 Keil Elektronik GmbH and Keil Software, Inc.
+   6      =4  All rights reserved.
+   7      =4  --------------------------------------------------------------------------*/
+   8      =4  
+   9      =4  #ifndef __STDIO_H__
+  10      =4  #define __STDIO_H__
+  11      =4  
+  12      =4  #ifndef EOF
+  13      =4   #define EOF -1
+  14      =4  #endif
+  15      =4  
+  16      =4  #ifndef NULL
+  17      =4   #define NULL ((void *) 0)
+  18      =4  #endif
+  19      =4  
+  20      =4  #ifndef _SIZE_T
+  21      =4   #define _SIZE_T
+  22      =4   typedef unsigned int size_t;
+  23      =4  #endif
+  24      =4  
+  25      =4  #pragma SAVE
+  26      =4  #pragma REGPARMS
+  27      =4  extern char _getkey (void);
+  28      =4  extern char getchar (void);
+  29      =4  extern char ungetchar (char);
+  30      =4  extern char putchar (char);
+  31      =4  extern int printf   (const char *, ...);
+  32      =4  extern int sprintf  (char *, const char *, ...);
+  33      =4  extern int vprintf  (const char *, char *);
+  34      =4  extern int vsprintf (char *, const char *, char *);
+  35      =4  extern char *gets (char *, int n);
+  36      =4  extern int scanf (const char *, ...);
+  37      =4  extern int sscanf (char *, const char *, ...);
+  38      =4  extern int puts (const char *);
+  39      =4  
+  40      =4  #pragma RESTORE
+  41      =4  
+  42      =4  #endif
+  43      =4  
+   6      =3  #include <intrins.h>
+   1      =4  /*--------------------------------------------------------------------------
+   2      =4  INTRINS.H
+   3      =4  
+   4      =4  Intrinsic functions for C51.
+   5      =4  Copyright (c) 1988-2010 Keil Elektronik GmbH and ARM Germany GmbH
+   6      =4  All rights reserved.
+   7      =4  --------------------------------------------------------------------------*/
+   8      =4  
+   9      =4  #ifndef __INTRINS_H__
+  10      =4  #define __INTRINS_H__
+  11      =4  
+  12      =4  #pragma SAVE
+  13      =4  
+  14      =4  #if defined (__CX2__)
+           =4 #pragma FUNCTIONS(STATIC)
+           =4 /* intrinsic functions are reentrant, but need static attribute */
+           =4 #endif
+  18      =4  
+  19      =4  extern void          _nop_     (void);
+  20      =4  extern bit           _testbit_ (bit);
+C51 COMPILER V9.60.0.0   SC8913                                                            01/05/2022 14:26:36 PAGE 12  
+
+  21      =4  extern unsigned char _cror_    (unsigned char, unsigned char);
+  22      =4  extern unsigned int  _iror_    (unsigned int,  unsigned char);
+  23      =4  extern unsigned long _lror_    (unsigned long, unsigned char);
+  24      =4  extern unsigned char _crol_    (unsigned char, unsigned char);
+  25      =4  extern unsigned int  _irol_    (unsigned int,  unsigned char);
+  26      =4  extern unsigned long _lrol_    (unsigned long, unsigned char);
+  27      =4  extern unsigned char _chkfloat_(float);
+  28      =4  #if defined (__CX2__)
+           =4 extern int           abs       (int);
+           =4 extern void          _illop_   (void);
+           =4 #endif
+  32      =4  #if !defined (__CX2__)
+  33      =4  extern void          _push_    (unsigned char _sfr);
+  34      =4  extern void          _pop_     (unsigned char _sfr);
+  35      =4  #endif
+  36      =4  
+  37      =4  #pragma RESTORE
+  38      =4  
+  39      =4  #endif
+  40      =4  
+   7      =3  #include <string.h>
+   1      =4  /*--------------------------------------------------------------------------
+   2      =4  STRING.H
+   3      =4  
+   4      =4  String functions.
+   5      =4  Copyright (c) 1988-2008 Keil Elektronik GmbH and Keil Software, Inc.
+   6      =4  Copyright (c) 2008-2016 ARM Germany GmbH
+   7      =4  All rights reserved.
+   8      =4  --------------------------------------------------------------------------*/
+   9      =4  
+  10      =4  #ifndef __STRING_H__
+  11      =4  #define __STRING_H__
+  12      =4  
+  13      =4  #ifndef _SIZE_T
+           =4  #define _SIZE_T
+           =4  typedef unsigned int size_t;
+           =4 #endif
+  17      =4  
+  18      =4  #ifndef NULL
+           =4  #define NULL ((void *)0)
+           =4 #endif
+  21      =4  
+  22      =4  #pragma SAVE
+  23      =4  #pragma REGPARMS
+  24      =4  extern char  *strcat  (char *s1, const char *s2);
+  25      =4  extern char  *strncat (char *s1, const char *s2, size_t n);
+  26      =4  
+  27      =4  extern char   strcmp  (const char *s1, const char *s2);
+  28      =4  extern char   strncmp (const char *s1, const char *s2, size_t n);
+  29      =4  
+  30      =4  extern char  *strcpy  (char *s1, const char *s2);
+  31      =4  extern char  *strncpy (char *s1, const char *s2, size_t n);
+  32      =4  
+  33      =4  extern size_t strlen  (const char *);
+  34      =4  
+  35      =4  extern char  *strchr  (const char *s, char c);
+  36      =4  extern int    strpos  (const char *s, char c);
+  37      =4  extern char  *strrchr (const char *s, char c);
+  38      =4  extern int    strrpos (const char *s, char c);
+  39      =4  
+  40      =4  extern size_t strspn  (const char *s, const char *set);
+  41      =4  extern size_t strcspn (const char *s, const char *set);
+C51 COMPILER V9.60.0.0   SC8913                                                            01/05/2022 14:26:36 PAGE 13  
+
+  42      =4  extern char  *strpbrk (const char *s, const char *set);
+  43      =4  extern char  *strrpbrk(const char *s, const char *set);
+  44      =4  extern char  *strstr  (const char *s, const char *sub);
+  45      =4  extern char  *strtok  (char *str, const char *set);
+  46      =4  
+  47      =4  extern char   memcmp  (const void *s1, const void *s2, size_t n);
+  48      =4  extern void  *memcpy  (void *s1, const void *s2, size_t n);
+  49      =4  extern void  *memchr  (const void *s, char val, size_t n);
+  50      =4  extern void  *memccpy (void *s1, const void *s2, char val, size_t n);
+  51      =4  extern void  *memmove (void *s1, const void *s2, size_t n);
+  52      =4  extern void  *memset  (void *s, char val, size_t n);
+  53      =4  #pragma RESTORE
+  54      =4  
+  55      =4  #endif
+   8      =3  #include <stdlib.h>
+   1      =4  /*--------------------------------------------------------------------------
+   2      =4  STDLIB.H
+   3      =4  
+   4      =4  Standard functions.
+   5      =4  Copyright (c) 1988-2008 Keil Elektronik GmbH and Keil Software, Inc.
+   6      =4  Copyright (c) 2008-2016 ARM Germany GmbH
+   7      =4  All rights reserved.
+   8      =4  --------------------------------------------------------------------------*/
+   9      =4  
+  10      =4  #ifndef __STDLIB_H__
+  11      =4  #define __STDLIB_H__
+  12      =4  
+  13      =4  #ifndef _SIZE_T
+           =4  #define _SIZE_T
+           =4  typedef unsigned int size_t;
+           =4 #endif
+  17      =4  
+  18      =4  #ifndef NULL
+           =4  #define NULL ((void *)0)
+           =4 #endif
+  21      =4  
+  22      =4  #ifndef _WCHAR_T_DEFINED_
+  23      =4  #define _WCHAR_T_DEFINED_
+  24      =4  typedef char wchar_t;
+  25      =4  #endif
+  26      =4  
+  27      =4  #if defined (__CX2__)
+           =4 #ifndef _DIV_T_DEFINED
+           =4 typedef struct _div_t {
+           =4         int quot;
+           =4         int rem;
+           =4 } div_t;
+           =4 typedef struct _ldiv_t {
+           =4         long quot;
+           =4         long rem;
+           =4 } ldiv_t;
+           =4 #define _DIV_T_DEFINED
+           =4 #endif // _DIV_T_DEFINED
+           =4 #endif // __CX2__
+  40      =4  
+  41      =4  #ifndef RAND_MAX
+  42      =4   #define RAND_MAX  32767u
+  43      =4  #endif
+  44      =4  
+  45      =4  #if defined (__CX2__)
+           =4 #pragma SAVE
+           =4 #pragma FUNCTIONS(STATIC)
+C51 COMPILER V9.60.0.0   SC8913                                                            01/05/2022 14:26:36 PAGE 14  
+
+           =4 /* intrinsic functions are reentrant, but need static attribute */
+           =4 extern int    abs  (int   val);
+           =4 #pragma RESTORE
+           =4 #endif // __CX2__
+  52      =4  
+  53      =4  #pragma SAVE
+  54      =4  #pragma REGPARMS
+  55      =4  
+  56      =4  extern char   cabs (char  val);
+  57      =4  #if !defined (__CX2__)
+  58      =4  extern int    abs  (int   val);
+  59      =4  #endif // __CX2__
+  60      =4  extern long   labs (long  val);
+  61      =4  
+  62      =4  extern float  atof (const char *s1);
+  63      =4  extern long   atol (const char *s1);
+  64      =4  extern int    atoi (const char *s1);
+  65      =4  extern int    rand (void);
+  66      =4  extern void   srand (unsigned int seed);
+  67      =4  
+  68      =4  #ifdef _DIV_T_DEFINED
+           =4 extern div_t  __div (int numer, int denom);
+           =4 #define div(numer,denom)  __div((numer),(denom));
+           =4 extern ldiv_t ldiv (long numer, long denom);
+           =4 #endif // _DIV_T_DEFINED
+  73      =4  
+  74      =4  extern float         strtod  (const char *nptr, char **endptr);
+  75      =4  extern long          strtol  (const char *nptr, char **endptr, unsigned char base);
+  76      =4  extern unsigned long strtoul (const char *nptr, char **endptr, unsigned char base);
+  77      =4  
+  78      =4  #define _MALLOC_MEM_    xdata
+  79      =4  
+  80      =4  extern void init_mempool          (void _MALLOC_MEM_ *p, size_t size);
+  81      =4  extern void _MALLOC_MEM_ *malloc  (size_t size);
+  82      =4  extern void free                  (void _MALLOC_MEM_ *p);
+  83      =4  extern void _MALLOC_MEM_ *realloc (void _MALLOC_MEM_ *p, size_t size);
+  84      =4  extern void _MALLOC_MEM_ *calloc  (size_t nmemb, size_t size);
+  85      =4  
+  86      =4  #if defined (__CX2__)
+           =4 extern void abort(void);
+           =4 #endif // __CX2__
+  89      =4  
+  90      =4  #pragma RESTORE
+  91      =4  
+  92      =4  #endif // __STDLIB_H__
+   9      =3  #include <string.h>
+   1      =4  /*--------------------------------------------------------------------------
+   2      =4  STRING.H
+   3      =4  
+   4      =4  String functions.
+   5      =4  Copyright (c) 1988-2008 Keil Elektronik GmbH and Keil Software, Inc.
+   6      =4  Copyright (c) 2008-2016 ARM Germany GmbH
+   7      =4  All rights reserved.
+   8      =4  --------------------------------------------------------------------------*/
+   9      =4  
+  10      =4  #ifndef __STRING_H__
+           =4 #define __STRING_H__
+           =4 
+           =4 #ifndef _SIZE_T
+           =4  #define _SIZE_T
+           =4  typedef unsigned int size_t;
+           =4 #endif
+C51 COMPILER V9.60.0.0   SC8913                                                            01/05/2022 14:26:36 PAGE 15  
+
+           =4 
+           =4 #ifndef NULL
+           =4  #define NULL ((void *)0)
+           =4 #endif
+           =4 
+           =4 #pragma SAVE
+           =4 #pragma REGPARMS
+           =4 extern char  *strcat  (char *s1, const char *s2);
+           =4 extern char  *strncat (char *s1, const char *s2, size_t n);
+           =4 
+           =4 extern char   strcmp  (const char *s1, const char *s2);
+           =4 extern char   strncmp (const char *s1, const char *s2, size_t n);
+           =4 
+           =4 extern char  *strcpy  (char *s1, const char *s2);
+           =4 extern char  *strncpy (char *s1, const char *s2, size_t n);
+           =4 
+           =4 extern size_t strlen  (const char *);
+           =4 
+           =4 extern char  *strchr  (const char *s, char c);
+           =4 extern int    strpos  (const char *s, char c);
+           =4 extern char  *strrchr (const char *s, char c);
+           =4 extern int    strrpos (const char *s, char c);
+           =4 
+           =4 extern size_t strspn  (const char *s, const char *set);
+           =4 extern size_t strcspn (const char *s, const char *set);
+           =4 extern char  *strpbrk (const char *s, const char *set);
+           =4 extern char  *strrpbrk(const char *s, const char *set);
+           =4 extern char  *strstr  (const char *s, const char *sub);
+           =4 extern char  *strtok  (char *str, const char *set);
+           =4 
+           =4 extern char   memcmp  (const void *s1, const void *s2, size_t n);
+           =4 extern void  *memcpy  (void *s1, const void *s2, size_t n);
+           =4 extern void  *memchr  (const void *s, char val, size_t n);
+           =4 extern void  *memccpy (void *s1, const void *s2, char val, size_t n);
+           =4 extern void  *memmove (void *s1, const void *s2, size_t n);
+           =4 extern void  *memset  (void *s, char val, size_t n);
+           =4 #pragma RESTORE
+           =4 
+           =4 #endif
+  10      =3  #include <absacc.h> //可直接操作内存地址
+   1      =4  /*--------------------------------------------------------------------------
+   2      =4  ABSACC.H
+   3      =4  
+   4      =4  Direct access to 8051, extended 8051 and NXP 8051MX memory areas.
+   5      =4  Copyright (c) 1988-2010 Keil Elektronik GmbH and ARM Germany GmbH
+   6      =4  All rights reserved.
+   7      =4  --------------------------------------------------------------------------*/
+   8      =4  
+   9      =4  #ifndef __ABSACC_H__
+  10      =4  #define __ABSACC_H__
+  11      =4  
+  12      =4  #define CBYTE ((unsigned char volatile code  *) 0)
+  13      =4  #define DBYTE ((unsigned char volatile data  *) 0)
+  14      =4  #if !defined (__CX2__)
+  15      =4  #define PBYTE ((unsigned char volatile pdata *) 0)
+  16      =4  #endif
+  17      =4  #define XBYTE ((unsigned char volatile xdata *) 0)
+  18      =4  
+  19      =4  #define CWORD ((unsigned int volatile code  *) 0)
+  20      =4  #define DWORD ((unsigned int volatile data  *) 0)
+  21      =4  #if !defined (__CX2__)
+  22      =4  #define PWORD ((unsigned int volatile pdata *) 0)
+C51 COMPILER V9.60.0.0   SC8913                                                            01/05/2022 14:26:36 PAGE 16  
+
+  23      =4  #endif
+  24      =4  #define XWORD ((unsigned int volatile xdata *) 0)
+  25      =4  
+  26      =4  
+  27      =4  #if defined (__CX51__) || defined (__CX2__)
+           =4 #define FVAR(object, addr)   (*((object volatile far *) (addr)))
+           =4 #define FARRAY(object, base) ((object volatile far *) (base))
+           =4 #define FCVAR(object, addr)   (*((object const far *) (addr)))
+           =4 #define FCARRAY(object, base) ((object const far *) (base))
+           =4 #else
+  33      =4  #define FVAR(object, addr)    (*((object volatile far *) ((addr)+0x10000L)))
+  34      =4  #define FCVAR(object, addr)   (*((object const far *) ((addr)+0x810000L)))
+  35      =4  #define FARRAY(object, base)  ((object volatile far *) ((base)+0x10000L))
+  36      =4  #define FCARRAY(object, base) ((object const far *) ((base)+0x810000L))
+  37      =4  #endif
+  38      =4  
+  39      =4  #if defined (__CX2__)
+           =4 #define HBYTE ((unsigned char volatile huge *)  0)
+           =4 #define HWORD ((unsigned int volatile huge *)  0)
+           =4 #define HVAR(object, addr)   (*((object volatile huge *) (addr)))
+           =4 #define HARRAY(object, base) ((object volatile huge *) (base))
+           =4 #endif
+  45      =4  
+  46      =4  #define CVAR(object, addr)   (*((object volatile code *) (addr)))
+  47      =4  #define CARRAY(object, base) ((object volatile code *) (base))
+  48      =4  #define DVAR(object, addr)   (*((object volatile data *) (addr)))
+  49      =4  #define DARRAY(object, base) ((object volatile data *) (base))
+  50      =4  #define XVAR(object, addr)   (*((object volatile xdata *) (addr)))
+  51      =4  #define XARRAY(object, base) ((object volatile xdata *) (base))
+  52      =4  
+  53      =4  #endif
+  11      =3  #include <stdarg.h>
+   1      =4  /*--------------------------------------------------------------------------
+   2      =4  STDARG.H
+   3      =4  
+   4      =4  Prototypes for variable argument lists.
+   5      =4  Copyright (c) 1988-2008 Keil Elektronik GmbH and Keil Software, Inc.
+   6      =4  Copyright (c) 2008-2016 ARM Germany GmbH
+   7      =4  All rights reserved.
+   8      =4  --------------------------------------------------------------------------*/
+   9      =4  
+  10      =4  #ifndef __STDARG_H__
+  11      =4  #define __STDARG_H__
+  12      =4  
+  13      =4  #ifndef __CX2__
+  14      =4  #ifndef NULL
+           =4  #define NULL ((void *)0)
+           =4 #endif
+  17      =4  #endif
+  18      =4  
+  19      =4  #ifndef _VA_LIST_DEFINED
+  20      =4  typedef char *va_list;
+  21      =4  #define _VA_LIST_DEFINED
+  22      =4  #endif
+  23      =4  
+  24      =4  #if defined __CX2__ && __CX2__ >= 558
+           =4   #define va_start(ap,v) ap = _va_start_ (&v, sizeof(v))
+           =4   extern void *_va_start_ (void *ap, int sz);   // intrinsic
+           =4 #else
+  28      =4    #define va_start(ap,v) ap = (va_list)&v + sizeof(v)
+  29      =4  #endif
+  30      =4  
+C51 COMPILER V9.60.0.0   SC8913                                                            01/05/2022 14:26:36 PAGE 17  
+
+  31      =4  #define va_arg(ap,t) (((t *)ap)++[0])
+  32      =4  #define va_end(ap)   (ap = (va_list)0)
+  33      =4  
+  34      =4  #endif
+  12      =3  
+  13      =3  
+  14      =3  /**********************布尔变量定义**********************/
+  15      =3  #define true  1
+  16      =3  #define false 0
+  17      =3  /**********************布尔变量定义**********************/
+  18      =3  
+  19      =3  /***********************************API配置接口***********************************/
+  20      =3  /*使用外部晶振*/
+  21      =3  #define EXTERNAL_CRYSTAL 0 
+  22      =3  /*调试是否启用串口*/
+  23      =3  #define USE_PRINTF_DEBUG 0 
+  24      =3  /*调试选项*/
+  25      =3  #define DEBUGGING    0
+  26      =3  /*迪文屏幕使用CRC校验*/
+  27      =3  #define USING_CRC 1
+  28      =3  /*定义WIFI模块相关引脚*/
+  29      =3  #define WIFI_RESET              P23
+  30      =3  #define WIFI_RELOAD             P20
+  31      =3  
+  32      =3  #define COUNTMAX     65536U
+  33      =3  
+  34      =3  /*消除编译器未使用变量警告*/
+  35      =3  #define UNUSED_VARIABLE(x)      ((void)(x))
+  36      =3  #define UNUSED_PARAMETER(x) UNUSED_VARIABLE(x)
+  37      =3  
+  38      =3  //(1/FOSC)*count =times(us)->count = time*FOSC/1000(ms)
+  39      =3  #define FOSC         27000000UL//11059200UL
+  40      =3  /*1ms(时钟频率越高，所能产生的时间越小)*/  
+  41      =3  #define TIMES        10U  
+  42      =3  /*定时器模式选择*/
+  43      =3  #define TIMER_MODE   12U
+  44      =3  /*定时器分频系数，默认为一分频*/  
+  45      =3  #define TIME_DIV     1U  
+  46      =3  #define T12_MODE (TIMES * FOSC / 1000 / 12 / TIME_DIV) 
+  47      =3  #define T1_MODE  (TIMES * FOSC/ 1000 / TIME_DIV)
+  48      =3  #define TIMERS_OVERFLOW (COUNTMAX * 1000 * TIMER_MODE * TIME_DIV) / FOSC
+  49      =3  
+  50      =3  #define OPEN_GLOBAL_OUTAGE()  (EA = 1 << 0)
+  51      =3  #define CLOSE_GLOBAL_OUTAGE() (EA = 0 << 0)
+  52      =3  /*判断延时数是否超出硬件允许范围*/
+  53      =3  #if(TIMES > TIMERS_OVERFLOW)
+           =3 #error The timer cannot generate the current duration!
+           =3 #endif
+  56      =3  /***********************************API配置接口***********************************/
+  57      =3  
+  58      =3  /***********************************常用的数据类型***********************************/
+  59      =3  typedef unsigned char  uint8_t;
+  60      =3  typedef signed char    int8_t;
+  61      =3  typedef unsigned short int  uint16_t;
+  62      =3  typedef unsigned long  uint32_t;
+  63      =3  typedef signed long    int32_t;
+  64      =3  typedef volatile       __IO;   
+  65      =3  
+  66      =3  /***********************************常用的数据类型***********************************/
+  67      =3  
+  68      =3  /***********************************系统上电参数***********************************/
+  69      =3  #define DEFAULT_SYSTEM_PARAMETER  "\xFF\xFF\xFF\xFF\x02\x01\x00\x84\x50"
+C51 COMPILER V9.60.0.0   SC8913                                                            01/05/2022 14:26:36 PAGE 18  
+
+  70      =3  
+  71      =3  /***********************************系统上电参数***********************************/
+  72      =3  
+  73      =3  /***********************************结构体的妙用 ***********************************/
+  74      =3  /*获得结构体(TYPE)的变量成员(MEMBER)在此结构体中的偏移量*/ 
+  75      =3  #define offsetof(TYPE, MEMBER) ((size_t) &((TYPE *)0)->MEMBER)
+  76      =3  /*根据"结构体(type)变量"中的"域成员变量(member)的指针(ptr)"来获取指向整个结构体
+             -变量的指针*/ 
+  77      =3  #define container_of(ptr, type, member) ({ \
+  78      =3          const typeof( ((type *)0)->member ) *__mptr = (ptr); \
+  79      =3          (type *)( (char *)__mptr - offsetof(type,member) );}) 
+  80      =3  /***********************************结构体的妙用 ***********************************/
+  81      =3  
+  82      =3  
+  83      =3  extern const uint8_t g_TimerNumbers;
+  84      =3  /***********************************函数声明***********************************/
+  85      =3  void  Gpio_Init(void);
+  86      =3  /***********************************函数声明***********************************/
+  87      =3  #endif
+   8      =2  
+   9      =2  /*延时的个数，5即为延时5Us*/
+  10      =2  #define IIC_DELAY 5U
+  11      =2  
+  12      =2  #define I2C_Fail    0U
+  13      =2  #define I2C_Succeed 1U
+  14      =2  
+  15      =2  /*定义SCL输出的宏定义*/
+  16      =2  sbit SCL_CHANNEL0 = P0^0;
+  17      =2  sbit SCL_CHANNEL1 = P1^2;
+  18      =2  sbit SCL_CHANNEL2 = P4^4;
+  19      =2  /*定义SDA输出、读取的宏定义*/
+  20      =2  sbit SDA_CHANNEL0 = P2^7;
+  21      =2  sbit SDA_CHANNEL1 = P0^5;
+  22      =2  sbit SDA_CHANNEL2 = P1^4;
+  23      =2  
+  24      =2  #define SDA_READ_CHANNELX(CH) \
+  25      =2  (CH == Channel0 ? SDA_CHANNEL0 : (CH == Channel1) ? SDA_CHANNEL1 : SDA_CHANNEL2)
+  26      =2  
+  27      =2  /*IIC层封装*/
+  28      =2  typedef enum 
+  29      =2  {
+  30      =2      Channel0 = 0x00,
+  31      =2      Channel1,
+  32      =2      Channel2
+  33      =2  }IIC_Channel;
+  34      =2  
+  35      =2  typedef enum 
+  36      =2  {
+  37      =2      Low  = 0x00,
+  38      =2      High = !Low,
+  39      =2  }IIC_Pin_State;
+  40      =2  
+  41      =2  
+  42      =2  extern void Delay_Us(uint16_t us);              //@11.0592MHz
+  43      =2  extern void Delay_Ms(uint16_t ms);              //@11.0592MHz
+  44      =2  void Delay_5Us(void);           //@27MHz
+  45      =2  
+  46      =2  
+  47      =2  extern void I2C_Start(IIC_Channel channel); 
+  48      =2  extern void I2C_Stop(IIC_Channel channel);
+  49      =2  extern void I2C_SendByte(IIC_Channel channel, uint8_t sendByte);
+  50      =2  extern uint8_t I2C_WaitAck(IIC_Channel channel, uint16_t timeout);
+C51 COMPILER V9.60.0.0   SC8913                                                            01/05/2022 14:26:36 PAGE 19  
+
+  51      =2  extern void I2C_SendAck(IIC_Channel channel);
+  52      =2  extern void I2C_SendNAck(IIC_Channel channel);
+  53      =2  extern uint8_t I2C_ReadByte(IIC_Channel channel); 
+  54      =2  extern uint8_t I2C_Set_SCL(IIC_Channel channel, IIC_Pin_State sate); 
+  55      =2  extern uint8_t I2C_Set_SDA(IIC_Channel channel, IIC_Pin_State sate); 
+  56      =2  
+  57      =2  #ifdef __cplusplus
+           =2 }
+           =2 #endif
+  60      =2  
+  61      =2  #endif /* __I2C_H */
+   8      =1  
+   9      =1  /*是否启用外部中断信号检测引脚*/
+  10      =1  #define USING_INT_PIN 0
+  11      =1  /*是否启用快速充电引脚*/
+  12      =1  #define USING_DPORDM_PIN 0
+  13      =1  /*硬件是否启用充电使能引脚*/
+  14      =1  #define USING_CHARGEING_PIN 0
+  15      =1  
+  16      =1  /*定义SC8913拓展IO*/
+  17      =1  #if (USING_INT_PIN)
+           =1 sbit INT_CHANNEL0 = P3^6;
+           =1 sbit INT_CHANNEL1 = P3^2;
+           =1 sbit INT_CHANNEL2 = P3^7;
+           =1 #endif
+  22      =1  
+  23      =1  #if (USING_DPORDM_PIN)
+           =1 sbit DP_CHANNEL0  = P2^1;
+           =1 sbit DP_CHANNEL1  = P4^3;
+           =1 sbit DP_CHANNEL2  = P0^4;
+           =1 
+           =1 sbit DM_CHANNEL0  = P2^2;
+           =1 sbit DM_CHANNEL1  = P0^2;
+           =1 sbit DM_CHANNEL2  = P0^3;
+           =1 #endif
+  32      =1  
+  33      =1  sbit STOP_CHANNEL0  = P0^1;
+  34      =1  sbit STOP_CHANNEL1  = P1^3;
+  35      =1  sbit STOP_CHANNEL2  = P1^5;
+  36      =1  
+  37      =1  #if (USING_CHARGEING_PIN)
+           =1 sbit CHARGER_CHANNEL0  = P2^4;
+           =1 sbit CHARGER_CHANNEL1  = P2^5;
+           =1 sbit CHARGER_CHANNEL2  = P2^6;
+           =1 #endif
+  42      =1  
+  43      =1  /*通道数*/
+  44      =1  #define CHANNEL_MAX         0x03
+  45      =1  /*SC8913寄存器个数*/
+  46      =1  #define REGISTER_MAX        0x1C
+  47      =1  /*定时读取只读寄存器个数*/
+  48      =1  #define READONLY_REGS       0x0B
+  49      =1  /*定义支持写寄存器个数*/
+  50      =1  #define WRITE_OPTION_REGS   0x0D
+  51      =1  
+  52      =1  /*从机地址*/
+  53      =1  #define SAVLE_ADDRESS       0x74
+  54      =1  /*从机命令写地址*/
+  55      =1  #define SAVLE_WRITE_ADDRESS 0xE8
+  56      =1  /*从机命令读地址*/
+  57      =1  #define SAVLE_READ_ADDRESS      0xE9
+  58      =1  
+C51 COMPILER V9.60.0.0   SC8913                                                            01/05/2022 14:26:36 PAGE 20  
+
+  59      =1  /*SC8913寄存器地址定义*/
+  60      =1  #define VBAT_SET_ADDR               0x00    /**/
+  61      =1  #define VBUSREF_I_SET_ADDR              0x01
+  62      =1  #define VBUSREF_I_SET2_ADDR             0x02
+  63      =1  #define VBUSREF_E_SET_ADDR              0x03
+  64      =1  #define VBUSREF_E_SET2_ADDR             0x04
+  65      =1  #define IBUS_LIM_SET_ADDR               0x05
+  66      =1  #define IBAT_LIM_SET_ADDR               0x06
+  67      =1  #define VINREG_SET_ADDR             0x07
+  68      =1  #define RATIO_ADDR                      0x08
+  69      =1  #define CTRL0_SET_ADDR              0x09
+  70      =1  #define CTRL1_SET_ADDR              0x0A
+  71      =1  #define CTRL2_SET_ADDR              0x0B
+  72      =1  #define CTRL3_SET_ADDR              0x0C
+  73      =1  #define VBUS_FB_VALUE_ADDR              0x0D
+  74      =1  #define VBUS_FB_VALUE2_ADDR             0x0E
+  75      =1  #define VBAT_FB_VALUE_ADDR              0x0F
+  76      =1  #define VBAT_FB_VALUE2_ADDR             0x10
+  77      =1  #define IBUS_VALUE_ADDR             0x11
+  78      =1  #define IBUS_VALUE2_ADDR                0x12
+  79      =1  #define IBAT_VALUE_ADDR         0x13
+  80      =1  #define IBAT_VALUE2_ADDR            0x14
+  81      =1  #define ADIN_VALUE_ADDR         0x15
+  82      =1  #define ADIN_VALUE_2_ADDR           0x16
+  83      =1  #define STATUS_ADDR                     0x17
+  84      =1  #define RESERVED_ADDR           0x18
+  85      =1  #define MASK_ADDR                   0x19
+  86      =1  #define DP_DM_CTRL_ADDR         0x1A
+  87      =1  #define DP_DM_READ_ADDR         0x1B
+  88      =1  
+  89      =1  #define REG_OK      2U
+  90      =1  #define REG_FAILE   3U
+  91      =1  
+  92      =1  
+  93      =1  #define NAME(scr)       #scr
+  94      =1  #define REG_R(r)        r##_Reg /*直接拼接字符串，不需要替换*/
+  95      =1  #define REG_TYPE(t)     t##_Type
+  96      =1  #define REG_Addr(a)     a##_Addr
+  97      =1  #define REG_VALUE(v)    v##_U8
+  98      =1  #define REG_BIT(b)      b##_Bit
+  99      =1  #define BIT_HIGH(h)     b##h##_HIGHT8
+ 100      =1  #define BIT_LOW(l)      b##l##_LOW2
+ 101      =1  
+ 102      =1  /*IBUS端输入阈值电压：低于此值后，芯片将对BAT端限流*/
+ 103      =1  #define IBUS_THRESHOLD_VOLTAGE 20.0F
+ 104      =1  /*充电器输入端最大电流*/
+ 105      =1  #define IBUS_MAX_CURRENT    0.8333F
+ 106      =1  /*充电器充电通道最大输出电流*/
+ 107      =1  #define IBAT_MAX_CURRENT    2.00F
+ 108      =1  /*电路中电流、电压检测电阻：单位mΩ*/
+ 109      =1  #define CHECK_RESISTANCE     10.0F
+ 110      =1  /*BUS端输入电压倍率*/
+ 111      =1  #define VBUS_RAITO           12.5F
+ 112      =1  /*BAT端输入电压倍率:<9v时，采用5x,否则12.5x*/
+ 113      =1  #define VBAT_RATIO           5.0F
+ 114      =1  /*BUS端输入电流倍率*/
+ 115      =1  #define IBUS_RAITO           3.0F
+ 116      =1  /*BAT端输入电流倍率*/
+ 117      =1  #define IBAT_RATIO           12.0F
+ 118      =1  /*电源输入电压比率*/
+ 119      =1  #define VINREG_RATIO         100.0F
+ 120      =1  /*设置BUS端电流上限*/
+C51 COMPILER V9.60.0.0   SC8913                                                            01/05/2022 14:26:36 PAGE 21  
+
+ 121      =1  #define SET_IBUS_LIMT(x)     ((256U * (x * CHECK_RESISTANCE) - IBUS_RAITO * 10.0F) / (IBUS_RAITO * 10.0F))
+ 122      =1  /*设置BAT端电流上限*/
+ 123      =1  #define SET_IBAT_LIMT(x)     ((256U * (x * CHECK_RESISTANCE) - IBAT_RATIO * 10.0F) / (IBAT_RATIO * 10.0F))
+ 124      =1  /*设置电源输入电源电压*/
+ 125      =1  #define SET_VINREG_SET(x)    ((x * 1000.0F - VINREG_RATIO) / VINREG_RATIO)
+ 126      =1  /*设置VBUS内部参考编程电压*/
+ 127      =1  #define SET_VBUSREF_I_SET(x) (((x * 1000.0F)/ (2.0F * VBUS_RAITO) - 4.0F) / 4.0F)
+ 128      =1  /*1S-2S电池设置VBAT_MON_RATIO位为1;3S-4S电池设置VBAT_MON_RATIO位为0*/
+ 129      =1  #define SET_RATIO(x)         (x ? (0x02 | 0x38) : (0xFD & 0x38))
+ 130      =1  /*当AC_ok为0时，设置AC_DEF=0;当AC_ok为1时，设置AC_DEF=1*/
+ 131      =1  #define SET_CTRL0_SET(x)     (x ? (0x20 | 0x04) : (0xDF & 0x04)) 
+ 132      =1  /*x=1时，选择BAT端电流作为IBAT上限;x=0时，选择BUS端电流作为IBAT上限*/
+ 133      =1  #define SET_CTRL1_SET(x)     (x ? (0x80 | 0x01) : (0x7F & 0x01))
+ 134      =1  /*x=1时，退出工厂模式;x=0时，进入工厂模式*/
+ 135      =1  #define SET_CTRL2_SET(x)     (x ? (0x08 | 0x01) : (0xF7 & 0x01))
+ 136      =1  /*x=1时，打开ADC;x=0时，关闭ADC*/
+ 137      =1  #define SET_CTRL3_SET(x)     (x ? (0x20 | 0x02) : (0xDF & 0x02))
+ 138      =1  /*得到只读寄存器在g_Sc8913_Registers数组中下标*/
+ 139      =1  #define GET_SITE(x)           (x - VBUS_FB_VALUE_ADDR)
+ 140      =1  
+ 141      =1  #define READ_VBUS_VALUE(ch, addr)    ((4U * g_Sc8913_Registers[ch][addr] \
+ 142      =1                                    +  (((g_Sc8913_Registers[ch][addr + 1]) & 0xc0) >> 6U) + 1.0F) * 2.0F * 
+             -VBUS_RAITO / 1000.0F)
+ 143      =1  #define READ_VBAT_VALUE(ch, addr)    ((4U * g_Sc8913_Registers[ch][addr] \
+ 144      =1                                    +  (((g_Sc8913_Registers[ch][addr + 1]) & 0xc0) >> 6U) + 1.0F) * 2.0F * 
+             -VBAT_RATIO / 1000.0F)
+ 145      =1  #define READ_IBUS_VALUE(ch, addr)    ((4U * g_Sc8913_Registers[ch][addr] \
+ 146      =1                                    +  (((g_Sc8913_Registers[ch][addr + 1]) & 0xc0) >> 6U) + 1.0F) / 600.0F 
+             -* IBUS_RAITO)
+ 147      =1  #define READ_IBAT_VALUE(ch, addr)    ((4U * g_Sc8913_Registers[ch][addr] \
+ 148      =1                                    +  (((g_Sc8913_Registers[ch][addr + 1]) & 0xc0) >> 6U) + 1.0F) / 600.0F 
+             -* IBAT_RATIO)
+ 149      =1  
+ 150      =1  /*SC8913寄存器定义*/
+ 151      =1  typedef enum
+ 152      =1  {
+ 153      =1      Write = 0x00,
+ 154      =1      Read,
+ 155      =1      Both
+ 156      =1  }Reg_Type;
+ 157      =1  
+ 158      =1  /****************************************寄存器VBAT_SET************************************/
+ 159      =1  typedef enum
+ 160      =1  {
+ 161      =1      R_0m = 0x00, /*0mΩ*/
+ 162      =1      R_20m,
+ 163      =1      R_40m,
+ 164      =1      R_80m
+ 165      =1  }Vbat_IRCompensation;
+ 166      =1  
+ 167      =1  typedef enum
+ 168      =1  {
+ 169      =1      Inside_Mode = 0x00, /*内部模式*/
+ 170      =1      External_Mode
+ 171      =1  }Vbat_Mode;
+ 172      =1  
+ 173      =1  typedef enum
+ 174      =1  {
+ 175      =1      One_Cell = 0x00, /*单节*/
+ 176      =1      Two_Cell,
+ 177      =1      Three_Cell,
+ 178      =1      Four_Cell
+C51 COMPILER V9.60.0.0   SC8913                                                            01/05/2022 14:26:36 PAGE 22  
+
+ 179      =1  }Vbat_Units;
+ 180      =1  
+ 181      =1  typedef enum
+ 182      =1  {
+ 183      =1      V4_10 = 0x00, /*4.1V*/
+ 184      =1      V4_20,
+ 185      =1      V4_25,
+ 186      =1      V4_30,
+ 187      =1      V4_35,
+ 188      =1      V4_40,
+ 189      =1      V4_45,
+ 190      =1      V4_50
+ 191      =1  }Vbat_Units_Voltage;
+ 192      =1  
+ 193      =1  /*充电设置寄存器*/
+ 194      =1  typedef struct 
+ 195      =1  {
+ 196      =1          Reg_Type VBAT_SET_Type;
+ 197      =1      uint8_t  VBAT_SET_Addr;
+ 198      =1      union 
+ 199      =1          {
+ 200      =1                  struct 
+ 201      =1                  {
+ 202      =1                          uint8_t bIRCOMP  : 2; /*电池充电内部电阻补偿*/
+ 203      =1                          uint8_t bVBAT_SEL : 1; /*充电电压选择设置*/
+ 204      =1                          uint8_t bCSEL    : 2; /*内部电压设置模式下，充电电池节数选择*/
+ 205      =1                          uint8_t bVCELL_SET : 3; /*内部电压设置模式下，每节电池充电截止电压设置*/
+ 206      =1                  }VBAT_SET_Bit;
+ 207      =1                  uint8_t VBAT_SET_U8;    
+ 208      =1          }VBAT_SET;      
+ 209      =1  }VBAT_SET_Register;/*default value: 0x01*/ 
+ 210      =1  /****************************************寄存器VBAT_SET************************************/
+ 211      =1  
+ 212      =1  /****************************************寄存器VBUSREF_I_SET************************************/
+ 213      =1  /*电源总线内部模式参考电压设置寄存器*/
+ 214      =1  typedef struct 
+ 215      =1  {
+ 216      =1          Reg_Type VBUSREF_I_SET_Type;
+ 217      =1      uint8_t  VBUSREF_I_SET_Addr;
+ 218      =1      union 
+ 219      =1          {
+ 220      =1                  uint8_t VBUSREF_I_SET_U8; /*为内部VBUS编程设置的参考电压*/  
+ 221      =1          }VBUSREF_I_SET; 
+ 222      =1  }VBUSREF_I_SET_Register;/*default value: 0x31*/ 
+ 223      =1  
+ 224      =1  /*电源总线内部模式参考电压设置寄存器*/
+ 225      =1  typedef struct 
+ 226      =1  {
+ 227      =1          Reg_Type VBUSREF_I_SET2_Type;
+ 228      =1      uint8_t  VBUSREF_I_SET2_Addr;
+ 229      =1      union 
+ 230      =1          {
+ 231      =1                  struct 
+ 232      =1                  {
+ 233      =1                          uint8_t bVBUSREF_I_SET_2  : 2; /*为内部VBUS编程设置的参考电压*/
+ 234      =1                          uint8_t bRESERVED : 6; 
+ 235      =1                  }VBUSREF_I_SET2_Bit;
+ 236      =1                  uint8_t VBUSREF_I_SET2_U8;      
+ 237      =1          }VBUSREF_I_SET2;        
+ 238      =1  }VBUSREF_I_SET2_Register;/*default value: 0x11xx xxxx*/ 
+ 239      =1  
+ 240      =1  /****************************************寄存器VBUSREF_I_SET************************************/
+C51 COMPILER V9.60.0.0   SC8913                                                            01/05/2022 14:26:36 PAGE 23  
+
+ 241      =1  
+ 242      =1  /****************************************寄存器IBUS_LIM_SET************************************/
+ 243      =1  /*输入源电流上限设置寄存器*/
+ 244      =1  typedef struct 
+ 245      =1  {
+ 246      =1          Reg_Type IBUS_LIM_SET_Type;
+ 247      =1      uint8_t  IBUS_LIM_SET_Addr;
+ 248      =1      union 
+ 249      =1          {
+ 250      =1                  uint8_t IBUS_LIM_SET_U8; /*为内部VBUS编程设置的参考电压*/   
+ 251      =1          }IBUS_LIM_SET;  
+ 252      =1  }IBUS_LIM_SET_Register;/*default value: 0xFF*/ 
+ 253      =1  
+ 254      =1  /*输入源电压上限设置寄存器*/
+ 255      =1  typedef struct 
+ 256      =1  {
+ 257      =1          Reg_Type IBAT_LIM_SET_Type;
+ 258      =1      uint8_t  IBAT_LIM_SET_Addr;
+ 259      =1      union 
+ 260      =1          {
+ 261      =1                  uint8_t IBAT_LIM_SET_U8; /*为内部VBUS编程设置的参考电压*/   
+ 262      =1          }IBAT_LIM_SET;  
+ 263      =1  }IBAT_LIM_SET_Register;/*default value: 0xFF*/ 
+ 264      =1  
+ 265      =1  /*充电模式下，输入源电压范围设置寄存器*/
+ 266      =1  typedef struct 
+ 267      =1  {
+ 268      =1          Reg_Type VINRANG_SET_Type;
+ 269      =1      uint8_t  VINRANG_SET_Addr;
+ 270      =1      union 
+ 271      =1          {
+ 272      =1          uint8_t VINRANG_SET_U8; /*设置输入源电压的范围*/      
+ 273      =1          }VINRANG_SET;   
+ 274      =1  }VINRANG_SET_Register;/*default value: 0x2C*/ 
+ 275      =1  /****************************************寄存器寄存器IBUS_LIM_SET***********************************
+             -*/
+ 276      =1  
+ 277      =1  /*BUS、BAT总线上电压、电流倍率设置寄存器*/
+ 278      =1  typedef struct 
+ 279      =1  {
+ 280      =1          Reg_Type RATIO_Type;
+ 281      =1      uint8_t  RATIO_Addr;
+ 282      =1      union 
+ 283      =1          {
+ 284      =1          struct 
+ 285      =1          {
+ 286      =1              uint8_t bNULL : 3;
+ 287      =1              uint8_t bIBAT_RATIO :1; /*设置BAT总线电流倍率*/
+ 288      =1              uint8_t bIBUS_RATIO : 2; /*设置BUS总线电流倍率*/
+ 289      =1              uint8_t bVBAT_MON_RATIO : 1;  /*设置BAT总线电压倍率*/
+ 290      =1              uint8_t bVBUS_RATIO : 1;  /*设置BAT总线电压倍率*/
+ 291      =1          }RATIO_Bit;
+ 292      =1          uint8_t RATIO_U8; /*设置BUS、BAT总线的电压、电流倍率*/     
+ 293      =1          }RATIO;
+ 294      =1  }RATIO_Register;/*default value: 0x38*/ 
+ 295      =1  
+ 296      =1  /*CTRLX_SET设置寄存器*/
+ 297      =1  typedef struct 
+ 298      =1  {
+ 299      =1          Reg_Type CTRL0_SET_Type;
+ 300      =1      uint8_t  CTRL0_SET_Addr;
+ 301      =1      union 
+C51 COMPILER V9.60.0.0   SC8913                                                            01/05/2022 14:26:36 PAGE 24  
+
+ 302      =1          {
+ 303      =1          struct 
+ 304      =1          {
+ 305      =1              uint8_t bEN_OTG : 1; /*充放电模式选择*/
+ 306      =1              uint8_t bNULL : 1; 
+ 307      =1              uint8_t bAC_DET : 1; /*交流插拔检测控制位*/
+ 308      =1              uint8_t bVINREG_RATIO : 1;  /*设置输入电源电压倍率*/
+ 309      =1              uint8_t bFREQ_SET : 1;  /*设置开关频率*/
+ 310      =1              uint8_t bDT_SET : 2; /*设置开关死区时间*/
+ 311      =1          }CTRL0_SET_Bit;
+ 312      =1          uint8_t CTRL0_SET_U8;   
+ 313      =1          }CTRL0_SET;     
+ 314      =1  }CTRL0_SET_Register;/*default value: 0x04*/ 
+ 315      =1  
+ 316      =1  typedef struct 
+ 317      =1  {
+ 318      =1          Reg_Type CTRL1_SET_Type;
+ 319      =1      uint8_t  CTRL1_SET_Addr;
+ 320      =1      union 
+ 321      =1          {
+ 322      =1          struct 
+ 323      =1          {
+ 324      =1              uint8_t bICHAE_SEL : 1; /*充电模式下，最终能够输出的电流极限参考选择（IB
+             -US/IBAT）*/
+ 325      =1              uint8_t bDIS_TRICKLE : 1; /*是否启用涓流模式*/
+ 326      =1              uint8_t bDIS_TERM : 1; /*充电终止控制*/
+ 327      =1              uint8_t bFB_SEL : 1;  /*VBUS控制电压设置，仅适用于放电模式*/
+ 328      =1              uint8_t bTRICKLE_SET : 1;  /*涓流模式的开启设置为VBAT的%x，默认为VBAT*%60*/
+ 329      =1              uint8_t bDIS_OVP : 1; /*放电模式的OVP保护设置*/
+ 330      =1              uint8_t bNULL : 2;
+ 331      =1          }CTRL1_SET_Bit;
+ 332      =1          uint8_t CTRL1_SET_U8;   
+ 333      =1          }CTRL1_SET;     
+ 334      =1  }CTRL1_SET_Register;/*default value: 0x01*/
+ 335      =1  
+ 336      =1  typedef struct 
+ 337      =1  {
+ 338      =1          Reg_Type CTRL2_SET_Type;
+ 339      =1      uint8_t  CTRL2_SET_Addr;
+ 340      =1      union 
+ 341      =1          {
+ 342      =1          struct 
+ 343      =1          {
+ 344      =1              uint8_t bNULL : 4; 
+ 345      =1              uint8_t bFACTORY : 1; /*工厂设置位。通电后，MCU应将这一位写成1*/
+ 346      =1              uint8_t bEN_DITHEM : 1; /*是否启用开关频率抖动功能*/
+ 347      =1              uint8_t bSLEW_SET  : 2;  /*放电模式下的参考电压旋转率/变化速率设置*/
+ 348      =1          }CTRL2_SET_Bit;
+ 349      =1          uint8_t CTRL2_SET_U8;   
+ 350      =1          }CTRL2_SET;     
+ 351      =1  }CTRL2_SET_Register;/*default value: 0x01*/
+ 352      =1  
+ 353      =1  typedef struct 
+ 354      =1  {
+ 355      =1          Reg_Type CTRL3_SET_Type;
+ 356      =1      uint8_t  CTRL3_SET_Addr;
+ 357      =1      union 
+ 358      =1          {
+ 359      =1          struct 
+ 360      =1          {
+ 361      =1              uint8_t bEN_PGATE : 1; /*PMOS控制*/ 
+ 362      =1              uint8_t bGPO_CTRL : 1; /*GPO输出控制*/
+C51 COMPILER V9.60.0.0   SC8913                                                            01/05/2022 14:26:36 PAGE 25  
+
+ 363      =1              uint8_t bAD_START : 1; /*是否启用ADC*/
+ 364      =1              uint8_t bILIM_BW_SEL  : 1;  /*ILIM循环带宽设置*/
+ 365      =1              uint8_t bLOOP_SET : 1; /*循环响应控制*/
+ 366      =1              uint8_t bDIS_SHORTFOLDBACK : 1; /*IBUS电流折叠控制为VBUS短路情况，仅在放电模�
+             -��下有效*/
+ 367      =1              uint8_t bEOC_SET : 1; /*充电结束阶段目标电流与充电电流倍率*/
+ 368      =1              uint8_t bEN_PFM  : 1; /*光照条件下的PFM控制，仅针对放电模式*/
+ 369      =1          }CTRL3_SET_Bit;
+ 370      =1          uint8_t CTRL3_SET_U8;   
+ 371      =1          }CTRL3_SET;     
+ 372      =1  }CTRL3_SET_Register;/*default value: 0x02*/
+ 373      =1  
+ 374      =1  /****************************************只读寄存器************************************/
+ 375      =1  typedef struct 
+ 376      =1  {
+ 377      =1          Reg_Type VBUS_FB_VALUE_Type;
+ 378      =1      uint8_t  VBUS_FB_VALUE_Addr;
+ 379      =1      union 
+ 380      =1          {
+ 381      =1          struct 
+ 382      =1          {
+ 383      =1              
+ 384      =1              uint8_t bVBUS_FB_VALUE_HULL : 6;
+ 385      =1              uint8_t bVBUS_FB_VALUE_HIGHT8 : 8;  
+ 386      =1              uint8_t bVBUS_FB_VALUE_LOW2   : 2;
+ 387      =1          }VBUS_FB_VALUE_Bit;
+ 388      =1          uint16_t VBUS_FB_VALUE_U8;      
+ 389      =1          }VBUS_FB_VALUE; 
+ 390      =1  }VBUS_FB_VALUE_Register;
+ 391      =1  
+ 392      =1  typedef struct 
+ 393      =1  {
+ 394      =1          Reg_Type VBAT_FB_VALUE_Type;
+ 395      =1      uint8_t  VBAT_FB_VALUE_Addr;
+ 396      =1      union 
+ 397      =1          {
+ 398      =1          struct 
+ 399      =1          {
+ 400      =1              
+ 401      =1              uint8_t bVBAT_FB_VALUE_HULL : 6;
+ 402      =1              uint8_t bVBAT_FB_VALUE_HIGHT8 : 8;  
+ 403      =1              uint8_t bVBAT_FB_VALUE_LOW2   : 2;
+ 404      =1          }VBAT_FB_VALUE_Bit;
+ 405      =1          uint16_t VBAT_FB_VALUE_U8;      
+ 406      =1          }VBAT_FB_VALUE; 
+ 407      =1  }VBAT_FB_VALUE_Register;
+ 408      =1  
+ 409      =1  typedef struct 
+ 410      =1  {
+ 411      =1          Reg_Type IBUS_FB_VALUE_Type;
+ 412      =1      uint8_t  IBUS_FB_VALUE_Addr;
+ 413      =1      union 
+ 414      =1          {
+ 415      =1          struct 
+ 416      =1          {
+ 417      =1              
+ 418      =1              uint8_t bIBUS_FB_VALUE_HULL : 6;
+ 419      =1              uint8_t bIBUS_FB_VALUE_HIGHT8 : 8;  
+ 420      =1              uint8_t bIBUS_FB_VALUE_LOW2   : 2;
+ 421      =1          }IBUS_FB_VALUE_Bit;
+ 422      =1          uint16_t IBUS_FB_VALUE_U8;      
+ 423      =1          }IBUS_FB_VALUE; 
+C51 COMPILER V9.60.0.0   SC8913                                                            01/05/2022 14:26:36 PAGE 26  
+
+ 424      =1  }IBUS_FB_VALUE_Register;
+ 425      =1  
+ 426      =1  typedef struct 
+ 427      =1  {
+ 428      =1          Reg_Type IBAT_FB_VALUE_Type;
+ 429      =1      uint8_t  IBAT_FB_VALUE_Addr;
+ 430      =1      union 
+ 431      =1          {
+ 432      =1          struct 
+ 433      =1          {
+ 434      =1              
+ 435      =1              uint8_t bIBAT_FB_VALUE_HULL : 6;
+ 436      =1              uint8_t bIBAT_FB_VALUE_HIGHT8 : 8;  
+ 437      =1              uint8_t bIBAT_FB_VALUE_LOW2   : 2;
+ 438      =1          }IBAT_FB_VALUE_Bit;
+ 439      =1          uint16_t IBAT_FB_VALUE_U8;      
+ 440      =1          }IBAT_FB_VALUE; 
+ 441      =1  }IBAT_FB_VALUE_Register;
+ 442      =1  
+ 443      =1  
+ 444      =1  typedef struct 
+ 445      =1  {
+ 446      =1          Reg_Type MASK_Type;
+ 447      =1      uint8_t  MASK_Addr;
+ 448      =1      union 
+ 449      =1          {
+ 450      =1          struct 
+ 451      =1          {
+ 452      =1              
+ 453      =1              uint8_t bDM_L_MASK : 1; /*检测到DM中断设置位*/
+ 454      =1              uint8_t bAC_OK_MASK : 1; /*插入交流适配器中断设置位*/  
+ 455      =1              uint8_t bINDET2_MASK : 1; /*USB-A在INDET2针脚处检测到一个负载插入中断设置位*
+             -/
+ 456      =1              uint8_t bINDET1_MASK : 1; /*USB-A在INDET1针脚处检测到一个负载插入中断设置位*
+             -/
+ 457      =1              uint8_t bVBUS_SHORT_MASK : 1; /*在放电模式下发生VBUS短路故障中断设置位*/
+ 458      =1              uint8_t bVBUS_OTP_MASK : 1; /*OTP故障发生中断设置位*/
+ 459      =1              uint8_t bVBUS_EOC_MASK : 1; /*满足EOC条件中断设置位*/
+ 460      =1              uint8_t bNULL : 1;
+ 461      =1          }MASK_Bit;
+ 462      =1          uint8_t MASK_U8;        
+ 463      =1          }MASK;  
+ 464      =1  }MASK_Register;
+ 465      =1  
+ 466      =1  /****************************************只读寄存器************************************/
+ 467      =1  
+ 468      =1  
+ 469      =1  typedef struct 
+ 470      =1  {
+ 471      =1          Reg_Type STATUS_Type;
+ 472      =1      uint8_t  STATUS_Addr;
+ 473      =1      union 
+ 474      =1          {
+ 475      =1          struct 
+ 476      =1          {
+ 477      =1              
+ 478      =1              uint8_t bDM_L : 1; /*检测到DM电压低于0.325V*/
+ 479      =1              uint8_t bAC_OK : 1; /*插入交流适配器*/  
+ 480      =1              uint8_t bINDET2 : 1; /*USB-A在INDET2针脚处检测到一个负载插入*/
+ 481      =1              uint8_t bINDET1 : 1; /*USB-A在INDET1针脚处检测到一个负载插入*/
+ 482      =1              uint8_t bVBUS_SHORT : 1; /*在放电模式下发生VBUS短路故障*/
+ 483      =1              uint8_t bVBUS_OTP : 1; /*OTP故障发生*/
+C51 COMPILER V9.60.0.0   SC8913                                                            01/05/2022 14:26:36 PAGE 27  
+
+ 484      =1              uint8_t bVBUS_EOC : 1; /*满足EOC条件*/
+ 485      =1              uint8_t bNULL : 1;
+ 486      =1          }STATUS_Bit;
+ 487      =1          uint8_t STATUS_U8;      
+ 488      =1          }STATUS;        
+ 489      =1  }STATUS_Register;
+ 490      =1  
+ 491      =1  extern data uint8_t g_Sc8913_Registers[CHANNEL_MAX][REGISTER_MAX]; 
+ 492      =1  extern uint8_t Sc8913_Init(void);
+ 493      =1  extern void Set_Sc8913_Stop(IIC_Channel channel, IIC_Pin_State state);
+ 494      =1  extern void Set_Sc8913_charger(IIC_Channel channel, IIC_Pin_State state);
+ 495      =1  extern uint8_t Sc8913_Write_Register(IIC_Channel channel, uint8_t start_addr, uint8_t *dat, uint8_t length
+             -);
+ 496      =1  extern uint8_t Sc8913_Read_Register(IIC_Channel channel, uint8_t start_addr, uint8_t *dat, uint8_t length)
+             -;
+ 497      =1  extern uint8_t Read_Register_Value(IIC_Channel channel);
+ 498      =1  #ifdef __cplusplus
+           =1 }
+           =1 #endif
+ 501      =1  
+ 502      =1  #endif /* __SC8913_H */
+   2          
+   3          /*9级优化，速度优先*/
+   4          // #pragma OPTIMIZE(9, speed)
+   5          
+   6          /*存储SC8913所有寄存器值*/
+   7          data uint8_t g_Sc8913_Registers[CHANNEL_MAX][REGISTER_MAX] = {0};
+   8          
+   9          /*SC8913寄存器组数据初始化*/
+  10          const uint8_t Init_RegMap_Value[] = 
+  11          {
+  12              0x01, SET_VBUSREF_I_SET(5.0F), 0xC0, 0x7C, 0xC0, SET_IBUS_LIMT(IBUS_MAX_CURRENT), SET_IBAT_LIMT(IBAT_M
+             -AX_CURRENT), 
+  13              SET_VINREG_SET(IBUS_THRESHOLD_VOLTAGE), SET_RATIO(1U), SET_CTRL0_SET(0U), SET_CTRL1_SET(1U), SET_CTRL2
+             -_SET(1U),
+  14              SET_CTRL3_SET(1)
+  15          };
+  16          
+  17          
+  18          /**
+  19           * @brief       初始化电源管理芯片SC8913
+  20           * @details     轮询模式，寄存器采用连续写模式
+  21           * @param       None
+  22           * @retval      None
+  23           */
+  24          uint8_t Sc8913_Init(void)
+  25          {
+  26   1          uint8_t j = 0;
+  27   1          uint8_t ret = REG_OK; 
+  28   1      
+  29   1          for(j = 0; j < CHANNEL_MAX; j++)
+  30   1          {   
+  31   2              /*初始化SC8913寄存器组*/
+  32   2              if(!Sc8913_Write_Register(j, VBAT_SET_ADDR, Init_RegMap_Value, WRITE_OPTION_REGS)) 
+  33   2              {
+  34   3                  ret = REG_FAILE;
+  35   3              }
+  36   2          }
+  37   1          return ret;
+  38   1      }
+  39          
+  40          /**
+C51 COMPILER V9.60.0.0   SC8913                                                            01/05/2022 14:26:36 PAGE 28  
+
+  41           * @brief       读取当前设备的10bitADC采样寄存器
+  42           * @details     读取到的值直接存储到union对象对应的高低位寄存器中
+  43           * @param       channel：当前通道
+  44           * @retval      读取结果
+  45           */
+  46          uint8_t Read_Register_Value(IIC_Channel channel) 
+  47          {
+  48   1          uint8_t ret = REG_OK;
+  49   1      
+  50   1          /*读取每个通道电源管理芯片SC8913所有寄存器值*/
+  51   1          if(Sc8913_Read_Register(channel, VBAT_SET_ADDR, (uint8_t *)&g_Sc8913_Registers[channel][0], REGISTER_M
+             -AX) == I2C_Fail)
+  52   1          {
+  53   2              ret = REG_FAILE;
+  54   2          }
+  55   1      
+  56   1          return ret;
+  57   1      }
+  58          
+  59          /*以下代码9级优化，速度优先*/
+  60          //#pragma OPTIMIZE(9, speed)
+  61          
+  62          /**
+  63           * @brief       设置对应设备充电通道芯片引脚的开启/关闭
+  64           * @details     高电平导通/低电平关闭
+  65           * @param       *driverx：当前设备指针;state:对应设备相应引脚的状态;
+  66           * @retval      None
+  67           */
+  68          void Set_Sc8913_Stop(IIC_Channel channel, IIC_Pin_State state)
+  69          {
+  70   1          switch(channel)
+  71   1          {
+  72   2              case Channel0: STOP_CHANNEL0 = state;
+  73   2                   break;
+  74   2              case Channel1: STOP_CHANNEL1 = state;
+  75   2                   break; 
+  76   2              case Channel2: STOP_CHANNEL2 = state;
+  77   2                   break;
+  78   2              default : break;    
+  79   2          }
+  80   1      }
+  81          
+  82          #if (USING_CHARGEING_PIN)
+              /**
+               * @brief       设置对应设备充电通道物理线路的开启/关闭
+               * @details     高电平导通/低电平关闭
+               * @param       *driverx：当前设备指针;state:对应设备相应引脚的状态;
+               * @retval      None
+               */
+              void Set_Sc8913_charger(IIC_Channel channel, IIC_Pin_State state)
+              {
+                  switch(channel)
+                  {
+                      case Channel0: CHARGER_CHANNEL0 = state;
+                           break;
+                      case Channel1: CHARGER_CHANNEL1 = state;
+                           break; 
+                      case Channel2: CHARGER_CHANNEL2 = state;
+                           break;
+                      default : break;    
+                  }
+              }
+C51 COMPILER V9.60.0.0   SC8913                                                            01/05/2022 14:26:36 PAGE 29  
+
+              #endif
+ 103          
+ 104          /**
+ 105           * @brief       写入1个或连续的多个对应通道下IIC设备内部寄存器
+ 106           * @details     支持连续地址的多个寄存器值的读取
+ 107           * @param       *driverx：当前设备指针;start_addr:开始寄存器地址;*dat:读出的寄存器值回调�
+             -��针;length:读取的数据长度
+ 108           * @retval      总线操作的结果
+ 109           */
+ 110          uint8_t Sc8913_Write_Register(IIC_Channel channel, uint8_t start_addr, uint8_t *dat, uint8_t length)
+ 111          {
+ 112   1          uint8_t i = 0;
+ 113   1          /*建立IIC通讯信号*/
+ 114   1          I2C_Start(channel);
+ 115   1          /*发送寄存器操作类型命令*/
+ 116   1          I2C_SendByte(channel, SAVLE_WRITE_ADDRESS);
+ 117   1          /*等待应答信号*/
+ 118   1          if(I2C_WaitAck(channel, 0x100) == I2C_Fail)
+ 119   1          {
+ 120   2              return I2C_Fail;
+ 121   2          }
+ 122   1          /*发送操作寄存器地址*/
+ 123   1          I2C_SendByte(channel, start_addr);
+ 124   1          /*等待应答信号*/
+ 125   1          if(I2C_WaitAck(channel, 0x100) == I2C_Fail)
+ 126   1          {
+ 127   2              return I2C_Fail;
+ 128   2          }
+ 129   1          /*写入多个数据*/
+ 130   1          for(i = 0; i < length; i++)
+ 131   1          {
+ 132   2              /*发送数据*/
+ 133   2              I2C_SendByte(channel, dat[i]);
+ 134   2              /*等待应答信号*/
+ 135   2              if(I2C_WaitAck(channel, 0x100) == I2C_Fail)
+ 136   2              {
+ 137   3                  return I2C_Fail;
+ 138   3              }
+ 139   2          }
+ 140   1          /*停止IIC通讯*/
+ 141   1          I2C_Stop(channel);
+ 142   1      
+ 143   1          return I2C_Succeed;
+ 144   1      }
+ 145          
+ 146          /**
+ 147           * @brief       读取1个或连续的多个对应通道下IIC设备内部寄存器值
+ 148           * @details     支持连续地址的多个寄存器值的读取
+ 149           * @param       *driverx：当前设备指针;start_addr:开始寄存器地址;*dat:读出的寄存器值回调�
+             -��针;length:读取的数据长度
+ 150           * @retval      总线操作的结果
+ 151           */
+ 152          uint8_t Sc8913_Read_Register(IIC_Channel channel, uint8_t start_addr, uint8_t *dat, uint8_t length)
+ 153          {
+ 154   1          uint8_t g = 0;
+ 155   1          /*建立IIC通讯信号*/
+ 156   1          I2C_Start(channel);
+ 157   1          /*发送写寄存器命令*/
+ 158   1          I2C_SendByte(channel, SAVLE_WRITE_ADDRESS);
+ 159   1          /*等待应答信号*/
+ 160   1          if(I2C_WaitAck(channel, 0x100) == I2C_Fail)
+ 161   1          {
+C51 COMPILER V9.60.0.0   SC8913                                                            01/05/2022 14:26:36 PAGE 30  
+
+ 162   2              return I2C_Fail;
+ 163   2          }
+ 164   1          /*发送需要开始读取的地址*/
+ 165   1          I2C_SendByte(channel, start_addr);
+ 166   1          /*等待应答信号*/
+ 167   1          if(I2C_WaitAck(channel, 0x100) == I2C_Fail)
+ 168   1          {
+ 169   2              return I2C_Fail;
+ 170   2          }
+ 171   1      
+ 172   1          /*重新建立IIC通讯信号*/
+ 173   1          I2C_Start(channel);
+ 174   1          /*发送读取寄存器命令*/
+ 175   1          I2C_SendByte(channel, SAVLE_READ_ADDRESS);
+ 176   1          /*等待应答信号*/
+ 177   1          if(I2C_WaitAck(channel, 0x100) == I2C_Fail)
+ 178   1          {
+ 179   2              return I2C_Fail;
+ 180   2          }
+ 181   1          /*读取多个数据*/
+ 182   1          for(g = 0; g < length; g++)
+ 183   1          {
+ 184   2              /*发送数据*/
+ 185   2              *dat++ = I2C_ReadByte(channel) ;
+ 186   2              /*在连续发送模式下*/
+ 187   2              if(length > sizeof(uint8_t))
+ 188   2              {   /*是否发送的n-1位*/
+ 189   3                  if(g < length - 1U)
+ 190   3                  /*主机发送应答信号*/
+ 191   3                  I2C_SendAck(channel);
+ 192   3              }  
+ 193   2          }
+ 194   1          /*读取完毕后发送NACK指令*/
+ 195   1          I2C_SendNAck(channel);
+ 196   1          /*停止IIC通讯*/
+ 197   1          I2C_Stop(channel);
+ 198   1      
+ 199   1          return I2C_Succeed;
+ 200   1      }
+ 201          
+C51 COMPILER V9.60.0.0   SC8913                                                            01/05/2022 14:26:36 PAGE 31  
+
+ASSEMBLY LISTING OF GENERATED OBJECT CODE
+
+
+             ; FUNCTION Com0020 (BEGIN)
+0000         L?0033:
+0000 ED                MOV     A,R5
+0001 F0                MOVX    @DPTR,A
+0002 A3                INC     DPTR
+0003 EB                MOV     A,R3
+0004 F0                MOVX    @DPTR,A
+0005 A3                INC     DPTR
+0006 EA                MOV     A,R2
+0007 F0                MOVX    @DPTR,A
+0008 A3                INC     DPTR
+0009 E9                MOV     A,R1
+000A F0                MOVX    @DPTR,A
+000B 22                RET     
+             ; FUNCTION Com0020 (END)
+
+             ; FUNCTION Sc8913_Init (BEGIN)
+                                           ; SOURCE LINE # 24
+                                           ; SOURCE LINE # 25
+                                           ; SOURCE LINE # 26
+0000 E4                CLR     A
+0001 900000      R     MOV     DPTR,#j
+0004 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 27
+0005 A3                INC     DPTR
+0006 7402              MOV     A,#02H
+0008 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 29
+0009 E4                CLR     A
+000A 900000      R     MOV     DPTR,#j
+000D F0                MOVX    @DPTR,A
+000E         ?C0001:
+000E 900000      R     MOV     DPTR,#j
+0011 E0                MOVX    A,@DPTR
+0012 FF                MOV     R7,A
+0013 C3                CLR     C
+0014 9403              SUBB    A,#03H
+0016 7480              MOV     A,#080H
+0018 9480              SUBB    A,#080H
+001A 5022              JNC     ?C0002
+                                           ; SOURCE LINE # 30
+                                           ; SOURCE LINE # 32
+001C 7B01              MOV     R3,#01H
+001E 7A00        R     MOV     R2,#HIGH Init_RegMap_Value
+0020 7900        R     MOV     R1,#LOW Init_RegMap_Value
+0022 900000      R     MOV     DPTR,#?_Sc8913_Write_Register?BYTE+05H
+0025 740D              MOV     A,#0DH
+0027 F0                MOVX    @DPTR,A
+0028 E4                CLR     A
+0029 FD                MOV     R5,A
+002A 120000      R     LCALL   _Sc8913_Write_Register
+002D EF                MOV     A,R7
+002E 7006              JNZ     ?C0003
+                                           ; SOURCE LINE # 33
+                                           ; SOURCE LINE # 34
+0030 900000      R     MOV     DPTR,#ret
+0033 7403              MOV     A,#03H
+0035 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 35
+C51 COMPILER V9.60.0.0   SC8913                                                            01/05/2022 14:26:36 PAGE 32  
+
+                                           ; SOURCE LINE # 36
+0036         ?C0003:
+0036 900000      R     MOV     DPTR,#j
+0039 E0                MOVX    A,@DPTR
+003A 04                INC     A
+003B F0                MOVX    @DPTR,A
+003C 80D0              SJMP    ?C0001
+003E         ?C0002:
+                                           ; SOURCE LINE # 37
+003E 900000      R     MOV     DPTR,#ret
+0041 E0                MOVX    A,@DPTR
+0042 FF                MOV     R7,A
+                                           ; SOURCE LINE # 38
+0043 22                RET     
+             ; FUNCTION Sc8913_Init (END)
+
+             ; FUNCTION _Read_Register_Value (BEGIN)
+                                           ; SOURCE LINE # 46
+0000 900000      R     MOV     DPTR,#channel
+0003 EF                MOV     A,R7
+0004 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 47
+                                           ; SOURCE LINE # 48
+0005 A3                INC     DPTR
+0006 7402              MOV     A,#02H
+0008 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 51
+0009 900000      R     MOV     DPTR,#channel
+000C E0                MOVX    A,@DPTR
+000D 75F01C            MOV     B,#01CH
+0010 A4                MUL     AB
+0011 2400        R     ADD     A,#LOW g_Sc8913_Registers
+0013 F9                MOV     R1,A
+0014 E4                CLR     A
+0015 FA                MOV     R2,A
+0016 FB                MOV     R3,A
+0017 E0                MOVX    A,@DPTR
+0018 FF                MOV     R7,A
+0019 900000      R     MOV     DPTR,#?_Sc8913_Read_Register?BYTE+05H
+001C 741C              MOV     A,#01CH
+001E F0                MOVX    @DPTR,A
+001F E4                CLR     A
+0020 FD                MOV     R5,A
+0021 120000      R     LCALL   _Sc8913_Read_Register
+0024 EF                MOV     A,R7
+0025 7006              JNZ     ?C0006
+                                           ; SOURCE LINE # 52
+                                           ; SOURCE LINE # 53
+0027 900000      R     MOV     DPTR,#ret
+002A 7403              MOV     A,#03H
+002C F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 54
+002D         ?C0006:
+                                           ; SOURCE LINE # 56
+002D 900000      R     MOV     DPTR,#ret
+0030 E0                MOVX    A,@DPTR
+0031 FF                MOV     R7,A
+                                           ; SOURCE LINE # 57
+0032 22                RET     
+             ; FUNCTION _Read_Register_Value (END)
+
+             ; FUNCTION _Set_Sc8913_Stop (BEGIN)
+C51 COMPILER V9.60.0.0   SC8913                                                            01/05/2022 14:26:36 PAGE 33  
+
+                                           ; SOURCE LINE # 68
+;---- Variable 'state' assigned to Register 'R5' ----
+;---- Variable 'channel' assigned to Register 'R7' ----
+                                           ; SOURCE LINE # 69
+                                           ; SOURCE LINE # 70
+0000 EF                MOV     A,R7
+0001 14                DEC     A
+0002 600D              JZ      ?C0010
+0004 14                DEC     A
+0005 6010              JZ      ?C0011
+0007 2402              ADD     A,#02H
+0009 7011              JNZ     ?C0013
+                                           ; SOURCE LINE # 71
+                                           ; SOURCE LINE # 72
+000B         ?C0009:
+000B ED                MOV     A,R5
+000C 24FF              ADD     A,#0FFH
+000E 9281              MOV     STOP_CHANNEL0,C
+                                           ; SOURCE LINE # 73
+0010 22                RET     
+                                           ; SOURCE LINE # 74
+0011         ?C0010:
+0011 ED                MOV     A,R5
+0012 24FF              ADD     A,#0FFH
+0014 9293              MOV     STOP_CHANNEL1,C
+                                           ; SOURCE LINE # 75
+0016 22                RET     
+                                           ; SOURCE LINE # 76
+0017         ?C0011:
+0017 ED                MOV     A,R5
+0018 24FF              ADD     A,#0FFH
+001A 9295              MOV     STOP_CHANNEL2,C
+                                           ; SOURCE LINE # 77
+                                           ; SOURCE LINE # 78
+                                           ; SOURCE LINE # 79
+                                           ; SOURCE LINE # 80
+001C         ?C0013:
+001C 22                RET     
+             ; FUNCTION _Set_Sc8913_Stop (END)
+
+             ; FUNCTION _Sc8913_Write_Register (BEGIN)
+                                           ; SOURCE LINE # 110
+0000 900000      R     MOV     DPTR,#start_addr
+0003 120000      R     LCALL   L?0033
+0006 900000      R     MOV     DPTR,#channel
+0009 EF                MOV     A,R7
+000A F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 111
+                                           ; SOURCE LINE # 112
+000B E4                CLR     A
+000C 900000      R     MOV     DPTR,#i
+000F F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 114
+0010 120000      E     LCALL   _I2C_Start
+                                           ; SOURCE LINE # 116
+0013 900000      R     MOV     DPTR,#channel
+0016 E0                MOVX    A,@DPTR
+0017 FF                MOV     R7,A
+0018 7DE8              MOV     R5,#0E8H
+001A 120000      E     LCALL   _I2C_SendByte
+                                           ; SOURCE LINE # 118
+001D 900000      R     MOV     DPTR,#channel
+C51 COMPILER V9.60.0.0   SC8913                                                            01/05/2022 14:26:36 PAGE 34  
+
+0020 E0                MOVX    A,@DPTR
+0021 FF                MOV     R7,A
+0022 7D00              MOV     R5,#00H
+0024 7C01              MOV     R4,#01H
+0026 120000      E     LCALL   _I2C_WaitAck
+0029 EF                MOV     A,R7
+002A 7002              JNZ     ?C0014
+                                           ; SOURCE LINE # 119
+                                           ; SOURCE LINE # 120
+002C FF                MOV     R7,A
+002D 22                RET     
+                                           ; SOURCE LINE # 121
+002E         ?C0014:
+                                           ; SOURCE LINE # 123
+002E 900000      R     MOV     DPTR,#channel
+0031 E0                MOVX    A,@DPTR
+0032 FF                MOV     R7,A
+0033 A3                INC     DPTR
+0034 E0                MOVX    A,@DPTR
+                                           ; SOURCE LINE # 125
+0035 120000      R     LCALL   L?0031
+0038 7002              JNZ     ?C0016
+                                           ; SOURCE LINE # 126
+                                           ; SOURCE LINE # 127
+003A FF                MOV     R7,A
+003B 22                RET     
+                                           ; SOURCE LINE # 128
+003C         ?C0016:
+                                           ; SOURCE LINE # 130
+003C E4                CLR     A
+003D 900000      R     MOV     DPTR,#i
+0040 F0                MOVX    @DPTR,A
+0041         ?C0017:
+0041 900000      R     MOV     DPTR,#length
+0044 E0                MOVX    A,@DPTR
+0045 FF                MOV     R7,A
+0046 A3                INC     DPTR
+0047 E0                MOVX    A,@DPTR
+0048 FE                MOV     R6,A
+0049 C3                CLR     C
+004A 9F                SUBB    A,R7
+004B 5027              JNC     ?C0018
+                                           ; SOURCE LINE # 131
+                                           ; SOURCE LINE # 133
+004D 900000      R     MOV     DPTR,#channel
+0050 E0                MOVX    A,@DPTR
+0051 FF                MOV     R7,A
+0052 900000      R     MOV     DPTR,#dat
+0055 E0                MOVX    A,@DPTR
+0056 FB                MOV     R3,A
+0057 A3                INC     DPTR
+0058 E0                MOVX    A,@DPTR
+0059 FA                MOV     R2,A
+005A A3                INC     DPTR
+005B E0                MOVX    A,@DPTR
+005C F9                MOV     R1,A
+005D 8E82              MOV     DPL,R6
+005F 758300            MOV     DPH,#00H
+0062 120000      E     LCALL   ?C?CLDOPTR
+                                           ; SOURCE LINE # 135
+0065 120000      R     LCALL   L?0031
+0068 7002              JNZ     ?C0019
+C51 COMPILER V9.60.0.0   SC8913                                                            01/05/2022 14:26:36 PAGE 35  
+
+                                           ; SOURCE LINE # 136
+                                           ; SOURCE LINE # 137
+006A FF                MOV     R7,A
+006B 22                RET     
+                                           ; SOURCE LINE # 138
+                                           ; SOURCE LINE # 139
+006C         ?C0019:
+006C 900000      R     MOV     DPTR,#i
+006F E0                MOVX    A,@DPTR
+0070 04                INC     A
+0071 F0                MOVX    @DPTR,A
+0072 80CD              SJMP    ?C0017
+0074         ?C0018:
+                                           ; SOURCE LINE # 141
+0074 900000      R     MOV     DPTR,#channel
+0077 E0                MOVX    A,@DPTR
+0078 FF                MOV     R7,A
+0079 120000      E     LCALL   _I2C_Stop
+                                           ; SOURCE LINE # 143
+007C 7F01              MOV     R7,#01H
+                                           ; SOURCE LINE # 144
+007E         ?C0015:
+007E 22                RET     
+007F         L?0031:
+007F FD                MOV     R5,A
+0080 120000      E     LCALL   _I2C_SendByte
+0083 900000      R     MOV     DPTR,#channel
+0086 E0                MOVX    A,@DPTR
+0087 FF                MOV     R7,A
+0088 7D00              MOV     R5,#00H
+008A 7C01              MOV     R4,#01H
+008C 120000      E     LCALL   _I2C_WaitAck
+008F EF                MOV     A,R7
+0090 22                RET     
+             ; FUNCTION _Sc8913_Write_Register (END)
+
+             ; FUNCTION _Sc8913_Read_Register (BEGIN)
+                                           ; SOURCE LINE # 152
+0000 900000      R     MOV     DPTR,#start_addr
+0003 120000      R     LCALL   L?0033
+0006 900000      R     MOV     DPTR,#channel
+0009 EF                MOV     A,R7
+000A F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 153
+                                           ; SOURCE LINE # 154
+000B E4                CLR     A
+000C 900000      R     MOV     DPTR,#g
+000F F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 156
+0010 120000      E     LCALL   _I2C_Start
+                                           ; SOURCE LINE # 158
+0013 7DE8              MOV     R5,#0E8H
+                                           ; SOURCE LINE # 160
+0015 120000      R     LCALL   L?0030
+0018 7002              JNZ     ?C0021
+                                           ; SOURCE LINE # 161
+                                           ; SOURCE LINE # 162
+001A FF                MOV     R7,A
+001B 22                RET     
+                                           ; SOURCE LINE # 163
+001C         ?C0021:
+                                           ; SOURCE LINE # 165
+C51 COMPILER V9.60.0.0   SC8913                                                            01/05/2022 14:26:36 PAGE 36  
+
+001C 900000      R     MOV     DPTR,#channel
+001F E0                MOVX    A,@DPTR
+0020 FF                MOV     R7,A
+0021 A3                INC     DPTR
+0022 E0                MOVX    A,@DPTR
+0023 FD                MOV     R5,A
+0024 120000      E     LCALL   _I2C_SendByte
+                                           ; SOURCE LINE # 167
+0027 900000      R     MOV     DPTR,#channel
+002A E0                MOVX    A,@DPTR
+002B FF                MOV     R7,A
+002C 7D00              MOV     R5,#00H
+002E 7C01              MOV     R4,#01H
+0030 120000      E     LCALL   _I2C_WaitAck
+0033 EF                MOV     A,R7
+0034 7002              JNZ     ?C0023
+                                           ; SOURCE LINE # 168
+                                           ; SOURCE LINE # 169
+0036 FF                MOV     R7,A
+0037 22                RET     
+                                           ; SOURCE LINE # 170
+0038         ?C0023:
+                                           ; SOURCE LINE # 173
+0038 900000      R     MOV     DPTR,#channel
+003B E0                MOVX    A,@DPTR
+003C FF                MOV     R7,A
+003D 120000      E     LCALL   _I2C_Start
+                                           ; SOURCE LINE # 175
+0040 7DE9              MOV     R5,#0E9H
+                                           ; SOURCE LINE # 177
+0042 120000      R     LCALL   L?0030
+0045 7002              JNZ     ?C0024
+                                           ; SOURCE LINE # 178
+                                           ; SOURCE LINE # 179
+0047 FF                MOV     R7,A
+0048 22                RET     
+                                           ; SOURCE LINE # 180
+0049         ?C0024:
+                                           ; SOURCE LINE # 182
+0049 E4                CLR     A
+004A 900000      R     MOV     DPTR,#g
+004D F0                MOVX    @DPTR,A
+004E         ?C0025:
+004E 900000      R     MOV     DPTR,#length
+0051 E0                MOVX    A,@DPTR
+0052 FF                MOV     R7,A
+0053 A3                INC     DPTR
+0054 E0                MOVX    A,@DPTR
+0055 C3                CLR     C
+0056 9F                SUBB    A,R7
+0057 504A              JNC     ?C0026
+                                           ; SOURCE LINE # 183
+                                           ; SOURCE LINE # 185
+0059 900000      R     MOV     DPTR,#channel
+005C E0                MOVX    A,@DPTR
+005D FF                MOV     R7,A
+005E 120000      E     LCALL   _I2C_ReadByte
+0061 900000      R     MOV     DPTR,#dat
+0064 E0                MOVX    A,@DPTR
+0065 FB                MOV     R3,A
+0066 A3                INC     DPTR
+0067 E4                CLR     A
+C51 COMPILER V9.60.0.0   SC8913                                                            01/05/2022 14:26:36 PAGE 37  
+
+0068 75F001            MOV     B,#01H
+006B 120000      E     LCALL   ?C?ILDIX
+006E A9F0              MOV     R1,B
+0070 FA                MOV     R2,A
+0071 EF                MOV     A,R7
+0072 120000      E     LCALL   ?C?CSTPTR
+                                           ; SOURCE LINE # 187
+0075 900000      R     MOV     DPTR,#length
+0078 E0                MOVX    A,@DPTR
+0079 FF                MOV     R7,A
+007A D3                SETB    C
+007B 9401              SUBB    A,#01H
+007D 7480              MOV     A,#080H
+007F 9480              SUBB    A,#080H
+0081 4018              JC      ?C0027
+                                           ; SOURCE LINE # 188
+                                           ; SOURCE LINE # 189
+0083 EF                MOV     A,R7
+0084 24FF              ADD     A,#0FFH
+0086 FF                MOV     R7,A
+0087 E4                CLR     A
+0088 34FF              ADDC    A,#0FFH
+008A FE                MOV     R6,A
+008B A3                INC     DPTR
+008C E0                MOVX    A,@DPTR
+008D C3                CLR     C
+008E 9F                SUBB    A,R7
+008F E4                CLR     A
+0090 9E                SUBB    A,R6
+0091 5008              JNC     ?C0027
+                                           ; SOURCE LINE # 191
+0093 900000      R     MOV     DPTR,#channel
+0096 E0                MOVX    A,@DPTR
+0097 FF                MOV     R7,A
+0098 120000      E     LCALL   _I2C_SendAck
+                                           ; SOURCE LINE # 192
+                                           ; SOURCE LINE # 193
+009B         ?C0027:
+009B 900000      R     MOV     DPTR,#g
+009E E0                MOVX    A,@DPTR
+009F 04                INC     A
+00A0 F0                MOVX    @DPTR,A
+00A1 80AB              SJMP    ?C0025
+00A3         ?C0026:
+                                           ; SOURCE LINE # 195
+00A3 900000      R     MOV     DPTR,#channel
+00A6 E0                MOVX    A,@DPTR
+00A7 FF                MOV     R7,A
+00A8 120000      E     LCALL   _I2C_SendNAck
+                                           ; SOURCE LINE # 197
+00AB 900000      R     MOV     DPTR,#channel
+00AE E0                MOVX    A,@DPTR
+00AF FF                MOV     R7,A
+00B0 120000      E     LCALL   _I2C_Stop
+                                           ; SOURCE LINE # 199
+00B3 7F01              MOV     R7,#01H
+                                           ; SOURCE LINE # 200
+00B5         ?C0022:
+00B5 22                RET     
+00B6         L?0030:
+00B6 900000      R     MOV     DPTR,#channel
+00B9 E0                MOVX    A,@DPTR
+C51 COMPILER V9.60.0.0   SC8913                                                            01/05/2022 14:26:36 PAGE 38  
+
+00BA FF                MOV     R7,A
+00BB 120000      E     LCALL   _I2C_SendByte
+00BE 900000      R     MOV     DPTR,#channel
+00C1 E0                MOVX    A,@DPTR
+00C2 FF                MOV     R7,A
+00C3 7D00              MOV     R5,#00H
+00C5 7C01              MOV     R4,#01H
+00C7 120000      E     LCALL   _I2C_WaitAck
+00CA EF                MOV     A,R7
+00CB 22                RET     
+             ; FUNCTION _Sc8913_Read_Register (END)
+
+C51 COMPILER V9.60.0.0   SC8913                                                            01/05/2022 14:26:36 PAGE 39  
+
+NAME                                    CLASS   MSPACE  TYPE    OFFSET  SIZE
+====                                    =====   ======  ====    ======  ====
+
+
+uint16_t . . . . . . . . . . . . . . .  TYPEDEF  -----  U_INT    -----  2
+P0 . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0080H  1
+Four_Cell. . . . . . . . . . . . . . .  E_CONST  -----  U_CHAR   -----  1
+P1 . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0090H  1
+R_20m. . . . . . . . . . . . . . . . .  E_CONST  -----  U_CHAR   -----  1
+High . . . . . . . . . . . . . . . . .  E_CONST  -----  U_CHAR   -----  1
+P2 . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00A0H  1
+P3 . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00B0H  1
+Sc8913_Init. . . . . . . . . . . . . .  PUBLIC   CODE   PROC     0000H  -----
+  j. . . . . . . . . . . . . . . . . .  AUTO     XDATA  U_CHAR   0000H  1
+  ret. . . . . . . . . . . . . . . . .  AUTO     XDATA  U_CHAR   0001H  1
+R_40m. . . . . . . . . . . . . . . . .  E_CONST  -----  U_CHAR   -----  1
+P4 . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00C0H  1
+Vbat_IRCompensation. . . . . . . . . .  TYPEDEF  -----  U_CHAR   -----  1
+P5 . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00C8H  1
+Vbat_Units . . . . . . . . . . . . . .  TYPEDEF  -----  U_CHAR   -----  1
+One_Cell . . . . . . . . . . . . . . .  E_CONST  -----  U_CHAR   -----  1
+P6 . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00E8H  1
+int32_t. . . . . . . . . . . . . . . .  TYPEDEF  -----  LONG     -----  4
+P7 . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00F8H  1
+R_80m. . . . . . . . . . . . . . . . .  E_CONST  -----  U_CHAR   -----  1
+_Read_Register_Value . . . . . . . . .  PUBLIC   CODE   PROC     0000H  -----
+  channel. . . . . . . . . . . . . . .  AUTO     XDATA  U_CHAR   0000H  1
+  ret. . . . . . . . . . . . . . . . .  AUTO     XDATA  U_CHAR   0001H  1
+_I2C_SendNAck. . . . . . . . . . . . .  EXTERN   CODE   PROC     -----  -----
+Write. . . . . . . . . . . . . . . . .  E_CONST  -----  U_CHAR   -----  1
+IE . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00A8H  1
+Both . . . . . . . . . . . . . . . . .  E_CONST  -----  U_CHAR   -----  1
+VINRANG_SET_Register . . . . . . . . .  TYPEDEF  -----  STRUCT   -----  3
+  VINRANG_SET_Type . . . . . . . . . .  MEMBER   -----  U_CHAR   0000H  1
+  VINRANG_SET_Addr . . . . . . . . . .  MEMBER   -----  U_CHAR   0001H  1
+  VINRANG_SET. . . . . . . . . . . . .  MEMBER   -----  UNION    0002H  1
+STATUS_Register. . . . . . . . . . . .  TYPEDEF  -----  STRUCT   -----  3
+  STATUS_Type. . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0000H  1
+  STATUS_Addr. . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0001H  1
+  STATUS . . . . . . . . . . . . . . .  MEMBER   -----  UNION    0002H  1
+size_t . . . . . . . . . . . . . . . .  TYPEDEF  -----  U_INT    -----  2
+IBAT_FB_VALUE_Register . . . . . . . .  TYPEDEF  -----  STRUCT   -----  5
+  IBAT_FB_VALUE_Type . . . . . . . . .  MEMBER   -----  U_CHAR   0000H  1
+  IBAT_FB_VALUE_Addr . . . . . . . . .  MEMBER   -----  U_CHAR   0001H  1
+  IBAT_FB_VALUE. . . . . . . . . . . .  MEMBER   -----  UNION    0002H  3
+Init_RegMap_Value. . . . . . . . . . .  PUBLIC   XDATA  ARRAY    0000H  13
+_Sc8913_Read_Register. . . . . . . . .  PUBLIC   CODE   PROC     0000H  -----
+  channel. . . . . . . . . . . . . . .  AUTO     XDATA  U_CHAR   0000H  1
+  start_addr . . . . . . . . . . . . .  AUTO     XDATA  U_CHAR   0001H  1
+  dat. . . . . . . . . . . . . . . . .  AUTO     XDATA  PTR      0002H  3
+  length . . . . . . . . . . . . . . .  AUTO     XDATA  U_CHAR   0005H  1
+  g. . . . . . . . . . . . . . . . . .  AUTO     XDATA  U_CHAR   0006H  1
+IP . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00B8H  1
+Two_Cell . . . . . . . . . . . . . . .  E_CONST  -----  U_CHAR   -----  1
+VBAT_FB_VALUE_Register . . . . . . . .  TYPEDEF  -----  STRUCT   -----  5
+  VBAT_FB_VALUE_Type . . . . . . . . .  MEMBER   -----  U_CHAR   0000H  1
+  VBAT_FB_VALUE_Addr . . . . . . . . .  MEMBER   -----  U_CHAR   0001H  1
+  VBAT_FB_VALUE. . . . . . . . . . . .  MEMBER   -----  UNION    0002H  3
+_Set_Sc8913_Stop . . . . . . . . . . .  PUBLIC   CODE   PROC     0000H  -----
+  channel. . . . . . . . . . . . . . .  * REG *  DATA   U_CHAR   0007H  1
+  state. . . . . . . . . . . . . . . .  * REG *  DATA   U_CHAR   0005H  1
+C51 COMPILER V9.60.0.0   SC8913                                                            01/05/2022 14:26:36 PAGE 40  
+
+NAME                                    CLASS   MSPACE  TYPE    OFFSET  SIZE
+====                                    =====   ======  ====    ======  ====
+
+
+Reg_Type . . . . . . . . . . . . . . .  TYPEDEF  -----  U_CHAR   -----  1
+CCON . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00D8H  1
+_Sc8913_Write_Register . . . . . . . .  PUBLIC   CODE   PROC     0000H  -----
+  channel. . . . . . . . . . . . . . .  AUTO     XDATA  U_CHAR   0000H  1
+  start_addr . . . . . . . . . . . . .  AUTO     XDATA  U_CHAR   0001H  1
+  dat. . . . . . . . . . . . . . . . .  AUTO     XDATA  PTR      0002H  3
+  length . . . . . . . . . . . . . . .  AUTO     XDATA  U_CHAR   0005H  1
+  i. . . . . . . . . . . . . . . . . .  AUTO     XDATA  U_CHAR   0006H  1
+VBAT_SET_Register. . . . . . . . . . .  TYPEDEF  -----  STRUCT   -----  3
+  VBAT_SET_Type. . . . . . . . . . . .  MEMBER   -----  U_CHAR   0000H  1
+  VBAT_SET_Addr. . . . . . . . . . . .  MEMBER   -----  U_CHAR   0001H  1
+  VBAT_SET . . . . . . . . . . . . . .  MEMBER   -----  UNION    0002H  1
+IBUS_FB_VALUE_Register . . . . . . . .  TYPEDEF  -----  STRUCT   -----  5
+  IBUS_FB_VALUE_Type . . . . . . . . .  MEMBER   -----  U_CHAR   0000H  1
+  IBUS_FB_VALUE_Addr . . . . . . . . .  MEMBER   -----  U_CHAR   0001H  1
+  IBUS_FB_VALUE. . . . . . . . . . . .  MEMBER   -----  UNION    0002H  3
+RATIO_Register . . . . . . . . . . . .  TYPEDEF  -----  STRUCT   -----  3
+  RATIO_Type . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0000H  1
+  RATIO_Addr . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0001H  1
+  RATIO. . . . . . . . . . . . . . . .  MEMBER   -----  UNION    0002H  1
+External_Mode. . . . . . . . . . . . .  E_CONST  -----  U_CHAR   -----  1
+_I2C_Start . . . . . . . . . . . . . .  EXTERN   CODE   PROC     -----  -----
+Low. . . . . . . . . . . . . . . . . .  E_CONST  -----  U_CHAR   -----  1
+_I2C_ReadByte. . . . . . . . . . . . .  EXTERN   CODE   PROC     -----  -----
+SCON . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0098H  1
+VBUS_FB_VALUE_Register . . . . . . . .  TYPEDEF  -----  STRUCT   -----  5
+  VBUS_FB_VALUE_Type . . . . . . . . .  MEMBER   -----  U_CHAR   0000H  1
+  VBUS_FB_VALUE_Addr . . . . . . . . .  MEMBER   -----  U_CHAR   0001H  1
+  VBUS_FB_VALUE. . . . . . . . . . . .  MEMBER   -----  UNION    0002H  3
+TCON . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0088H  1
+_I2C_SendAck . . . . . . . . . . . . .  EXTERN   CODE   PROC     -----  -----
+Vbat_Units_Voltage . . . . . . . . . .  TYPEDEF  -----  U_CHAR   -----  1
+VBUSREF_I_SET_Register . . . . . . . .  TYPEDEF  -----  STRUCT   -----  3
+  VBUSREF_I_SET_Type . . . . . . . . .  MEMBER   -----  U_CHAR   0000H  1
+  VBUSREF_I_SET_Addr . . . . . . . . .  MEMBER   -----  U_CHAR   0001H  1
+  VBUSREF_I_SET. . . . . . . . . . . .  MEMBER   -----  UNION    0002H  1
+_I2C_SendByte. . . . . . . . . . . . .  EXTERN   CODE   PROC     -----  -----
+IIC_Pin_State. . . . . . . . . . . . .  TYPEDEF  -----  U_CHAR   -----  1
+Inside_Mode. . . . . . . . . . . . . .  E_CONST  -----  U_CHAR   -----  1
+_I2C_WaitAck . . . . . . . . . . . . .  EXTERN   CODE   PROC     -----  -----
+_I2C_Stop. . . . . . . . . . . . . . .  EXTERN   CODE   PROC     -----  -----
+V4_10. . . . . . . . . . . . . . . . .  E_CONST  -----  U_CHAR   -----  1
+V4_20. . . . . . . . . . . . . . . . .  E_CONST  -----  U_CHAR   -----  1
+V4_30. . . . . . . . . . . . . . . . .  E_CONST  -----  U_CHAR   -----  1
+V4_40. . . . . . . . . . . . . . . . .  E_CONST  -----  U_CHAR   -----  1
+V4_50. . . . . . . . . . . . . . . . .  E_CONST  -----  U_CHAR   -----  1
+R_0m . . . . . . . . . . . . . . . . .  E_CONST  -----  U_CHAR   -----  1
+uint8_t. . . . . . . . . . . . . . . .  TYPEDEF  -----  U_CHAR   -----  1
+V4_25. . . . . . . . . . . . . . . . .  E_CONST  -----  U_CHAR   -----  1
+V4_35. . . . . . . . . . . . . . . . .  E_CONST  -----  U_CHAR   -----  1
+V4_45. . . . . . . . . . . . . . . . .  E_CONST  -----  U_CHAR   -----  1
+STOP_CHANNEL0. . . . . . . . . . . . .  ABSBIT   -----  BIT      0081H  1
+STOP_CHANNEL1. . . . . . . . . . . . .  ABSBIT   -----  BIT      0093H  1
+STOP_CHANNEL2. . . . . . . . . . . . .  ABSBIT   -----  BIT      0095H  1
+__IO . . . . . . . . . . . . . . . . .  TYPEDEF  -----  INT      -----  2
+MASK_Register. . . . . . . . . . . . .  TYPEDEF  -----  STRUCT   -----  3
+  MASK_Type. . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0000H  1
+C51 COMPILER V9.60.0.0   SC8913                                                            01/05/2022 14:26:36 PAGE 41  
+
+NAME                                    CLASS   MSPACE  TYPE    OFFSET  SIZE
+====                                    =====   ======  ====    ======  ====
+
+
+  MASK_Addr. . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0001H  1
+  MASK . . . . . . . . . . . . . . . .  MEMBER   -----  UNION    0002H  1
+int8_t . . . . . . . . . . . . . . . .  TYPEDEF  -----  CHAR     -----  1
+IBAT_LIM_SET_Register. . . . . . . . .  TYPEDEF  -----  STRUCT   -----  3
+  IBAT_LIM_SET_Type. . . . . . . . . .  MEMBER   -----  U_CHAR   0000H  1
+  IBAT_LIM_SET_Addr. . . . . . . . . .  MEMBER   -----  U_CHAR   0001H  1
+  IBAT_LIM_SET . . . . . . . . . . . .  MEMBER   -----  UNION    0002H  1
+Three_Cell . . . . . . . . . . . . . .  E_CONST  -----  U_CHAR   -----  1
+CTRL0_SET_Register . . . . . . . . . .  TYPEDEF  -----  STRUCT   -----  3
+  CTRL0_SET_Type . . . . . . . . . . .  MEMBER   -----  U_CHAR   0000H  1
+  CTRL0_SET_Addr . . . . . . . . . . .  MEMBER   -----  U_CHAR   0001H  1
+  CTRL0_SET. . . . . . . . . . . . . .  MEMBER   -----  UNION    0002H  1
+CTRL1_SET_Register . . . . . . . . . .  TYPEDEF  -----  STRUCT   -----  3
+  CTRL1_SET_Type . . . . . . . . . . .  MEMBER   -----  U_CHAR   0000H  1
+  CTRL1_SET_Addr . . . . . . . . . . .  MEMBER   -----  U_CHAR   0001H  1
+  CTRL1_SET. . . . . . . . . . . . . .  MEMBER   -----  UNION    0002H  1
+CTRL2_SET_Register . . . . . . . . . .  TYPEDEF  -----  STRUCT   -----  3
+  CTRL2_SET_Type . . . . . . . . . . .  MEMBER   -----  U_CHAR   0000H  1
+  CTRL2_SET_Addr . . . . . . . . . . .  MEMBER   -----  U_CHAR   0001H  1
+  CTRL2_SET. . . . . . . . . . . . . .  MEMBER   -----  UNION    0002H  1
+CTRL3_SET_Register . . . . . . . . . .  TYPEDEF  -----  STRUCT   -----  3
+  CTRL3_SET_Type . . . . . . . . . . .  MEMBER   -----  U_CHAR   0000H  1
+  CTRL3_SET_Addr . . . . . . . . . . .  MEMBER   -----  U_CHAR   0001H  1
+  CTRL3_SET. . . . . . . . . . . . . .  MEMBER   -----  UNION    0002H  1
+wchar_t. . . . . . . . . . . . . . . .  TYPEDEF  -----  CHAR     -----  1
+Channel0 . . . . . . . . . . . . . . .  E_CONST  -----  U_CHAR   -----  1
+Channel1 . . . . . . . . . . . . . . .  E_CONST  -----  U_CHAR   -----  1
+Channel2 . . . . . . . . . . . . . . .  E_CONST  -----  U_CHAR   -----  1
+IBUS_LIM_SET_Register. . . . . . . . .  TYPEDEF  -----  STRUCT   -----  3
+  IBUS_LIM_SET_Type. . . . . . . . . .  MEMBER   -----  U_CHAR   0000H  1
+  IBUS_LIM_SET_Addr. . . . . . . . . .  MEMBER   -----  U_CHAR   0001H  1
+  IBUS_LIM_SET . . . . . . . . . . . .  MEMBER   -----  UNION    0002H  1
+g_Sc8913_Registers . . . . . . . . . .  PUBLIC   DATA   ARRAY    0000H  84
+IIC_Channel. . . . . . . . . . . . . .  TYPEDEF  -----  U_CHAR   -----  1
+VBUSREF_I_SET2_Register. . . . . . . .  TYPEDEF  -----  STRUCT   -----  3
+  VBUSREF_I_SET2_Type. . . . . . . . .  MEMBER   -----  U_CHAR   0000H  1
+  VBUSREF_I_SET2_Addr. . . . . . . . .  MEMBER   -----  U_CHAR   0001H  1
+  VBUSREF_I_SET2 . . . . . . . . . . .  MEMBER   -----  UNION    0002H  1
+Vbat_Mode. . . . . . . . . . . . . . .  TYPEDEF  -----  U_CHAR   -----  1
+va_list. . . . . . . . . . . . . . . .  TYPEDEF  -----  PTR      -----  3
+PSW. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00D0H  1
+uint32_t . . . . . . . . . . . . . . .  TYPEDEF  -----  U_LONG   -----  4
+Read . . . . . . . . . . . . . . . . .  E_CONST  -----  U_CHAR   -----  1
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    509    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =     13      18
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     84    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

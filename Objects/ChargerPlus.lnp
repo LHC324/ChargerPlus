@@ -1,0 +1,13 @@
+".\Objects\main.obj",
+".\Objects\GPIO.obj",
+".\Objects\timer.obj",
+".\Objects\usart.obj",
+".\Objects\IIC.obj",
+".\Objects\SC8913.obj",
+".\Objects\charger.obj",
+".\Objects\Dwin.obj",
+".\Objects\ModbusMaster.obj",
+".\Objects\STARTUP.obj" 
+TO ".\Objects\ChargerPlus" 
+PRINT(".\Listings\ChargerPlus.m51") RAMSIZE(256) 
+XDATA( 0X0000-0X1FFF )

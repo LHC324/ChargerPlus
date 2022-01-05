@@ -1,0 +1,2203 @@
+C51 COMPILER V9.60.0.0   IIC                                                               01/05/2022 14:26:36 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE IIC
+OBJECT MODULE PLACED IN .\Objects\IIC.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE Src\IIC.C LARGE OPTIMIZE(9,SPEED) BROWSE FLOATFUZZY(4) INCDIR(.\Inc) DEB
+                    -UG OBJECTEXTEND CODE LISTINCLUDE SYMBOLS PRINT(.\Listings\IIC.lst) OBJECT(.\Objects\IIC.obj)
+
+line level    source
+
+   1           #include "IIC.h"
+   1      =1  #ifndef __I2C_H
+   2      =1  #define __I2C_H
+   3      =1  
+   4      =1  #ifdef __cplusplus
+           =1 extern "C" {
+           =1 #endif
+   7      =1  #include "config.h"
+   1      =2  #ifndef __CONFIG_H_
+   2      =2  #define __CONFIG_H_
+   3      =2  
+   4      =2  #include <STC8.H>
+   1      =3  #ifndef __STC8F_H_
+   2      =3  #define __STC8F_H_
+   3      =3  
+   4      =3  /////////////////////////////////////////////////
+   5      =3  
+   6      =3  //包含本头文件后,不用另外再包含"REG51.H"
+   7      =3  
+   8      =3  //内核特殊功能寄存器
+   9      =3  sfr ACC         =   0xe0;
+  10      =3  sfr B           =   0xf0;
+  11      =3  sfr PSW         =   0xd0;
+  12      =3  sbit CY         =   PSW^7;
+  13      =3  sbit AC         =   PSW^6;
+  14      =3  sbit F0         =   PSW^5;
+  15      =3  sbit RS1        =   PSW^4;
+  16      =3  sbit RS0        =   PSW^3;
+  17      =3  sbit OV         =   PSW^2;
+  18      =3  sbit P          =   PSW^0;
+  19      =3  sfr SP          =   0x81;
+  20      =3  sfr DPL         =   0x82;
+  21      =3  sfr DPH         =   0x83;
+  22      =3  sfr TA          =   0xae;
+  23      =3  sfr DPS         =   0xe3;
+  24      =3  sfr DPL1        =   0xe4;
+  25      =3  sfr DPH1        =   0xe5;
+  26      =3  
+  27      =3  
+  28      =3  //I/O 口特殊功能寄存器
+  29      =3  sfr P0          =   0x80;
+  30      =3  sfr P1          =   0x90;
+  31      =3  sfr P2          =   0xa0;
+  32      =3  sfr P3          =   0xb0;
+  33      =3  sfr P4          =   0xc0;
+  34      =3  sfr P5          =   0xc8;
+  35      =3  sfr P6          =   0xe8;
+  36      =3  sfr P7          =   0xf8;
+  37      =3  sfr P0M0        =   0x94;
+  38      =3  sfr P0M1        =   0x93;
+  39      =3  sfr P1M0        =   0x92;
+  40      =3  sfr P1M1        =   0x91;
+  41      =3  sfr P2M0        =   0x96;
+  42      =3  sfr P2M1        =   0x95;
+C51 COMPILER V9.60.0.0   IIC                                                               01/05/2022 14:26:36 PAGE 2   
+
+  43      =3  sfr P3M0        =   0xb2;
+  44      =3  sfr P3M1        =   0xb1;
+  45      =3  sfr P4M0        =   0xb4;
+  46      =3  sfr P4M1        =   0xb3;
+  47      =3  sfr P5M0        =   0xca;
+  48      =3  sfr P5M1        =   0xc9;
+  49      =3  sfr P6M0        =   0xcc;
+  50      =3  sfr P6M1        =   0xcb;
+  51      =3  sfr P7M0        =   0xe2;
+  52      =3  sfr P7M1        =   0xe1;
+  53      =3  
+  54      =3  sbit P00        =   P0^0;
+  55      =3  sbit P01        =   P0^1;
+  56      =3  sbit P02        =   P0^2;
+  57      =3  sbit P03        =   P0^3;
+  58      =3  sbit P04        =   P0^4;
+  59      =3  sbit P05        =   P0^5;
+  60      =3  sbit P06        =   P0^6;
+  61      =3  sbit P07        =   P0^7;
+  62      =3  sbit P10        =   P1^0;
+  63      =3  sbit P11        =   P1^1;
+  64      =3  sbit P12        =   P1^2;
+  65      =3  sbit P13        =   P1^3;
+  66      =3  sbit P14        =   P1^4;
+  67      =3  sbit P15        =   P1^5;
+  68      =3  sbit P16        =   P1^6;
+  69      =3  sbit P17        =   P1^7;
+  70      =3  sbit P20        =   P2^0;
+  71      =3  sbit P21        =   P2^1;
+  72      =3  sbit P22        =   P2^2;
+  73      =3  sbit P23        =   P2^3;
+  74      =3  sbit P24        =   P2^4;
+  75      =3  sbit P25        =   P2^5;
+  76      =3  sbit P26        =   P2^6;
+  77      =3  sbit P27        =   P2^7;
+  78      =3  sbit P30        =   P3^0;
+  79      =3  sbit P31        =   P3^1;
+  80      =3  sbit P32        =   P3^2;
+  81      =3  sbit P33        =   P3^3;
+  82      =3  sbit P34        =   P3^4;
+  83      =3  sbit P35        =   P3^5;
+  84      =3  sbit P36        =   P3^6;
+  85      =3  sbit P37        =   P3^7;
+  86      =3  sbit P40        =   P4^0;
+  87      =3  sbit P41        =   P4^1;
+  88      =3  sbit P42        =   P4^2;
+  89      =3  sbit P43        =   P4^3;
+  90      =3  sbit P44        =   P4^4;
+  91      =3  sbit P45        =   P4^5;
+  92      =3  sbit P46        =   P4^6;
+  93      =3  sbit P47        =   P4^7;
+  94      =3  sbit P50        =   P5^0;
+  95      =3  sbit P51        =   P5^1;
+  96      =3  sbit P52        =   P5^2;
+  97      =3  sbit P53        =   P5^3;
+  98      =3  sbit P54        =   P5^4;
+  99      =3  sbit P55        =   P5^5;
+ 100      =3  sbit P56        =   P5^6;
+ 101      =3  sbit P57        =   P5^7;
+ 102      =3  sbit P60        =   P6^0;
+ 103      =3  sbit P61        =   P6^1;
+ 104      =3  sbit P62        =   P6^2;
+C51 COMPILER V9.60.0.0   IIC                                                               01/05/2022 14:26:36 PAGE 3   
+
+ 105      =3  sbit P63        =   P6^3;
+ 106      =3  sbit P64        =   P6^4;
+ 107      =3  sbit P65        =   P6^5;
+ 108      =3  sbit P66        =   P6^6;
+ 109      =3  sbit P67        =   P6^7;
+ 110      =3  sbit P70        =   P7^0;
+ 111      =3  sbit P71        =   P7^1;
+ 112      =3  sbit P72        =   P7^2;
+ 113      =3  sbit P73        =   P7^3;
+ 114      =3  sbit P74        =   P7^4;
+ 115      =3  sbit P75        =   P7^5;
+ 116      =3  sbit P76        =   P7^6;
+ 117      =3  sbit P77        =   P7^7;
+ 118      =3  
+ 119      =3  //如下特殊功能寄存器位于扩展RAM区域
+ 120      =3  //访问这些寄存器,需先将P_SW2的BIT7设置为1,才可正常读写
+ 121      =3  #define P0PU        (*(unsigned char volatile xdata *)0xfe10)
+ 122      =3  #define P1PU        (*(unsigned char volatile xdata *)0xfe11)
+ 123      =3  #define P2PU        (*(unsigned char volatile xdata *)0xfe12)
+ 124      =3  #define P3PU        (*(unsigned char volatile xdata *)0xfe13)
+ 125      =3  #define P4PU        (*(unsigned char volatile xdata *)0xfe14)
+ 126      =3  #define P5PU        (*(unsigned char volatile xdata *)0xfe15)
+ 127      =3  #define P6PU        (*(unsigned char volatile xdata *)0xfe16)
+ 128      =3  #define P7PU        (*(unsigned char volatile xdata *)0xfe17)
+ 129      =3  #define P0NCS       (*(unsigned char volatile xdata *)0xfe18)
+ 130      =3  #define P1NCS       (*(unsigned char volatile xdata *)0xfe19)
+ 131      =3  #define P2NCS       (*(unsigned char volatile xdata *)0xfe1a)
+ 132      =3  #define P3NCS       (*(unsigned char volatile xdata *)0xfe1b)
+ 133      =3  #define P4NCS       (*(unsigned char volatile xdata *)0xfe1c)
+ 134      =3  #define P5NCS       (*(unsigned char volatile xdata *)0xfe1d)
+ 135      =3  #define P6NCS       (*(unsigned char volatile xdata *)0xfe1e)
+ 136      =3  #define P7NCS       (*(unsigned char volatile xdata *)0xfe1f)
+ 137      =3  
+ 138      =3  //系统管理特殊功能寄存器
+ 139      =3  sfr PCON        =   0x87;
+ 140      =3  #define SMOD        0x80
+ 141      =3  #define SMOD0       0x40
+ 142      =3  #define LVDF        0x20
+ 143      =3  #define POF         0x10
+ 144      =3  #define GF1         0x08
+ 145      =3  #define GF0         0x04
+ 146      =3  #define PD          0x02
+ 147      =3  #define IDL         0x01
+ 148      =3  sfr AUXR        =   0x8e;
+ 149      =3  #define T0x12       0x80
+ 150      =3  #define T1x12       0x40
+ 151      =3  #define UART_M0x6   0x20
+ 152      =3  #define T2R         0x10
+ 153      =3  #define T2_CT       0x08
+ 154      =3  #define T2x12       0x04
+ 155      =3  #define EXTRAM      0x02
+ 156      =3  #define S1ST2       0x01
+ 157      =3  sfr AUXR2       =   0x97;
+ 158      =3  #define TXLNRX      0x10
+ 159      =3  sfr BUS_SPEED   =   0xa1;
+ 160      =3  sfr P_SW1       =   0xa2;
+ 161      =3  sfr P_SW2       =   0xba;
+ 162      =3  #define EAXFR       0x80
+ 163      =3  sfr VOCTRL      =   0xbb;
+ 164      =3  sfr RSTCFG      =   0xff;
+ 165      =3  
+ 166      =3  //如下特殊功能寄存器位于扩展RAM区域
+C51 COMPILER V9.60.0.0   IIC                                                               01/05/2022 14:26:36 PAGE 4   
+
+ 167      =3  //访问这些寄存器,需先将P_SW2的BIT7设置为1,才可正常读写
+ 168      =3  #define CKSEL       (*(unsigned char volatile xdata *)0xfe00)
+ 169      =3  #define CLKDIV      (*(unsigned char volatile xdata *)0xfe01)
+ 170      =3  #define IRC24MCR    (*(unsigned char volatile xdata *)0xfe02)
+ 171      =3  #define XOSCCR      (*(unsigned char volatile xdata *)0xfe03)
+ 172      =3  #define IRC32KCR    (*(unsigned char volatile xdata *)0xfe04)
+ 173      =3  
+ 174      =3  //中断特殊功能寄存器
+ 175      =3  sfr IE          =   0xa8;
+ 176      =3  sbit EA         =   IE^7;
+ 177      =3  sbit ELVD       =   IE^6;
+ 178      =3  sbit EADC       =   IE^5;
+ 179      =3  sbit ES         =   IE^4;
+ 180      =3  sbit ET1        =   IE^3;
+ 181      =3  sbit EX1        =   IE^2;
+ 182      =3  sbit ET0        =   IE^1;
+ 183      =3  sbit EX0        =   IE^0;
+ 184      =3  sfr IE2         =   0xaf;
+ 185      =3  #define ET4         0x40
+ 186      =3  #define ET3         0x20
+ 187      =3  #define ES4         0x10
+ 188      =3  #define ES3         0x08
+ 189      =3  #define ET2         0x04
+ 190      =3  #define ESPI        0x02
+ 191      =3  #define ES2         0x01
+ 192      =3  sfr IP          =   0xb8;
+ 193      =3  sbit PPCA       =   IP^7;
+ 194      =3  sbit PLVD       =   IP^6;
+ 195      =3  sbit PADC       =   IP^5;
+ 196      =3  sbit PS         =   IP^4;
+ 197      =3  sbit PT1        =   IP^3;
+ 198      =3  sbit PX1        =   IP^2;
+ 199      =3  sbit PT0        =   IP^1;
+ 200      =3  sbit PX0        =   IP^0;
+ 201      =3  sfr IP2         =   0xb5;
+ 202      =3  #define PI2C        0x40
+ 203      =3  #define PCMP        0x20
+ 204      =3  #define PX4         0x10
+ 205      =3  #define PPWMFD      0x08
+ 206      =3  #define PPWM        0x04
+ 207      =3  #define PSPI        0x02
+ 208      =3  #define PS2         0x01
+ 209      =3  sfr IPH         =   0xb7;
+ 210      =3  #define PPCAH       0x80
+ 211      =3  #define PLVDH       0x40
+ 212      =3  #define PADCH       0x20
+ 213      =3  #define PSH         0x10
+ 214      =3  #define PT1H        0x08
+ 215      =3  #define PX1H        0x04
+ 216      =3  #define PT0H        0x02
+ 217      =3  #define PX0H        0x01
+ 218      =3  sfr IP2H        =   0xb6;
+ 219      =3  #define PI2CH       0x40
+ 220      =3  #define PCMPH       0x20
+ 221      =3  #define PX4H        0x10
+ 222      =3  #define PPWMFDH     0x08
+ 223      =3  #define PPWMH       0x04
+ 224      =3  #define PSPIH       0x02
+ 225      =3  #define PS2H        0x01
+ 226      =3  sfr INTCLKO     =   0x8f;
+ 227      =3  #define EX4         0x40
+ 228      =3  #define EX3         0x20
+C51 COMPILER V9.60.0.0   IIC                                                               01/05/2022 14:26:36 PAGE 5   
+
+ 229      =3  #define EX2         0x10
+ 230      =3  #define T2CLKO      0x04
+ 231      =3  #define T1CLKO      0x02
+ 232      =3  #define T0CLKO      0x01
+ 233      =3  sfr AUXINTIF    =   0xef;
+ 234      =3  #define INT4IF      0x40
+ 235      =3  #define INT3IF      0x20
+ 236      =3  #define INT2IF      0x10
+ 237      =3  #define T4IF        0x04
+ 238      =3  #define T3IF        0x02
+ 239      =3  #define T2IF        0x01
+ 240      =3  
+ 241      =3  //定时器特殊功能寄存器
+ 242      =3  sfr TCON        =   0x88;
+ 243      =3  sbit TF1        =   TCON^7;
+ 244      =3  sbit TR1        =   TCON^6;
+ 245      =3  sbit TF0        =   TCON^5;
+ 246      =3  sbit TR0        =   TCON^4;
+ 247      =3  sbit IE1        =   TCON^3;
+ 248      =3  sbit IT1        =   TCON^2;
+ 249      =3  sbit IE0        =   TCON^1;
+ 250      =3  sbit IT0        =   TCON^0;
+ 251      =3  sfr TMOD        =   0x89;
+ 252      =3  #define T1_GATE     0x80
+ 253      =3  #define T1_CT       0x40
+ 254      =3  #define T1_M1       0x20
+ 255      =3  #define T1_M0       0x10
+ 256      =3  #define T0_GATE     0x08
+ 257      =3  #define T0_CT       0x04
+ 258      =3  #define T0_M1       0x02
+ 259      =3  #define T0_M0       0x01
+ 260      =3  sfr TL0         =   0x8a;
+ 261      =3  sfr TL1         =   0x8b;
+ 262      =3  sfr TH0         =   0x8c;
+ 263      =3  sfr TH1         =   0x8d;
+ 264      =3  sfr T4T3M       =   0xd1;
+ 265      =3  #define T4R         0x80
+ 266      =3  #define T4_CT       0x40
+ 267      =3  #define T4x12       0x20
+ 268      =3  #define T4CLKO      0x10
+ 269      =3  #define T3R         0x08
+ 270      =3  #define T3_CT       0x04
+ 271      =3  #define T3x12       0x02
+ 272      =3  #define T3CLKO      0x01
+ 273      =3  sfr T4H         =   0xd2;
+ 274      =3  sfr T4L         =   0xd3;
+ 275      =3  sfr T3H         =   0xd4;
+ 276      =3  sfr T3L         =   0xd5;
+ 277      =3  sfr T2H         =   0xd6;
+ 278      =3  sfr T2L         =   0xd7;
+ 279      =3  sfr TH4         =   0xd2;
+ 280      =3  sfr TL4         =   0xd3;
+ 281      =3  sfr TH3         =   0xd4;
+ 282      =3  sfr TL3         =   0xd5;
+ 283      =3  sfr TH2         =   0xd6;
+ 284      =3  sfr TL2         =   0xd7;
+ 285      =3  sfr WKTCL       =   0xaa;
+ 286      =3  sfr WKTCH       =   0xab;
+ 287      =3  #define WKTEN       0x80
+ 288      =3  sfr WDT_CONTR   =   0xc1;
+ 289      =3  #define WDT_FLAG    0x80
+ 290      =3  #define EN_WDT      0x20
+C51 COMPILER V9.60.0.0   IIC                                                               01/05/2022 14:26:36 PAGE 6   
+
+ 291      =3  #define CLR_WDT     0x10
+ 292      =3  #define IDL_WDT     0x08
+ 293      =3  
+ 294      =3  //串行口特殊功能寄存器
+ 295      =3  sfr SCON        =   0x98;
+ 296      =3  sbit SM0        =   SCON^7;
+ 297      =3  sbit SM1        =   SCON^6;
+ 298      =3  sbit SM2        =   SCON^5;
+ 299      =3  sbit REN        =   SCON^4;
+ 300      =3  sbit TB8        =   SCON^3;
+ 301      =3  sbit RB8        =   SCON^2;
+ 302      =3  sbit TI         =   SCON^1;
+ 303      =3  sbit RI         =   SCON^0;
+ 304      =3  sfr SBUF        =   0x99;
+ 305      =3  sfr S2CON       =   0x9a;
+ 306      =3  #define S2SM0       0x80
+ 307      =3  #define S2ST4       0x40
+ 308      =3  #define S2SM2       0x20
+ 309      =3  #define S2REN       0x10
+ 310      =3  #define S2TB8       0x08
+ 311      =3  #define S2RB8       0x04
+ 312      =3  #define S2TI        0x02
+ 313      =3  #define S2RI        0x01
+ 314      =3  sfr S2BUF       =   0x9b;
+ 315      =3  sfr S3CON       =   0xac;
+ 316      =3  #define S3SM0       0x80
+ 317      =3  #define S3ST4       0x40
+ 318      =3  #define S3SM2       0x20
+ 319      =3  #define S3REN       0x10
+ 320      =3  #define S3TB8       0x08
+ 321      =3  #define S3RB8       0x04
+ 322      =3  #define S3TI        0x02
+ 323      =3  #define S3RI        0x01
+ 324      =3  sfr S3BUF       =   0xad;
+ 325      =3  sfr S4CON       =   0x84;
+ 326      =3  #define S4SM0       0x80
+ 327      =3  #define S4ST4       0x40
+ 328      =3  #define S4SM2       0x20
+ 329      =3  #define S4REN       0x10
+ 330      =3  #define S4TB8       0x08
+ 331      =3  #define S4RB8       0x04
+ 332      =3  #define S4TI        0x02
+ 333      =3  #define S4RI        0x01
+ 334      =3  sfr S4BUF       =   0x85;
+ 335      =3  sfr SADDR       =   0xa9;
+ 336      =3  sfr SADEN       =   0xb9;
+ 337      =3  
+ 338      =3  //ADC 特殊功能寄存器
+ 339      =3  sfr ADC_CONTR   =   0xbc;
+ 340      =3  #define ADC_POWER   0x80
+ 341      =3  #define ADC_START   0x40
+ 342      =3  #define ADC_FLAG    0x20
+ 343      =3  sfr ADC_RES     =   0xbd;
+ 344      =3  sfr ADC_RESL    =   0xbe;
+ 345      =3  sfr ADCCFG      =   0xde;
+ 346      =3  #define ADC_RESFMT  0x20
+ 347      =3  
+ 348      =3  //SPI 特殊功能寄存器
+ 349      =3  sfr SPSTAT      =   0xcd;
+ 350      =3  #define SPIF        0x80
+ 351      =3  #define WCOL        0x40
+ 352      =3  sfr SPCTL       =   0xce;
+C51 COMPILER V9.60.0.0   IIC                                                               01/05/2022 14:26:36 PAGE 7   
+
+ 353      =3  #define SSIG        0x80
+ 354      =3  #define SPEN        0x40
+ 355      =3  #define DORD        0x20
+ 356      =3  #define MSTR        0x10
+ 357      =3  #define CPOL        0x08
+ 358      =3  #define CPHA        0x04
+ 359      =3  sfr SPDAT       =   0xcf;
+ 360      =3  
+ 361      =3  //IAP/ISP 特殊功能寄存器
+ 362      =3  sfr IAP_DATA    =   0xc2;
+ 363      =3  sfr IAP_ADDRH   =   0xc3;
+ 364      =3  sfr IAP_ADDRL   =   0xc4;
+ 365      =3  sfr IAP_CMD     =   0xc5;
+ 366      =3  #define IAP_IDL     0x00
+ 367      =3  #define IAP_READ    0x01
+ 368      =3  #define IAP_WRITE   0x02
+ 369      =3  #define IAP_ERASE   0x03
+ 370      =3  sfr IAP_TRIG    =   0xc6;
+ 371      =3  sfr IAP_CONTR   =   0xc7;
+ 372      =3  #define IAPEN       0x80
+ 373      =3  #define SWBS        0x40
+ 374      =3  #define SWRST       0x20
+ 375      =3  #define CMD_FAIL    0x10
+ 376      =3  sfr ISP_DATA    =   0xc2;
+ 377      =3  sfr ISP_ADDRH   =   0xc3;
+ 378      =3  sfr ISP_ADDRL   =   0xc4;
+ 379      =3  sfr ISP_CMD     =   0xc5;
+ 380      =3  sfr ISP_TRIG    =   0xc6;
+ 381      =3  sfr ISP_CONTR   =   0xc7;
+ 382      =3  
+ 383      =3  //比较器特殊功能寄存器
+ 384      =3  sfr CMPCR1      =   0xe6;
+ 385      =3  #define CMPEN       0x80
+ 386      =3  #define CMPIF       0x40
+ 387      =3  #define PIE         0x20
+ 388      =3  #define NIE         0x10
+ 389      =3  #define PIS         0x08
+ 390      =3  #define NIS         0x04
+ 391      =3  #define CMPOE       0x02
+ 392      =3  #define CMPRES      0x01
+ 393      =3  sfr CMPCR2      =   0xe7;
+ 394      =3  #define INVCMPO     0x80
+ 395      =3  #define DISFLT      0x40
+ 396      =3  
+ 397      =3  //PCA/PWM 特殊功能寄存器
+ 398      =3  sfr CCON        =   0xd8;
+ 399      =3  sbit CF         =   CCON^7;
+ 400      =3  sbit CR         =   CCON^6;
+ 401      =3  sbit CCF3       =   CCON^3;
+ 402      =3  sbit CCF2       =   CCON^2;
+ 403      =3  sbit CCF1       =   CCON^1;
+ 404      =3  sbit CCF0       =   CCON^0;
+ 405      =3  sfr CMOD        =   0xd9;
+ 406      =3  #define CIDL        0x80
+ 407      =3  #define ECF         0x01
+ 408      =3  sfr CL          =   0xe9;
+ 409      =3  sfr CH          =   0xf9;
+ 410      =3  sfr CCAPM0      =   0xda;
+ 411      =3  #define ECOM0       0x40
+ 412      =3  #define CCAPP0      0x20
+ 413      =3  #define CCAPN0      0x10
+ 414      =3  #define MAT0        0x08
+C51 COMPILER V9.60.0.0   IIC                                                               01/05/2022 14:26:36 PAGE 8   
+
+ 415      =3  #define TOG0        0x04
+ 416      =3  #define PWM0        0x02
+ 417      =3  #define ECCF0       0x01
+ 418      =3  sfr CCAPM1      =   0xdb;
+ 419      =3  #define ECOM1       0x40
+ 420      =3  #define CCAPP1      0x20
+ 421      =3  #define CCAPN1      0x10
+ 422      =3  #define MAT1        0x08
+ 423      =3  #define TOG1        0x04
+ 424      =3  #define PWM1        0x02
+ 425      =3  #define ECCF1       0x01
+ 426      =3  sfr CCAPM2      =   0xdc;
+ 427      =3  #define ECOM2       0x40
+ 428      =3  #define CCAPP2      0x20
+ 429      =3  #define CCAPN2      0x10
+ 430      =3  #define MAT2        0x08
+ 431      =3  #define TOG2        0x04
+ 432      =3  #define PWM2        0x02
+ 433      =3  #define ECCF2       0x01
+ 434      =3  sfr CCAPM3      =   0xdd;
+ 435      =3  #define ECOM3       0x40
+ 436      =3  #define CCAPP3      0x20
+ 437      =3  #define CCAPN3      0x10
+ 438      =3  #define MAT3        0x08
+ 439      =3  #define TOG3        0x04
+ 440      =3  #define PWM3        0x02
+ 441      =3  #define ECCF3       0x01
+ 442      =3  sfr CCAP0L      =   0xea;
+ 443      =3  sfr CCAP1L      =   0xeb;
+ 444      =3  sfr CCAP2L      =   0xec;
+ 445      =3  sfr CCAP3L      =   0xed;
+ 446      =3  sfr CCAP0H      =   0xfa;
+ 447      =3  sfr CCAP1H      =   0xfb;
+ 448      =3  sfr CCAP2H      =   0xfc;
+ 449      =3  sfr CCAP3H      =   0xfd;
+ 450      =3  sfr PCA_PWM0    =   0xf2;
+ 451      =3  sfr PCA_PWM1    =   0xf3;
+ 452      =3  sfr PCA_PWM2    =   0xf4;
+ 453      =3  sfr PCA_PWM3    =   0xf5;
+ 454      =3  
+ 455      =3  //增强型PWM波形发生器特殊功能寄存器
+ 456      =3  sfr PWMCFG      =   0xf1;
+ 457      =3  #define CBIF        0x80
+ 458      =3  #define ETADC       0x40
+ 459      =3  sfr PWMIF       =   0xf6;
+ 460      =3  #define C7IF        0x80
+ 461      =3  #define C6IF        0x40
+ 462      =3  #define C5IF        0x20
+ 463      =3  #define C4IF        0x10
+ 464      =3  #define C3IF        0x08
+ 465      =3  #define C2IF        0x04
+ 466      =3  #define C1IF        0x02
+ 467      =3  #define C0IF        0x01
+ 468      =3  sfr PWMFDCR     =   0xf7;
+ 469      =3  #define INVCMP      0x80
+ 470      =3  #define INVIO       0x40
+ 471      =3  #define ENFD        0x20
+ 472      =3  #define FLTFLIO     0x10
+ 473      =3  #define EFDI        0x08
+ 474      =3  #define FDCMP       0x04
+ 475      =3  #define FDIO        0x02
+ 476      =3  #define FDIF        0x01
+C51 COMPILER V9.60.0.0   IIC                                                               01/05/2022 14:26:36 PAGE 9   
+
+ 477      =3  sfr PWMCR       =   0xfe;
+ 478      =3  #define ENPWM       0x80
+ 479      =3  #define ECBI        0x40
+ 480      =3  
+ 481      =3  //如下特殊功能寄存器位于扩展RAM区域
+ 482      =3  //访问这些寄存器,需先将P_SW2的BIT7设置为1,才可正常读写
+ 483      =3  #define PWMC        (*(unsigned int  volatile xdata *)0xfff0)
+ 484      =3  #define PWMCH       (*(unsigned char volatile xdata *)0xfff0)
+ 485      =3  #define PWMCL       (*(unsigned char volatile xdata *)0xfff1)
+ 486      =3  #define PWMCKS      (*(unsigned char volatile xdata *)0xfff2)
+ 487      =3  #define TADCP       (*(unsigned char volatile xdata *)0xfff3)
+ 488      =3  #define TADCPH      (*(unsigned char volatile xdata *)0xfff3)
+ 489      =3  #define TADCPL      (*(unsigned char volatile xdata *)0xfff4)
+ 490      =3  #define PWM0T1      (*(unsigned int  volatile xdata *)0xff00)
+ 491      =3  #define PWM0T1H     (*(unsigned char volatile xdata *)0xff00)
+ 492      =3  #define PWM0T1L     (*(unsigned char volatile xdata *)0xff01)
+ 493      =3  #define PWM0T2      (*(unsigned int  volatile xdata *)0xff02)
+ 494      =3  #define PWM0T2H     (*(unsigned char volatile xdata *)0xff02)
+ 495      =3  #define PWM0T2L     (*(unsigned char volatile xdata *)0xff03)
+ 496      =3  #define PWM0CR      (*(unsigned char volatile xdata *)0xff04)
+ 497      =3  #define PWM0HLD     (*(unsigned char volatile xdata *)0xff05)
+ 498      =3  #define PWM1T1      (*(unsigned int  volatile xdata *)0xff10)
+ 499      =3  #define PWM1T1H     (*(unsigned char volatile xdata *)0xff10)
+ 500      =3  #define PWM1T1L     (*(unsigned char volatile xdata *)0xff11)
+ 501      =3  #define PWM1T2      (*(unsigned int  volatile xdata *)0xff12)
+ 502      =3  #define PWM1T2H     (*(unsigned char volatile xdata *)0xff12)
+ 503      =3  #define PWM1T2L     (*(unsigned char volatile xdata *)0xff13)
+ 504      =3  #define PWM1CR      (*(unsigned char volatile xdata *)0xff14)
+ 505      =3  #define PWM1HLD     (*(unsigned char volatile xdata *)0xff15)
+ 506      =3  #define PWM2T1      (*(unsigned int  volatile xdata *)0xff20)
+ 507      =3  #define PWM2T1H     (*(unsigned char volatile xdata *)0xff20)
+ 508      =3  #define PWM2T1L     (*(unsigned char volatile xdata *)0xff21)
+ 509      =3  #define PWM2T2      (*(unsigned int  volatile xdata *)0xff22)
+ 510      =3  #define PWM2T2H     (*(unsigned char volatile xdata *)0xff22)
+ 511      =3  #define PWM2T2L     (*(unsigned char volatile xdata *)0xff23)
+ 512      =3  #define PWM2CR      (*(unsigned char volatile xdata *)0xff24)
+ 513      =3  #define PWM2HLD     (*(unsigned char volatile xdata *)0xff25)
+ 514      =3  #define PWM3T1      (*(unsigned int  volatile xdata *)0xff30)
+ 515      =3  #define PWM3T1H     (*(unsigned char volatile xdata *)0xff30)
+ 516      =3  #define PWM3T1L     (*(unsigned char volatile xdata *)0xff31)
+ 517      =3  #define PWM3T2      (*(unsigned int  volatile xdata *)0xff32)
+ 518      =3  #define PWM3T2H     (*(unsigned char volatile xdata *)0xff32)
+ 519      =3  #define PWM3T2L     (*(unsigned char volatile xdata *)0xff33)
+ 520      =3  #define PWM3CR      (*(unsigned char volatile xdata *)0xff34)
+ 521      =3  #define PWM3HLD     (*(unsigned char volatile xdata *)0xff35)
+ 522      =3  #define PWM4T1      (*(unsigned int  volatile xdata *)0xff40)
+ 523      =3  #define PWM4T1H     (*(unsigned char volatile xdata *)0xff40)
+ 524      =3  #define PWM4T1L     (*(unsigned char volatile xdata *)0xff41)
+ 525      =3  #define PWM4T2      (*(unsigned int  volatile xdata *)0xff42)
+ 526      =3  #define PWM4T2H     (*(unsigned char volatile xdata *)0xff42)
+ 527      =3  #define PWM4T2L     (*(unsigned char volatile xdata *)0xff43)
+ 528      =3  #define PWM4CR      (*(unsigned char volatile xdata *)0xff44)
+ 529      =3  #define PWM4HLD     (*(unsigned char volatile xdata *)0xff45)
+ 530      =3  #define PWM5T1      (*(unsigned int  volatile xdata *)0xff50)
+ 531      =3  #define PWM5T1H     (*(unsigned char volatile xdata *)0xff50)
+ 532      =3  #define PWM5T1L     (*(unsigned char volatile xdata *)0xff51)
+ 533      =3  #define PWM5T2      (*(unsigned int  volatile xdata *)0xff52)
+ 534      =3  #define PWM5T2H     (*(unsigned char volatile xdata *)0xff52)
+ 535      =3  #define PWM5T2L     (*(unsigned char volatile xdata *)0xff53)
+ 536      =3  #define PWM5CR      (*(unsigned char volatile xdata *)0xff54)
+ 537      =3  #define PWM5HLD     (*(unsigned char volatile xdata *)0xff55)
+ 538      =3  #define PWM6T1      (*(unsigned int  volatile xdata *)0xff60)
+C51 COMPILER V9.60.0.0   IIC                                                               01/05/2022 14:26:36 PAGE 10  
+
+ 539      =3  #define PWM6T1H     (*(unsigned char volatile xdata *)0xff60)
+ 540      =3  #define PWM6T1L     (*(unsigned char volatile xdata *)0xff61)
+ 541      =3  #define PWM6T2      (*(unsigned int  volatile xdata *)0xff62)
+ 542      =3  #define PWM6T2H     (*(unsigned char volatile xdata *)0xff62)
+ 543      =3  #define PWM6T2L     (*(unsigned char volatile xdata *)0xff63)
+ 544      =3  #define PWM6CR      (*(unsigned char volatile xdata *)0xff64)
+ 545      =3  #define PWM6HLD     (*(unsigned char volatile xdata *)0xff65)
+ 546      =3  #define PWM7T1      (*(unsigned int  volatile xdata *)0xff70)
+ 547      =3  #define PWM7T1H     (*(unsigned char volatile xdata *)0xff70)
+ 548      =3  #define PWM7T1L     (*(unsigned char volatile xdata *)0xff71)
+ 549      =3  #define PWM7T2      (*(unsigned int  volatile xdata *)0xff72)
+ 550      =3  #define PWM7T2H     (*(unsigned char volatile xdata *)0xff72)
+ 551      =3  #define PWM7T2L     (*(unsigned char volatile xdata *)0xff73)
+ 552      =3  #define PWM7CR      (*(unsigned char volatile xdata *)0xff74)
+ 553      =3  #define PWM7HLD     (*(unsigned char volatile xdata *)0xff75)
+ 554      =3  
+ 555      =3  //I2C特殊功能寄存器
+ 556      =3  //如下特殊功能寄存器位于扩展RAM区域
+ 557      =3  //访问这些寄存器,需先将P_SW2的BIT7设置为1,才可正常读写
+ 558      =3  #define I2CCFG      (*(unsigned char volatile xdata *)0xfe80)
+ 559      =3  #define ENI2C       0x80
+ 560      =3  #define MSSL        0x40
+ 561      =3  #define I2CMSCR     (*(unsigned char volatile xdata *)0xfe81)
+ 562      =3  #define EMSI        0x80
+ 563      =3  #define I2CMSST     (*(unsigned char volatile xdata *)0xfe82)
+ 564      =3  #define MSBUSY      0x80
+ 565      =3  #define MSIF        0x40
+ 566      =3  #define MSACKI      0x02
+ 567      =3  #define MSACKO      0x01
+ 568      =3  #define I2CSLCR     (*(unsigned char volatile xdata *)0xfe83)
+ 569      =3  #define ESTAI       0x40
+ 570      =3  #define ERXI        0x20
+ 571      =3  #define ETXI        0x10
+ 572      =3  #define ESTOI       0x08
+ 573      =3  #define SLRST       0x01
+ 574      =3  #define I2CSLST     (*(unsigned char volatile xdata *)0xfe84)
+ 575      =3  #define SLBUSY      0x80
+ 576      =3  #define STAIF       0x40
+ 577      =3  #define RXIF        0x20
+ 578      =3  #define TXIF        0x10
+ 579      =3  #define STOIF       0x08
+ 580      =3  #define TXING       0x04
+ 581      =3  #define SLACKI      0x02
+ 582      =3  #define SLACKO      0x01
+ 583      =3  #define I2CSLADR    (*(unsigned char volatile xdata *)0xfe85)
+ 584      =3  #define I2CTXD      (*(unsigned char volatile xdata *)0xfe86)
+ 585      =3  #define I2CRXD      (*(unsigned char volatile xdata *)0xfe87)
+ 586      =3  
+ 587      =3  /////////////////////////////////////////////////
+ 588      =3  
+ 589      =3  #endif
+ 590      =3  
+   5      =2  #include <stdio.h>
+   1      =3  /*--------------------------------------------------------------------------
+   2      =3  STDIO.H
+   3      =3  
+   4      =3  Prototypes for standard I/O functions.
+   5      =3  Copyright (c) 1988-2002 Keil Elektronik GmbH and Keil Software, Inc.
+   6      =3  All rights reserved.
+   7      =3  --------------------------------------------------------------------------*/
+   8      =3  
+   9      =3  #ifndef __STDIO_H__
+C51 COMPILER V9.60.0.0   IIC                                                               01/05/2022 14:26:36 PAGE 11  
+
+  10      =3  #define __STDIO_H__
+  11      =3  
+  12      =3  #ifndef EOF
+  13      =3   #define EOF -1
+  14      =3  #endif
+  15      =3  
+  16      =3  #ifndef NULL
+  17      =3   #define NULL ((void *) 0)
+  18      =3  #endif
+  19      =3  
+  20      =3  #ifndef _SIZE_T
+  21      =3   #define _SIZE_T
+  22      =3   typedef unsigned int size_t;
+  23      =3  #endif
+  24      =3  
+  25      =3  #pragma SAVE
+  26      =3  #pragma REGPARMS
+  27      =3  extern char _getkey (void);
+  28      =3  extern char getchar (void);
+  29      =3  extern char ungetchar (char);
+  30      =3  extern char putchar (char);
+  31      =3  extern int printf   (const char *, ...);
+  32      =3  extern int sprintf  (char *, const char *, ...);
+  33      =3  extern int vprintf  (const char *, char *);
+  34      =3  extern int vsprintf (char *, const char *, char *);
+  35      =3  extern char *gets (char *, int n);
+  36      =3  extern int scanf (const char *, ...);
+  37      =3  extern int sscanf (char *, const char *, ...);
+  38      =3  extern int puts (const char *);
+  39      =3  
+  40      =3  #pragma RESTORE
+  41      =3  
+  42      =3  #endif
+  43      =3  
+   6      =2  #include <intrins.h>
+   1      =3  /*--------------------------------------------------------------------------
+   2      =3  INTRINS.H
+   3      =3  
+   4      =3  Intrinsic functions for C51.
+   5      =3  Copyright (c) 1988-2010 Keil Elektronik GmbH and ARM Germany GmbH
+   6      =3  All rights reserved.
+   7      =3  --------------------------------------------------------------------------*/
+   8      =3  
+   9      =3  #ifndef __INTRINS_H__
+  10      =3  #define __INTRINS_H__
+  11      =3  
+  12      =3  #pragma SAVE
+  13      =3  
+  14      =3  #if defined (__CX2__)
+           =3 #pragma FUNCTIONS(STATIC)
+           =3 /* intrinsic functions are reentrant, but need static attribute */
+           =3 #endif
+  18      =3  
+  19      =3  extern void          _nop_     (void);
+  20      =3  extern bit           _testbit_ (bit);
+  21      =3  extern unsigned char _cror_    (unsigned char, unsigned char);
+  22      =3  extern unsigned int  _iror_    (unsigned int,  unsigned char);
+  23      =3  extern unsigned long _lror_    (unsigned long, unsigned char);
+  24      =3  extern unsigned char _crol_    (unsigned char, unsigned char);
+  25      =3  extern unsigned int  _irol_    (unsigned int,  unsigned char);
+  26      =3  extern unsigned long _lrol_    (unsigned long, unsigned char);
+  27      =3  extern unsigned char _chkfloat_(float);
+C51 COMPILER V9.60.0.0   IIC                                                               01/05/2022 14:26:36 PAGE 12  
+
+  28      =3  #if defined (__CX2__)
+           =3 extern int           abs       (int);
+           =3 extern void          _illop_   (void);
+           =3 #endif
+  32      =3  #if !defined (__CX2__)
+  33      =3  extern void          _push_    (unsigned char _sfr);
+  34      =3  extern void          _pop_     (unsigned char _sfr);
+  35      =3  #endif
+  36      =3  
+  37      =3  #pragma RESTORE
+  38      =3  
+  39      =3  #endif
+  40      =3  
+   7      =2  #include <string.h>
+   1      =3  /*--------------------------------------------------------------------------
+   2      =3  STRING.H
+   3      =3  
+   4      =3  String functions.
+   5      =3  Copyright (c) 1988-2008 Keil Elektronik GmbH and Keil Software, Inc.
+   6      =3  Copyright (c) 2008-2016 ARM Germany GmbH
+   7      =3  All rights reserved.
+   8      =3  --------------------------------------------------------------------------*/
+   9      =3  
+  10      =3  #ifndef __STRING_H__
+  11      =3  #define __STRING_H__
+  12      =3  
+  13      =3  #ifndef _SIZE_T
+           =3  #define _SIZE_T
+           =3  typedef unsigned int size_t;
+           =3 #endif
+  17      =3  
+  18      =3  #ifndef NULL
+           =3  #define NULL ((void *)0)
+           =3 #endif
+  21      =3  
+  22      =3  #pragma SAVE
+  23      =3  #pragma REGPARMS
+  24      =3  extern char  *strcat  (char *s1, const char *s2);
+  25      =3  extern char  *strncat (char *s1, const char *s2, size_t n);
+  26      =3  
+  27      =3  extern char   strcmp  (const char *s1, const char *s2);
+  28      =3  extern char   strncmp (const char *s1, const char *s2, size_t n);
+  29      =3  
+  30      =3  extern char  *strcpy  (char *s1, const char *s2);
+  31      =3  extern char  *strncpy (char *s1, const char *s2, size_t n);
+  32      =3  
+  33      =3  extern size_t strlen  (const char *);
+  34      =3  
+  35      =3  extern char  *strchr  (const char *s, char c);
+  36      =3  extern int    strpos  (const char *s, char c);
+  37      =3  extern char  *strrchr (const char *s, char c);
+  38      =3  extern int    strrpos (const char *s, char c);
+  39      =3  
+  40      =3  extern size_t strspn  (const char *s, const char *set);
+  41      =3  extern size_t strcspn (const char *s, const char *set);
+  42      =3  extern char  *strpbrk (const char *s, const char *set);
+  43      =3  extern char  *strrpbrk(const char *s, const char *set);
+  44      =3  extern char  *strstr  (const char *s, const char *sub);
+  45      =3  extern char  *strtok  (char *str, const char *set);
+  46      =3  
+  47      =3  extern char   memcmp  (const void *s1, const void *s2, size_t n);
+  48      =3  extern void  *memcpy  (void *s1, const void *s2, size_t n);
+C51 COMPILER V9.60.0.0   IIC                                                               01/05/2022 14:26:36 PAGE 13  
+
+  49      =3  extern void  *memchr  (const void *s, char val, size_t n);
+  50      =3  extern void  *memccpy (void *s1, const void *s2, char val, size_t n);
+  51      =3  extern void  *memmove (void *s1, const void *s2, size_t n);
+  52      =3  extern void  *memset  (void *s, char val, size_t n);
+  53      =3  #pragma RESTORE
+  54      =3  
+  55      =3  #endif
+   8      =2  #include <stdlib.h>
+   1      =3  /*--------------------------------------------------------------------------
+   2      =3  STDLIB.H
+   3      =3  
+   4      =3  Standard functions.
+   5      =3  Copyright (c) 1988-2008 Keil Elektronik GmbH and Keil Software, Inc.
+   6      =3  Copyright (c) 2008-2016 ARM Germany GmbH
+   7      =3  All rights reserved.
+   8      =3  --------------------------------------------------------------------------*/
+   9      =3  
+  10      =3  #ifndef __STDLIB_H__
+  11      =3  #define __STDLIB_H__
+  12      =3  
+  13      =3  #ifndef _SIZE_T
+           =3  #define _SIZE_T
+           =3  typedef unsigned int size_t;
+           =3 #endif
+  17      =3  
+  18      =3  #ifndef NULL
+           =3  #define NULL ((void *)0)
+           =3 #endif
+  21      =3  
+  22      =3  #ifndef _WCHAR_T_DEFINED_
+  23      =3  #define _WCHAR_T_DEFINED_
+  24      =3  typedef char wchar_t;
+  25      =3  #endif
+  26      =3  
+  27      =3  #if defined (__CX2__)
+           =3 #ifndef _DIV_T_DEFINED
+           =3 typedef struct _div_t {
+           =3         int quot;
+           =3         int rem;
+           =3 } div_t;
+           =3 typedef struct _ldiv_t {
+           =3         long quot;
+           =3         long rem;
+           =3 } ldiv_t;
+           =3 #define _DIV_T_DEFINED
+           =3 #endif // _DIV_T_DEFINED
+           =3 #endif // __CX2__
+  40      =3  
+  41      =3  #ifndef RAND_MAX
+  42      =3   #define RAND_MAX  32767u
+  43      =3  #endif
+  44      =3  
+  45      =3  #if defined (__CX2__)
+           =3 #pragma SAVE
+           =3 #pragma FUNCTIONS(STATIC)
+           =3 /* intrinsic functions are reentrant, but need static attribute */
+           =3 extern int    abs  (int   val);
+           =3 #pragma RESTORE
+           =3 #endif // __CX2__
+  52      =3  
+  53      =3  #pragma SAVE
+  54      =3  #pragma REGPARMS
+C51 COMPILER V9.60.0.0   IIC                                                               01/05/2022 14:26:36 PAGE 14  
+
+  55      =3  
+  56      =3  extern char   cabs (char  val);
+  57      =3  #if !defined (__CX2__)
+  58      =3  extern int    abs  (int   val);
+  59      =3  #endif // __CX2__
+  60      =3  extern long   labs (long  val);
+  61      =3  
+  62      =3  extern float  atof (const char *s1);
+  63      =3  extern long   atol (const char *s1);
+  64      =3  extern int    atoi (const char *s1);
+  65      =3  extern int    rand (void);
+  66      =3  extern void   srand (unsigned int seed);
+  67      =3  
+  68      =3  #ifdef _DIV_T_DEFINED
+           =3 extern div_t  __div (int numer, int denom);
+           =3 #define div(numer,denom)  __div((numer),(denom));
+           =3 extern ldiv_t ldiv (long numer, long denom);
+           =3 #endif // _DIV_T_DEFINED
+  73      =3  
+  74      =3  extern float         strtod  (const char *nptr, char **endptr);
+  75      =3  extern long          strtol  (const char *nptr, char **endptr, unsigned char base);
+  76      =3  extern unsigned long strtoul (const char *nptr, char **endptr, unsigned char base);
+  77      =3  
+  78      =3  #define _MALLOC_MEM_    xdata
+  79      =3  
+  80      =3  extern void init_mempool          (void _MALLOC_MEM_ *p, size_t size);
+  81      =3  extern void _MALLOC_MEM_ *malloc  (size_t size);
+  82      =3  extern void free                  (void _MALLOC_MEM_ *p);
+  83      =3  extern void _MALLOC_MEM_ *realloc (void _MALLOC_MEM_ *p, size_t size);
+  84      =3  extern void _MALLOC_MEM_ *calloc  (size_t nmemb, size_t size);
+  85      =3  
+  86      =3  #if defined (__CX2__)
+           =3 extern void abort(void);
+           =3 #endif // __CX2__
+  89      =3  
+  90      =3  #pragma RESTORE
+  91      =3  
+  92      =3  #endif // __STDLIB_H__
+   9      =2  #include <string.h>
+   1      =3  /*--------------------------------------------------------------------------
+   2      =3  STRING.H
+   3      =3  
+   4      =3  String functions.
+   5      =3  Copyright (c) 1988-2008 Keil Elektronik GmbH and Keil Software, Inc.
+   6      =3  Copyright (c) 2008-2016 ARM Germany GmbH
+   7      =3  All rights reserved.
+   8      =3  --------------------------------------------------------------------------*/
+   9      =3  
+  10      =3  #ifndef __STRING_H__
+           =3 #define __STRING_H__
+           =3 
+           =3 #ifndef _SIZE_T
+           =3  #define _SIZE_T
+           =3  typedef unsigned int size_t;
+           =3 #endif
+           =3 
+           =3 #ifndef NULL
+           =3  #define NULL ((void *)0)
+           =3 #endif
+           =3 
+           =3 #pragma SAVE
+           =3 #pragma REGPARMS
+C51 COMPILER V9.60.0.0   IIC                                                               01/05/2022 14:26:36 PAGE 15  
+
+           =3 extern char  *strcat  (char *s1, const char *s2);
+           =3 extern char  *strncat (char *s1, const char *s2, size_t n);
+           =3 
+           =3 extern char   strcmp  (const char *s1, const char *s2);
+           =3 extern char   strncmp (const char *s1, const char *s2, size_t n);
+           =3 
+           =3 extern char  *strcpy  (char *s1, const char *s2);
+           =3 extern char  *strncpy (char *s1, const char *s2, size_t n);
+           =3 
+           =3 extern size_t strlen  (const char *);
+           =3 
+           =3 extern char  *strchr  (const char *s, char c);
+           =3 extern int    strpos  (const char *s, char c);
+           =3 extern char  *strrchr (const char *s, char c);
+           =3 extern int    strrpos (const char *s, char c);
+           =3 
+           =3 extern size_t strspn  (const char *s, const char *set);
+           =3 extern size_t strcspn (const char *s, const char *set);
+           =3 extern char  *strpbrk (const char *s, const char *set);
+           =3 extern char  *strrpbrk(const char *s, const char *set);
+           =3 extern char  *strstr  (const char *s, const char *sub);
+           =3 extern char  *strtok  (char *str, const char *set);
+           =3 
+           =3 extern char   memcmp  (const void *s1, const void *s2, size_t n);
+           =3 extern void  *memcpy  (void *s1, const void *s2, size_t n);
+           =3 extern void  *memchr  (const void *s, char val, size_t n);
+           =3 extern void  *memccpy (void *s1, const void *s2, char val, size_t n);
+           =3 extern void  *memmove (void *s1, const void *s2, size_t n);
+           =3 extern void  *memset  (void *s, char val, size_t n);
+           =3 #pragma RESTORE
+           =3 
+           =3 #endif
+  10      =2  #include <absacc.h> //可直接操作内存地址
+   1      =3  /*--------------------------------------------------------------------------
+   2      =3  ABSACC.H
+   3      =3  
+   4      =3  Direct access to 8051, extended 8051 and NXP 8051MX memory areas.
+   5      =3  Copyright (c) 1988-2010 Keil Elektronik GmbH and ARM Germany GmbH
+   6      =3  All rights reserved.
+   7      =3  --------------------------------------------------------------------------*/
+   8      =3  
+   9      =3  #ifndef __ABSACC_H__
+  10      =3  #define __ABSACC_H__
+  11      =3  
+  12      =3  #define CBYTE ((unsigned char volatile code  *) 0)
+  13      =3  #define DBYTE ((unsigned char volatile data  *) 0)
+  14      =3  #if !defined (__CX2__)
+  15      =3  #define PBYTE ((unsigned char volatile pdata *) 0)
+  16      =3  #endif
+  17      =3  #define XBYTE ((unsigned char volatile xdata *) 0)
+  18      =3  
+  19      =3  #define CWORD ((unsigned int volatile code  *) 0)
+  20      =3  #define DWORD ((unsigned int volatile data  *) 0)
+  21      =3  #if !defined (__CX2__)
+  22      =3  #define PWORD ((unsigned int volatile pdata *) 0)
+  23      =3  #endif
+  24      =3  #define XWORD ((unsigned int volatile xdata *) 0)
+  25      =3  
+  26      =3  
+  27      =3  #if defined (__CX51__) || defined (__CX2__)
+           =3 #define FVAR(object, addr)   (*((object volatile far *) (addr)))
+           =3 #define FARRAY(object, base) ((object volatile far *) (base))
+C51 COMPILER V9.60.0.0   IIC                                                               01/05/2022 14:26:36 PAGE 16  
+
+           =3 #define FCVAR(object, addr)   (*((object const far *) (addr)))
+           =3 #define FCARRAY(object, base) ((object const far *) (base))
+           =3 #else
+  33      =3  #define FVAR(object, addr)    (*((object volatile far *) ((addr)+0x10000L)))
+  34      =3  #define FCVAR(object, addr)   (*((object const far *) ((addr)+0x810000L)))
+  35      =3  #define FARRAY(object, base)  ((object volatile far *) ((base)+0x10000L))
+  36      =3  #define FCARRAY(object, base) ((object const far *) ((base)+0x810000L))
+  37      =3  #endif
+  38      =3  
+  39      =3  #if defined (__CX2__)
+           =3 #define HBYTE ((unsigned char volatile huge *)  0)
+           =3 #define HWORD ((unsigned int volatile huge *)  0)
+           =3 #define HVAR(object, addr)   (*((object volatile huge *) (addr)))
+           =3 #define HARRAY(object, base) ((object volatile huge *) (base))
+           =3 #endif
+  45      =3  
+  46      =3  #define CVAR(object, addr)   (*((object volatile code *) (addr)))
+  47      =3  #define CARRAY(object, base) ((object volatile code *) (base))
+  48      =3  #define DVAR(object, addr)   (*((object volatile data *) (addr)))
+  49      =3  #define DARRAY(object, base) ((object volatile data *) (base))
+  50      =3  #define XVAR(object, addr)   (*((object volatile xdata *) (addr)))
+  51      =3  #define XARRAY(object, base) ((object volatile xdata *) (base))
+  52      =3  
+  53      =3  #endif
+  11      =2  #include <stdarg.h>
+   1      =3  /*--------------------------------------------------------------------------
+   2      =3  STDARG.H
+   3      =3  
+   4      =3  Prototypes for variable argument lists.
+   5      =3  Copyright (c) 1988-2008 Keil Elektronik GmbH and Keil Software, Inc.
+   6      =3  Copyright (c) 2008-2016 ARM Germany GmbH
+   7      =3  All rights reserved.
+   8      =3  --------------------------------------------------------------------------*/
+   9      =3  
+  10      =3  #ifndef __STDARG_H__
+  11      =3  #define __STDARG_H__
+  12      =3  
+  13      =3  #ifndef __CX2__
+  14      =3  #ifndef NULL
+           =3  #define NULL ((void *)0)
+           =3 #endif
+  17      =3  #endif
+  18      =3  
+  19      =3  #ifndef _VA_LIST_DEFINED
+  20      =3  typedef char *va_list;
+  21      =3  #define _VA_LIST_DEFINED
+  22      =3  #endif
+  23      =3  
+  24      =3  #if defined __CX2__ && __CX2__ >= 558
+           =3   #define va_start(ap,v) ap = _va_start_ (&v, sizeof(v))
+           =3   extern void *_va_start_ (void *ap, int sz);   // intrinsic
+           =3 #else
+  28      =3    #define va_start(ap,v) ap = (va_list)&v + sizeof(v)
+  29      =3  #endif
+  30      =3  
+  31      =3  #define va_arg(ap,t) (((t *)ap)++[0])
+  32      =3  #define va_end(ap)   (ap = (va_list)0)
+  33      =3  
+  34      =3  #endif
+  12      =2  
+  13      =2  
+  14      =2  /**********************布尔变量定义**********************/
+C51 COMPILER V9.60.0.0   IIC                                                               01/05/2022 14:26:36 PAGE 17  
+
+  15      =2  #define true  1
+  16      =2  #define false 0
+  17      =2  /**********************布尔变量定义**********************/
+  18      =2  
+  19      =2  /***********************************API配置接口***********************************/
+  20      =2  /*使用外部晶振*/
+  21      =2  #define EXTERNAL_CRYSTAL 0 
+  22      =2  /*调试是否启用串口*/
+  23      =2  #define USE_PRINTF_DEBUG 0 
+  24      =2  /*调试选项*/
+  25      =2  #define DEBUGGING    0
+  26      =2  /*迪文屏幕使用CRC校验*/
+  27      =2  #define USING_CRC 1
+  28      =2  /*定义WIFI模块相关引脚*/
+  29      =2  #define WIFI_RESET              P23
+  30      =2  #define WIFI_RELOAD             P20
+  31      =2  
+  32      =2  #define COUNTMAX     65536U
+  33      =2  
+  34      =2  /*消除编译器未使用变量警告*/
+  35      =2  #define UNUSED_VARIABLE(x)      ((void)(x))
+  36      =2  #define UNUSED_PARAMETER(x) UNUSED_VARIABLE(x)
+  37      =2  
+  38      =2  //(1/FOSC)*count =times(us)->count = time*FOSC/1000(ms)
+  39      =2  #define FOSC         27000000UL//11059200UL
+  40      =2  /*1ms(时钟频率越高，所能产生的时间越小)*/  
+  41      =2  #define TIMES        10U  
+  42      =2  /*定时器模式选择*/
+  43      =2  #define TIMER_MODE   12U
+  44      =2  /*定时器分频系数，默认为一分频*/  
+  45      =2  #define TIME_DIV     1U  
+  46      =2  #define T12_MODE (TIMES * FOSC / 1000 / 12 / TIME_DIV) 
+  47      =2  #define T1_MODE  (TIMES * FOSC/ 1000 / TIME_DIV)
+  48      =2  #define TIMERS_OVERFLOW (COUNTMAX * 1000 * TIMER_MODE * TIME_DIV) / FOSC
+  49      =2  
+  50      =2  #define OPEN_GLOBAL_OUTAGE()  (EA = 1 << 0)
+  51      =2  #define CLOSE_GLOBAL_OUTAGE() (EA = 0 << 0)
+  52      =2  /*判断延时数是否超出硬件允许范围*/
+  53      =2  #if(TIMES > TIMERS_OVERFLOW)
+           =2 #error The timer cannot generate the current duration!
+           =2 #endif
+  56      =2  /***********************************API配置接口***********************************/
+  57      =2  
+  58      =2  /***********************************常用的数据类型***********************************/
+  59      =2  typedef unsigned char  uint8_t;
+  60      =2  typedef signed char    int8_t;
+  61      =2  typedef unsigned short int  uint16_t;
+  62      =2  typedef unsigned long  uint32_t;
+  63      =2  typedef signed long    int32_t;
+  64      =2  typedef volatile       __IO;   
+  65      =2  
+  66      =2  /***********************************常用的数据类型***********************************/
+  67      =2  
+  68      =2  /***********************************系统上电参数***********************************/
+  69      =2  #define DEFAULT_SYSTEM_PARAMETER  "\xFF\xFF\xFF\xFF\x02\x01\x00\x84\x50"
+  70      =2  
+  71      =2  /***********************************系统上电参数***********************************/
+  72      =2  
+  73      =2  /***********************************结构体的妙用 ***********************************/
+  74      =2  /*获得结构体(TYPE)的变量成员(MEMBER)在此结构体中的偏移量*/ 
+  75      =2  #define offsetof(TYPE, MEMBER) ((size_t) &((TYPE *)0)->MEMBER)
+  76      =2  /*根据"结构体(type)变量"中的"域成员变量(member)的指针(ptr)"来获取指向整个结构体
+C51 COMPILER V9.60.0.0   IIC                                                               01/05/2022 14:26:36 PAGE 18  
+
+             -变量的指针*/ 
+  77      =2  #define container_of(ptr, type, member) ({ \
+  78      =2          const typeof( ((type *)0)->member ) *__mptr = (ptr); \
+  79      =2          (type *)( (char *)__mptr - offsetof(type,member) );}) 
+  80      =2  /***********************************结构体的妙用 ***********************************/
+  81      =2  
+  82      =2  
+  83      =2  extern const uint8_t g_TimerNumbers;
+  84      =2  /***********************************函数声明***********************************/
+  85      =2  void  Gpio_Init(void);
+  86      =2  /***********************************函数声明***********************************/
+  87      =2  #endif
+   8      =1  
+   9      =1  /*延时的个数，5即为延时5Us*/
+  10      =1  #define IIC_DELAY 5U
+  11      =1  
+  12      =1  #define I2C_Fail    0U
+  13      =1  #define I2C_Succeed 1U
+  14      =1  
+  15      =1  /*定义SCL输出的宏定义*/
+  16      =1  sbit SCL_CHANNEL0 = P0^0;
+  17      =1  sbit SCL_CHANNEL1 = P1^2;
+  18      =1  sbit SCL_CHANNEL2 = P4^4;
+  19      =1  /*定义SDA输出、读取的宏定义*/
+  20      =1  sbit SDA_CHANNEL0 = P2^7;
+  21      =1  sbit SDA_CHANNEL1 = P0^5;
+  22      =1  sbit SDA_CHANNEL2 = P1^4;
+  23      =1  
+  24      =1  #define SDA_READ_CHANNELX(CH) \
+  25      =1  (CH == Channel0 ? SDA_CHANNEL0 : (CH == Channel1) ? SDA_CHANNEL1 : SDA_CHANNEL2)
+  26      =1  
+  27      =1  /*IIC层封装*/
+  28      =1  typedef enum 
+  29      =1  {
+  30      =1      Channel0 = 0x00,
+  31      =1      Channel1,
+  32      =1      Channel2
+  33      =1  }IIC_Channel;
+  34      =1  
+  35      =1  typedef enum 
+  36      =1  {
+  37      =1      Low  = 0x00,
+  38      =1      High = !Low,
+  39      =1  }IIC_Pin_State;
+  40      =1  
+  41      =1  
+  42      =1  extern void Delay_Us(uint16_t us);              //@11.0592MHz
+  43      =1  extern void Delay_Ms(uint16_t ms);              //@11.0592MHz
+  44      =1  void Delay_5Us(void);           //@27MHz
+  45      =1  
+  46      =1  
+  47      =1  extern void I2C_Start(IIC_Channel channel); 
+  48      =1  extern void I2C_Stop(IIC_Channel channel);
+  49      =1  extern void I2C_SendByte(IIC_Channel channel, uint8_t sendByte);
+  50      =1  extern uint8_t I2C_WaitAck(IIC_Channel channel, uint16_t timeout);
+  51      =1  extern void I2C_SendAck(IIC_Channel channel);
+  52      =1  extern void I2C_SendNAck(IIC_Channel channel);
+  53      =1  extern uint8_t I2C_ReadByte(IIC_Channel channel); 
+  54      =1  extern uint8_t I2C_Set_SCL(IIC_Channel channel, IIC_Pin_State sate); 
+  55      =1  extern uint8_t I2C_Set_SDA(IIC_Channel channel, IIC_Pin_State sate); 
+  56      =1  
+  57      =1  #ifdef __cplusplus
+C51 COMPILER V9.60.0.0   IIC                                                               01/05/2022 14:26:36 PAGE 19  
+
+           =1 }
+           =1 #endif
+  60      =1  
+  61      =1  #endif /* __I2C_H */
+   2          
+   3          /*以下代码9级优化，速度优先*/
+   4          // #pragma OPTIMIZE(9, speed)
+   5          
+   6           /**
+   7           * @name        void I2C_Start(void)
+   8           * @brief       发送I2C起始信号
+   9           * @details     当SCL为高时，SDA由高拉低，就会形成起始信号
+  10           * @param       channel:通道号
+  11           * @retval      None
+  12           */
+  13           void I2C_Start(IIC_Channel channel) 
+  14           {      /*SDA拉高*/
+  15   1              I2C_Set_SDA(channel, High);                                                                                     
+  16   1              /*SCL拉高     */                                                                      
+  17   1              I2C_Set_SCL(channel, High);
+  18   1              /*延时*/
+  19   1              Delay_5Us();                            
+  20   1              /*SDA拉低*/
+  21   1              I2C_Set_SDA(channel, Low);
+  22   1              /*延时*/                                                                                      
+  23   1              Delay_5Us();                            
+  24   1              /*SCL拉低，钳住*/
+  25   1              I2C_Set_SCL(channel, Low);                                                                              
+  26   1       }
+  27          
+  28           /**
+  29           * @brief       发送I2C结束信号
+  30           * @details     当SCL为高时，SDA由低拉高，就会形成结束信号
+  31           * @param       channel:通道号
+  32           * @retval      None
+  33           */
+  34           void I2C_Stop(IIC_Channel channel) 
+  35           {
+  36   1              /*SDA拉低*/
+  37   1              I2C_Set_SDA(channel, Low);                      
+  38   1              /*SCL拉高     */                                                                      
+  39   1              I2C_Set_SCL(channel, High);
+  40   1              /*延时*/
+  41   1              Delay_Us(IIC_DELAY);                            
+  42   1              /*SDA拉高*/
+  43   1              I2C_Set_SDA(channel, High);     
+  44   1       }
+  45           /**
+  46           * @brief       通过I2C发送（写）数据
+  47           * @details     当SCL为高时，保持SDA（高为1，低位0）稳定，即可传输一位数据
+  48           * @param       channel:通道号，byte：想要发送的数据（1字节，8位）
+  49           * @retval      None
+  50           */
+  51           void I2C_SendByte(IIC_Channel channel, uint8_t sendByte) 
+  52           {
+  53   1              uint8_t i = 0;
+  54   1               /*SCL拉低，钳住*/
+  55   1              I2C_Set_SCL(channel, Low);
+  56   1              /*延时*/
+  57   1              Delay_5Us();
+  58   1      
+  59   1              for(i = 0; i < sizeof(uint8_t) * 8U; i++)
+C51 COMPILER V9.60.0.0   IIC                                                               01/05/2022 14:26:36 PAGE 20  
+
+  60   1              {       /*如果高位为1则拉高，否则拉低*/
+  61   2                      if(sendByte & 0x80) 
+  62   2                      {                                       
+  63   3                              /*SDA拉高*/
+  64   3                              I2C_Set_SDA(channel, High);
+  65   3                      }
+  66   2                      else 
+  67   2                      {
+  68   3                              /*SDA拉低*/
+  69   3                              I2C_Set_SDA(channel, Low);
+  70   3                      }
+  71   2                      /*数据左移1位*/
+  72   2                      sendByte <<= 1U;
+  73   2                      /*延时*/                                                      
+  74   2                      Delay_5Us();                    
+  75   2                      /*SCL拉高*/                                                                   
+  76   2                      I2C_Set_SCL(channel, High);
+  77   2                      /*延时*/
+  78   2                      Delay_5Us();                    
+  79   2                      /*SCL拉低，钳住*/
+  80   2                      I2C_Set_SCL(channel, Low);
+  81   2              }
+  82   1       }
+  83           /**
+  84           * @brief       等待从机应答信号
+  85           * @details     主机将SCL和SDA都拉高之后，释放SDA，然后读取SDA，为低则表示接收到从�
+             -��的应答信号
+  86           * @param       channel:通道号，timeout: 在规定时间内等待应答信号
+  87           * @retval      I2C_WaitAck_Succeed：  成功等到应答信号
+  88           * @retval      I2C_WaitAck_Fail：             在规定时间内未等到应答信号
+  89           */
+  90           uint8_t I2C_WaitAck(IIC_Channel channel, uint16_t timeout) 
+  91           {
+  92   1              /*SDA拉高*/
+  93   1              I2C_Set_SDA(channel, High);
+  94   1              /*延时*/
+  95   1              Delay_5Us();                            
+  96   1              /*SCL拉高*/                                                                   
+  97   1              I2C_Set_SCL(channel, High);
+  98   1              /*延时*/
+  99   1              Delay_5Us();                            
+ 100   1      
+ 101   1              /*开始循环查询SDA线上是否有应答信号*/
+ 102   1              while(SDA_READ_CHANNELX(channel))
+ 103   1              {       /*如果为1，则说明未产生应答*/
+ 104   2                      if (!(--timeout)) {
+ 105   3                              /*如果时间超时*/
+ 106   3                              /*如果为非主机测量，则此处不能Stop*/
+ 107   3                              /*发出终止信号*/
+ 108   3                              // I2C_Stop(channel);
+ 109   3                              /*返回失败信息*/                                                  
+ 110   3                              return I2C_Fail;                                        
+ 111   3                      }
+ 112   2                      /*如果时间未超时*/
+ 113   2                      Delay_Us(1);                                            
+ 114   2              }
+ 115   1              //如果收到了应答信号，将SCL拉低
+ 116   1              /*SCL拉低，钳住*/
+ 117   1              I2C_Set_SCL(channel, Low);
+ 118   1               /*返回成功信息*/
+ 119   1              return I2C_Succeed;                                                     
+ 120   1       }
+C51 COMPILER V9.60.0.0   IIC                                                               01/05/2022 14:26:36 PAGE 21  
+
+ 121          
+ 122           /**
+ 123           * @brief       向从机发送应答信号
+ 124           * @details     在SDA持续为低时，SCL产生一个正脉冲即表示产生一个应答信号
+ 125           * @param       channel:通道号
+ 126           * @retval      None
+ 127           */
+ 128           void I2C_SendAck(IIC_Channel channel) 
+ 129           {
+ 130   1              /*SDA拉低:CPU驱动SDA = 0*/
+ 131   1              I2C_Set_SDA(channel, Low);
+ 132   1              /*延时*/
+ 133   1              Delay_Us(IIC_DELAY);                            
+ 134   1              /*SCL拉高*/                                                                   
+ 135   1              I2C_Set_SCL(channel, High);     /* CPU产生1个时钟 */
+ 136   1              /*延时*/
+ 137   1              Delay_Us(IIC_DELAY);                            
+ 138   1              /*SCL拉低，钳住*/
+ 139   1              I2C_Set_SCL(channel, Low);
+ 140   1              /*延时*/
+ 141   1              Delay_Us(IIC_DELAY); 
+ 142   1              /*SDA拉高：CPU释放SDA总线*/
+ 143   1              I2C_Set_SDA(channel, High);
+ 144   1       }
+ 145           /**
+ 146           * @brief       向从机发送非应答信号
+ 147           * @details     在SDA持续为高时，SCL产生一个正脉冲即表示产生一个非应答信号
+ 148           * @param       channel:通道号
+ 149           * @retval      None
+ 150           */
+ 151           void I2C_SendNAck(IIC_Channel channel) 
+ 152           {
+ 153   1              /*SDA拉高*/
+ 154   1              I2C_Set_SDA(channel, High);
+ 155   1              /*SCL拉低，钳住*/
+ 156   1              I2C_Set_SCL(channel, Low);
+ 157   1              /*延时*/
+ 158   1              Delay_5Us();                            
+ 159   1              /*SCL拉高*/                                                                   
+ 160   1              I2C_Set_SCL(channel, High);
+ 161   1              /*延时*/
+ 162   1              Delay_5Us();                            
+ 163   1              /*SCL拉低，钳住*/
+ 164   1              I2C_Set_SCL(channel, Low);
+ 165   1       }
+ 166          
+ 167           /**
+ 168           * @brief       读取SDA线上的数据
+ 169           * @details     将SDA拉高后，不断产生正脉冲后读取SDA的高低，即为从机发送的数据
+ 170           * @param       channel:通道号
+ 171           * @retval      readByte：读到的一字节数据
+ 172           */
+ 173           uint8_t I2C_ReadByte(IIC_Channel channel) 
+ 174           {
+ 175   1              uint8_t readByte = 0;
+ 176   1              uint8_t i = 0;
+ 177   1              /*SDA拉高*/
+ 178   1              I2C_Set_SDA(channel, High);
+ 179   1      
+ 180   1              for(i = 0; i < sizeof(uint8_t) * 8U; i++) {
+ 181   2                      // /*SCL拉低，钳住*/
+ 182   2                      // I2C_Set_SCL(channel, Low);
+C51 COMPILER V9.60.0.0   IIC                                                               01/05/2022 14:26:36 PAGE 22  
+
+ 183   2                      readByte <<= 1U;        
+ 184   2                      /*SCL拉高*/                                                                   
+ 185   2                      I2C_Set_SCL(channel, High);     
+ 186   2                      /*延时*/
+ 187   2                      Delay_5Us();
+ 188   2                      if(SDA_READ_CHANNELX(channel)) 
+ 189   2                      {
+ 190   3                              readByte |= 1U;
+ 191   3                      }
+ 192   2                      /*SCL拉低，钳住*/
+ 193   2                      I2C_Set_SCL(channel, Low);
+ 194   2                      /*延时*/
+ 195   2                      Delay_5Us();                    
+ 196   2              }
+ 197   1              return readByte;
+ 198   1       }
+ 199          
+ 200          /**
+ 201           * @brief       设置SCL线上的电平状态
+ 202           * @details     Low/High
+ 203           * @param       channel:通道号，sate：状态
+ 204           * @retval      设置后状态
+ 205           */
+ 206           static uint8_t I2C_Set_SCL(IIC_Channel channel, IIC_Pin_State sate) 
+ 207           {
+ 208   1               uint8_t ret = I2C_Succeed;
+ 209   1      
+ 210   1               switch(channel)
+ 211   1               {
+ 212   2                      case Channel0: SCL_CHANNEL0 = sate;
+ 213   2                               break;
+ 214   2                      case Channel1: SCL_CHANNEL1 = sate;
+ 215   2                               break;
+ 216   2                      case Channel2: SCL_CHANNEL2 = sate;
+ 217   2                               break;
+ 218   2                      default : ret = I2C_Fail; break;
+ 219   2               }
+ 220   1              return ret;
+ 221   1       }
+ 222          
+ 223          /**
+ 224           * @brief       设置SDA线上的电平状态
+ 225           * @details     Low/High
+ 226           * @param       channel:通道号，sate：状态
+ 227           * @retval      设置后状态
+ 228           */
+ 229            static uint8_t I2C_Set_SDA(IIC_Channel channel, IIC_Pin_State sate) 
+ 230           {
+ 231   1               uint8_t ret = I2C_Succeed;
+ 232   1      
+ 233   1               switch(channel)
+ 234   1               {
+ 235   2                      case Channel0: SDA_CHANNEL0 = sate;
+ 236   2                               break;
+ 237   2                      case Channel1: SDA_CHANNEL1 = sate;
+ 238   2                               break;
+ 239   2                      case Channel2: SDA_CHANNEL2 = sate;
+ 240   2                               break;
+ 241   2                      default : ret = I2C_Fail; break;
+ 242   2               }
+ 243   1              return ret;
+ 244   1       }
+C51 COMPILER V9.60.0.0   IIC                                                               01/05/2022 14:26:36 PAGE 23  
+
+ 245          
+ 246          /*禁止编译器优化该模块*/
+ 247          #pragma OPTIMIZE(0)
+ 248           /**
+ 249           * @brief       us级别的延时
+ 250           * @details     IIC的SDA、SCL引脚切换需要一定延时
+ 251           * @param       us，需要延长的us数
+ 252           * @retval      None
+ 253           */
+ 254           void Delay_Us(uint16_t us)             //@11.0592MHz
+ 255          {
+ 256   1              do
+ 257   1              {
+ 258   2                      _nop_();
+ 259   2                      _nop_();
+ 260   2                      _nop_();
+ 261   2              }while(--us);
+ 262   1      }
+ 263          
+ 264          
+ 265           /**
+ 266           * @brief       @27MHz下5us延时
+ 267           * @details     该延时函数的精度将会受到编译器优化模式和时钟频率的影响
+ 268           * @param       None
+ 269           * @retval      None
+ 270           */
+ 271          void Delay_5Us(void)            
+ 272          {
+ 273   1              uint8_t us = 5U;
+ 274   1              while(--us);
+ 275   1      }
+ 276          
+ 277          /*不优化*/
+ 278          // #pragma OPTIMIZE(0)
+ 279           /**
+ 280           * @brief       ms级别的延时
+ 281           * @details     IIC的SDA、SCL引脚切换需要一定延时
+ 282           * @param       ms，需要延长的us数
+ 283           * @retval      None
+ 284           */
+ 285           void Delay_Ms(uint16_t ms)             //@27MHz
+ 286          {
+ 287   1              uint8_t i = 0, j = 0;
+ 288   1      
+ 289   1              do
+ 290   1              {       /* code */
+ 291   2                      _nop_();
+ 292   2                      _nop_();
+ 293   2                      // _nop_();
+ 294   2                      i = 36;
+ 295   2                      j = 13;
+ 296   2                      do
+ 297   2                      {
+ 298   3                              while (--j);
+ 299   3                      } while (--i);
+ 300   2              } while (--ms);
+ 301   1      }
+ 302          
+C51 COMPILER V9.60.0.0   IIC                                                               01/05/2022 14:26:36 PAGE 24  
+
+ASSEMBLY LISTING OF GENERATED OBJECT CODE
+
+
+             ; FUNCTION _I2C_Start (BEGIN)
+                                           ; SOURCE LINE # 13
+0000 900000      R     MOV     DPTR,#channel
+0003 EF                MOV     A,R7
+0004 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 14
+                                           ; SOURCE LINE # 15
+0005 7D01              MOV     R5,#01H
+0007 120000      R     LCALL   _I2C_Set_SDA
+                                           ; SOURCE LINE # 17
+000A 900000      R     MOV     DPTR,#channel
+000D E0                MOVX    A,@DPTR
+000E FF                MOV     R7,A
+000F 7D01              MOV     R5,#01H
+0011 120000      R     LCALL   _I2C_Set_SCL
+                                           ; SOURCE LINE # 19
+0014 120000      R     LCALL   Delay_5Us
+                                           ; SOURCE LINE # 21
+0017 900000      R     MOV     DPTR,#channel
+001A E0                MOVX    A,@DPTR
+001B FF                MOV     R7,A
+001C E4                CLR     A
+001D FD                MOV     R5,A
+001E 120000      R     LCALL   _I2C_Set_SDA
+                                           ; SOURCE LINE # 23
+0021 120000      R     LCALL   Delay_5Us
+                                           ; SOURCE LINE # 25
+0024 900000      R     MOV     DPTR,#channel
+0027 E0                MOVX    A,@DPTR
+0028 FF                MOV     R7,A
+0029 E4                CLR     A
+002A FD                MOV     R5,A
+002B 020000      R     LJMP    _I2C_Set_SCL
+             ; FUNCTION _I2C_Start (END)
+
+             ; FUNCTION _I2C_Stop (BEGIN)
+                                           ; SOURCE LINE # 34
+0000 900000      R     MOV     DPTR,#channel
+0003 EF                MOV     A,R7
+0004 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 35
+                                           ; SOURCE LINE # 37
+0005 E4                CLR     A
+0006 FD                MOV     R5,A
+0007 120000      R     LCALL   _I2C_Set_SDA
+                                           ; SOURCE LINE # 39
+000A 900000      R     MOV     DPTR,#channel
+000D E0                MOVX    A,@DPTR
+000E FF                MOV     R7,A
+000F 7D01              MOV     R5,#01H
+0011 120000      R     LCALL   _I2C_Set_SCL
+                                           ; SOURCE LINE # 41
+0014 7F05              MOV     R7,#05H
+0016 7E00              MOV     R6,#00H
+0018 120000      R     LCALL   _Delay_Us
+                                           ; SOURCE LINE # 43
+001B 900000      R     MOV     DPTR,#channel
+001E E0                MOVX    A,@DPTR
+001F FF                MOV     R7,A
+C51 COMPILER V9.60.0.0   IIC                                                               01/05/2022 14:26:36 PAGE 25  
+
+0020 7D01              MOV     R5,#01H
+0022 020000      R     LJMP    _I2C_Set_SDA
+             ; FUNCTION _I2C_Stop (END)
+
+             ; FUNCTION _I2C_SendByte (BEGIN)
+                                           ; SOURCE LINE # 51
+0000 900000      R     MOV     DPTR,#sendByte
+0003 ED                MOV     A,R5
+0004 F0                MOVX    @DPTR,A
+0005 900000      R     MOV     DPTR,#channel
+0008 EF                MOV     A,R7
+0009 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 52
+                                           ; SOURCE LINE # 53
+000A E4                CLR     A
+000B 900000      R     MOV     DPTR,#i
+000E F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 55
+000F FD                MOV     R5,A
+0010 120000      R     LCALL   _I2C_Set_SCL
+                                           ; SOURCE LINE # 57
+0013 120000      R     LCALL   Delay_5Us
+                                           ; SOURCE LINE # 59
+0016 E4                CLR     A
+0017 900000      R     MOV     DPTR,#i
+001A F0                MOVX    @DPTR,A
+001B         ?C0003:
+001B 900000      R     MOV     DPTR,#i
+001E E0                MOVX    A,@DPTR
+001F C3                CLR     C
+0020 9408              SUBB    A,#08H
+0022 E4                CLR     A
+0023 9400              SUBB    A,#00H
+0025 5041              JNC     ?C0008
+                                           ; SOURCE LINE # 60
+                                           ; SOURCE LINE # 61
+0027 900000      R     MOV     DPTR,#sendByte
+002A E0                MOVX    A,@DPTR
+002B 900000      R     MOV     DPTR,#channel
+002E 30E706            JNB     ACC.7,?C0006
+                                           ; SOURCE LINE # 62
+                                           ; SOURCE LINE # 64
+0031 E0                MOVX    A,@DPTR
+0032 FF                MOV     R7,A
+0033 7D01              MOV     R5,#01H
+                                           ; SOURCE LINE # 65
+0035 8004              SJMP    ?C0056
+0037         ?C0006:
+                                           ; SOURCE LINE # 67
+                                           ; SOURCE LINE # 69
+0037 E0                MOVX    A,@DPTR
+0038 FF                MOV     R7,A
+0039 E4                CLR     A
+003A FD                MOV     R5,A
+003B         ?C0056:
+003B 120000      R     LCALL   _I2C_Set_SDA
+                                           ; SOURCE LINE # 70
+003E         ?C0007:
+                                           ; SOURCE LINE # 72
+003E 900000      R     MOV     DPTR,#sendByte
+0041 E0                MOVX    A,@DPTR
+0042 FF                MOV     R7,A
+C51 COMPILER V9.60.0.0   IIC                                                               01/05/2022 14:26:36 PAGE 26  
+
+0043 25E0              ADD     A,ACC
+0045 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 74
+0046 120000      R     LCALL   Delay_5Us
+                                           ; SOURCE LINE # 76
+0049 900000      R     MOV     DPTR,#channel
+004C E0                MOVX    A,@DPTR
+004D FF                MOV     R7,A
+004E 7D01              MOV     R5,#01H
+0050 120000      R     LCALL   _I2C_Set_SCL
+                                           ; SOURCE LINE # 78
+0053 120000      R     LCALL   Delay_5Us
+                                           ; SOURCE LINE # 80
+0056 900000      R     MOV     DPTR,#channel
+0059 E0                MOVX    A,@DPTR
+005A FF                MOV     R7,A
+005B E4                CLR     A
+005C FD                MOV     R5,A
+005D 120000      R     LCALL   _I2C_Set_SCL
+                                           ; SOURCE LINE # 81
+0060 900000      R     MOV     DPTR,#i
+0063 E0                MOVX    A,@DPTR
+0064 04                INC     A
+0065 F0                MOVX    @DPTR,A
+0066 80B3              SJMP    ?C0003
+                                           ; SOURCE LINE # 82
+0068         ?C0008:
+0068 22                RET     
+             ; FUNCTION _I2C_SendByte (END)
+
+             ; FUNCTION _I2C_WaitAck (BEGIN)
+                                           ; SOURCE LINE # 90
+0000 900000      R     MOV     DPTR,#timeout
+0003 EC                MOV     A,R4
+0004 F0                MOVX    @DPTR,A
+0005 A3                INC     DPTR
+0006 ED                MOV     A,R5
+0007 F0                MOVX    @DPTR,A
+0008 900000      R     MOV     DPTR,#channel
+000B EF                MOV     A,R7
+000C F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 91
+                                           ; SOURCE LINE # 93
+000D 7D01              MOV     R5,#01H
+000F 120000      R     LCALL   _I2C_Set_SDA
+                                           ; SOURCE LINE # 95
+0012 120000      R     LCALL   Delay_5Us
+                                           ; SOURCE LINE # 97
+0015 900000      R     MOV     DPTR,#channel
+0018 E0                MOVX    A,@DPTR
+0019 FF                MOV     R7,A
+001A 7D01              MOV     R5,#01H
+001C 120000      R     LCALL   _I2C_Set_SCL
+                                           ; SOURCE LINE # 99
+001F 120000      R     LCALL   Delay_5Us
+0022         ?C0009:
+                                           ; SOURCE LINE # 102
+0022 900000      R     MOV     DPTR,#channel
+0025 E0                MOVX    A,@DPTR
+0026 FF                MOV     R7,A
+0027 7E00              MOV     R6,#00H
+0029 7004              JNZ     ?C0011
+C51 COMPILER V9.60.0.0   IIC                                                               01/05/2022 14:26:36 PAGE 27  
+
+002B A2A7              MOV     C,SDA_CHANNEL0
+002D 800C              SJMP    ?C0012
+002F         ?C0011:
+002F EF                MOV     A,R7
+0030 6401              XRL     A,#01H
+0032 4E                ORL     A,R6
+0033 7004              JNZ     ?C0013
+0035 A285              MOV     C,SDA_CHANNEL1
+0037 8002              SJMP    ?C0014
+0039         ?C0013:
+0039 A294              MOV     C,SDA_CHANNEL2
+003B         ?C0014:
+003B         ?C0012:
+003B 5019              JNC     ?C0010
+                                           ; SOURCE LINE # 103
+                                           ; SOURCE LINE # 104
+003D 900000      R     MOV     DPTR,#timeout
+0040 74FF              MOV     A,#0FFH
+0042 F5F0              MOV     B,A
+0044 120000      E     LCALL   ?C?IILDX
+0047 45F0              ORL     A,B
+0049 7002              JNZ     ?C0015
+                                           ; SOURCE LINE # 110
+004B FF                MOV     R7,A
+004C 22                RET     
+                                           ; SOURCE LINE # 111
+004D         ?C0015:
+                                           ; SOURCE LINE # 113
+004D 7F01              MOV     R7,#01H
+004F 7E00              MOV     R6,#00H
+0051 120000      R     LCALL   _Delay_Us
+                                           ; SOURCE LINE # 114
+0054 80CC              SJMP    ?C0009
+0056         ?C0010:
+                                           ; SOURCE LINE # 117
+0056 900000      R     MOV     DPTR,#channel
+0059 E0                MOVX    A,@DPTR
+005A FF                MOV     R7,A
+005B E4                CLR     A
+005C FD                MOV     R5,A
+005D 120000      R     LCALL   _I2C_Set_SCL
+                                           ; SOURCE LINE # 119
+0060 7F01              MOV     R7,#01H
+                                           ; SOURCE LINE # 120
+0062         ?C0016:
+0062 22                RET     
+             ; FUNCTION _I2C_WaitAck (END)
+
+             ; FUNCTION _I2C_SendAck (BEGIN)
+                                           ; SOURCE LINE # 128
+0000 900000      R     MOV     DPTR,#channel
+0003 EF                MOV     A,R7
+0004 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 129
+                                           ; SOURCE LINE # 131
+0005 E4                CLR     A
+0006 FD                MOV     R5,A
+0007 120000      R     LCALL   _I2C_Set_SDA
+                                           ; SOURCE LINE # 133
+000A 7F05              MOV     R7,#05H
+000C 7E00              MOV     R6,#00H
+000E 120000      R     LCALL   _Delay_Us
+C51 COMPILER V9.60.0.0   IIC                                                               01/05/2022 14:26:36 PAGE 28  
+
+                                           ; SOURCE LINE # 135
+0011 900000      R     MOV     DPTR,#channel
+0014 E0                MOVX    A,@DPTR
+0015 FF                MOV     R7,A
+0016 7D01              MOV     R5,#01H
+0018 120000      R     LCALL   _I2C_Set_SCL
+                                           ; SOURCE LINE # 137
+001B 7F05              MOV     R7,#05H
+001D 7E00              MOV     R6,#00H
+001F 120000      R     LCALL   _Delay_Us
+                                           ; SOURCE LINE # 139
+0022 900000      R     MOV     DPTR,#channel
+0025 E0                MOVX    A,@DPTR
+0026 FF                MOV     R7,A
+0027 E4                CLR     A
+0028 FD                MOV     R5,A
+0029 120000      R     LCALL   _I2C_Set_SCL
+                                           ; SOURCE LINE # 141
+002C 7F05              MOV     R7,#05H
+002E 7E00              MOV     R6,#00H
+0030 120000      R     LCALL   _Delay_Us
+                                           ; SOURCE LINE # 143
+0033 900000      R     MOV     DPTR,#channel
+0036 E0                MOVX    A,@DPTR
+0037 FF                MOV     R7,A
+0038 7D01              MOV     R5,#01H
+003A 020000      R     LJMP    _I2C_Set_SDA
+             ; FUNCTION _I2C_SendAck (END)
+
+             ; FUNCTION _I2C_SendNAck (BEGIN)
+                                           ; SOURCE LINE # 151
+0000 900000      R     MOV     DPTR,#channel
+0003 EF                MOV     A,R7
+0004 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 152
+                                           ; SOURCE LINE # 154
+0005 7D01              MOV     R5,#01H
+0007 120000      R     LCALL   _I2C_Set_SDA
+                                           ; SOURCE LINE # 156
+000A 900000      R     MOV     DPTR,#channel
+000D E0                MOVX    A,@DPTR
+000E FF                MOV     R7,A
+000F E4                CLR     A
+0010 FD                MOV     R5,A
+0011 120000      R     LCALL   _I2C_Set_SCL
+                                           ; SOURCE LINE # 158
+0014 120000      R     LCALL   Delay_5Us
+                                           ; SOURCE LINE # 160
+0017 900000      R     MOV     DPTR,#channel
+001A E0                MOVX    A,@DPTR
+001B FF                MOV     R7,A
+001C 7D01              MOV     R5,#01H
+001E 120000      R     LCALL   _I2C_Set_SCL
+                                           ; SOURCE LINE # 162
+0021 120000      R     LCALL   Delay_5Us
+                                           ; SOURCE LINE # 164
+0024 900000      R     MOV     DPTR,#channel
+0027 E0                MOVX    A,@DPTR
+0028 FF                MOV     R7,A
+0029 E4                CLR     A
+002A FD                MOV     R5,A
+002B 020000      R     LJMP    _I2C_Set_SCL
+C51 COMPILER V9.60.0.0   IIC                                                               01/05/2022 14:26:36 PAGE 29  
+
+             ; FUNCTION _I2C_SendNAck (END)
+
+             ; FUNCTION _I2C_ReadByte (BEGIN)
+                                           ; SOURCE LINE # 173
+0000 900000      R     MOV     DPTR,#channel
+0003 EF                MOV     A,R7
+0004 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 174
+                                           ; SOURCE LINE # 175
+0005 E4                CLR     A
+0006 A3                INC     DPTR
+0007 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 176
+0008 A3                INC     DPTR
+0009 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 178
+000A 7D01              MOV     R5,#01H
+000C 120000      R     LCALL   _I2C_Set_SDA
+                                           ; SOURCE LINE # 180
+000F E4                CLR     A
+0010 900000      R     MOV     DPTR,#i
+0013 F0                MOVX    @DPTR,A
+0014         ?C0019:
+0014 900000      R     MOV     DPTR,#i
+0017 E0                MOVX    A,@DPTR
+0018 C3                CLR     C
+0019 9408              SUBB    A,#08H
+001B E4                CLR     A
+001C 9400              SUBB    A,#00H
+001E 504B              JNC     ?C0020
+                                           ; SOURCE LINE # 183
+0020 900000      R     MOV     DPTR,#readByte
+0023 E0                MOVX    A,@DPTR
+0024 25E0              ADD     A,ACC
+0026 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 185
+0027 900000      R     MOV     DPTR,#channel
+002A E0                MOVX    A,@DPTR
+002B FF                MOV     R7,A
+002C 7D01              MOV     R5,#01H
+002E 120000      R     LCALL   _I2C_Set_SCL
+                                           ; SOURCE LINE # 187
+0031 120000      R     LCALL   Delay_5Us
+                                           ; SOURCE LINE # 188
+0034 900000      R     MOV     DPTR,#channel
+0037 E0                MOVX    A,@DPTR
+0038 FF                MOV     R7,A
+0039 7E00              MOV     R6,#00H
+003B 7004              JNZ     ?C0023
+003D A2A7              MOV     C,SDA_CHANNEL0
+003F 800C              SJMP    ?C0024
+0041         ?C0023:
+0041 EF                MOV     A,R7
+0042 6401              XRL     A,#01H
+0044 4E                ORL     A,R6
+0045 7004              JNZ     ?C0025
+0047 A285              MOV     C,SDA_CHANNEL1
+0049 8002              SJMP    ?C0026
+004B         ?C0025:
+004B A294              MOV     C,SDA_CHANNEL2
+004D         ?C0026:
+004D         ?C0024:
+C51 COMPILER V9.60.0.0   IIC                                                               01/05/2022 14:26:36 PAGE 30  
+
+004D 5007              JNC     ?C0022
+                                           ; SOURCE LINE # 189
+                                           ; SOURCE LINE # 190
+004F 900000      R     MOV     DPTR,#readByte
+0052 E0                MOVX    A,@DPTR
+0053 4401              ORL     A,#01H
+0055 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 191
+0056         ?C0022:
+                                           ; SOURCE LINE # 193
+0056 900000      R     MOV     DPTR,#channel
+0059 E0                MOVX    A,@DPTR
+005A FF                MOV     R7,A
+005B E4                CLR     A
+005C FD                MOV     R5,A
+005D 120000      R     LCALL   _I2C_Set_SCL
+                                           ; SOURCE LINE # 195
+0060 120000      R     LCALL   Delay_5Us
+                                           ; SOURCE LINE # 196
+0063 900000      R     MOV     DPTR,#i
+0066 E0                MOVX    A,@DPTR
+0067 04                INC     A
+0068 F0                MOVX    @DPTR,A
+0069 80A9              SJMP    ?C0019
+006B         ?C0020:
+                                           ; SOURCE LINE # 197
+006B 900000      R     MOV     DPTR,#readByte
+006E E0                MOVX    A,@DPTR
+006F FF                MOV     R7,A
+                                           ; SOURCE LINE # 198
+0070 22                RET     
+             ; FUNCTION _I2C_ReadByte (END)
+
+             ; FUNCTION _I2C_Set_SCL (BEGIN)
+                                           ; SOURCE LINE # 206
+;---- Variable 'sate' assigned to Register 'R5' ----
+;---- Variable 'channel' assigned to Register 'R7' ----
+                                           ; SOURCE LINE # 207
+                                           ; SOURCE LINE # 208
+;---- Variable 'ret' assigned to Register 'R6' ----
+0000 7E01              MOV     R6,#01H
+                                           ; SOURCE LINE # 210
+0002 EF                MOV     A,R7
+0003 14                DEC     A
+0004 600E              JZ      ?C0030
+0006 14                DEC     A
+0007 6012              JZ      ?C0031
+0009 2402              ADD     A,#02H
+000B 7015              JNZ     ?C0032
+                                           ; SOURCE LINE # 211
+                                           ; SOURCE LINE # 212
+000D         ?C0029:
+000D ED                MOV     A,R5
+000E 24FF              ADD     A,#0FFH
+0010 9280              MOV     SCL_CHANNEL0,C
+                                           ; SOURCE LINE # 213
+0012 8010              SJMP    ?C0028
+                                           ; SOURCE LINE # 214
+0014         ?C0030:
+0014 ED                MOV     A,R5
+0015 24FF              ADD     A,#0FFH
+0017 9292              MOV     SCL_CHANNEL1,C
+C51 COMPILER V9.60.0.0   IIC                                                               01/05/2022 14:26:36 PAGE 31  
+
+                                           ; SOURCE LINE # 215
+0019 8009              SJMP    ?C0028
+                                           ; SOURCE LINE # 216
+001B         ?C0031:
+001B ED                MOV     A,R5
+001C 24FF              ADD     A,#0FFH
+001E 92C4              MOV     SCL_CHANNEL2,C
+                                           ; SOURCE LINE # 217
+0020 8002              SJMP    ?C0028
+                                           ; SOURCE LINE # 218
+0022         ?C0032:
+0022 E4                CLR     A
+0023 FE                MOV     R6,A
+                                           ; SOURCE LINE # 219
+0024         ?C0028:
+                                           ; SOURCE LINE # 220
+0024 AF06              MOV     R7,AR6
+                                           ; SOURCE LINE # 221
+0026 22                RET     
+             ; FUNCTION _I2C_Set_SCL (END)
+
+             ; FUNCTION _I2C_Set_SDA (BEGIN)
+                                           ; SOURCE LINE # 229
+;---- Variable 'sate' assigned to Register 'R5' ----
+;---- Variable 'channel' assigned to Register 'R7' ----
+                                           ; SOURCE LINE # 230
+                                           ; SOURCE LINE # 231
+;---- Variable 'ret' assigned to Register 'R6' ----
+0000 7E01              MOV     R6,#01H
+                                           ; SOURCE LINE # 233
+0002 EF                MOV     A,R7
+0003 14                DEC     A
+0004 600E              JZ      ?C0036
+0006 14                DEC     A
+0007 6012              JZ      ?C0037
+0009 2402              ADD     A,#02H
+000B 7015              JNZ     ?C0038
+                                           ; SOURCE LINE # 234
+                                           ; SOURCE LINE # 235
+000D         ?C0035:
+000D ED                MOV     A,R5
+000E 24FF              ADD     A,#0FFH
+0010 92A7              MOV     SDA_CHANNEL0,C
+                                           ; SOURCE LINE # 236
+0012 8010              SJMP    ?C0034
+                                           ; SOURCE LINE # 237
+0014         ?C0036:
+0014 ED                MOV     A,R5
+0015 24FF              ADD     A,#0FFH
+0017 9285              MOV     SDA_CHANNEL1,C
+                                           ; SOURCE LINE # 238
+0019 8009              SJMP    ?C0034
+                                           ; SOURCE LINE # 239
+001B         ?C0037:
+001B ED                MOV     A,R5
+001C 24FF              ADD     A,#0FFH
+001E 9294              MOV     SDA_CHANNEL2,C
+                                           ; SOURCE LINE # 240
+0020 8002              SJMP    ?C0034
+                                           ; SOURCE LINE # 241
+0022         ?C0038:
+0022 E4                CLR     A
+C51 COMPILER V9.60.0.0   IIC                                                               01/05/2022 14:26:36 PAGE 32  
+
+0023 FE                MOV     R6,A
+                                           ; SOURCE LINE # 242
+0024         ?C0034:
+                                           ; SOURCE LINE # 243
+0024 AF06              MOV     R7,AR6
+                                           ; SOURCE LINE # 244
+0026 22                RET     
+             ; FUNCTION _I2C_Set_SDA (END)
+
+             ; FUNCTION _Delay_Us (BEGIN)
+                                           ; SOURCE LINE # 254
+0000 900000      R     MOV     DPTR,#us
+0003 EE                MOV     A,R6
+0004 F0                MOVX    @DPTR,A
+0005 A3                INC     DPTR
+0006 EF                MOV     A,R7
+0007 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 255
+0008         ?C0042:
+                                           ; SOURCE LINE # 257
+                                           ; SOURCE LINE # 258
+0008 00                NOP     
+                                           ; SOURCE LINE # 259
+0009 00                NOP     
+                                           ; SOURCE LINE # 260
+000A 00                NOP     
+                                           ; SOURCE LINE # 261
+000B 900000      R     MOV     DPTR,#us
+000E 74FF              MOV     A,#0FFH
+0010 75F0FF            MOV     B,#0FFH
+0013 120000      E     LCALL   ?C?IILDX
+0016 AFF0              MOV     R7,B
+0018 FE                MOV     R6,A
+0019 EF                MOV     A,R7
+001A 4E                ORL     A,R6
+001B 70EB              JNZ     ?C0042
+                                           ; SOURCE LINE # 262
+001D 22                RET     
+             ; FUNCTION _Delay_Us (END)
+
+             ; FUNCTION Delay_5Us (BEGIN)
+                                           ; SOURCE LINE # 271
+                                           ; SOURCE LINE # 272
+                                           ; SOURCE LINE # 273
+0000 900000      R     MOV     DPTR,#us
+0003 7405              MOV     A,#05H
+0005 F0                MOVX    @DPTR,A
+0006         ?C0044:
+                                           ; SOURCE LINE # 274
+0006 900000      R     MOV     DPTR,#us
+0009 E0                MOVX    A,@DPTR
+000A 14                DEC     A
+000B FF                MOV     R7,A
+000C F0                MOVX    @DPTR,A
+000D EF                MOV     A,R7
+000E 70F6              JNZ     ?C0044
+                                           ; SOURCE LINE # 275
+0010 22                RET     
+             ; FUNCTION Delay_5Us (END)
+
+             ; FUNCTION _Delay_Ms (BEGIN)
+                                           ; SOURCE LINE # 285
+C51 COMPILER V9.60.0.0   IIC                                                               01/05/2022 14:26:36 PAGE 33  
+
+0000 900000      R     MOV     DPTR,#ms
+0003 EE                MOV     A,R6
+0004 F0                MOVX    @DPTR,A
+0005 A3                INC     DPTR
+0006 EF                MOV     A,R7
+0007 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 286
+                                           ; SOURCE LINE # 287
+0008 900000      R     MOV     DPTR,#i
+000B E4                CLR     A
+000C F0                MOVX    @DPTR,A
+000D 900000      R     MOV     DPTR,#j
+0010 E4                CLR     A
+0011 F0                MOVX    @DPTR,A
+0012         ?C0049:
+                                           ; SOURCE LINE # 290
+                                           ; SOURCE LINE # 291
+0012 00                NOP     
+                                           ; SOURCE LINE # 292
+0013 00                NOP     
+                                           ; SOURCE LINE # 294
+0014 900000      R     MOV     DPTR,#i
+0017 7424              MOV     A,#024H
+0019 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 295
+001A 900000      R     MOV     DPTR,#j
+001D 740D              MOV     A,#0DH
+001F F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 297
+0020         ?C0053:
+                                           ; SOURCE LINE # 298
+0020 900000      R     MOV     DPTR,#j
+0023 E0                MOVX    A,@DPTR
+0024 14                DEC     A
+0025 FF                MOV     R7,A
+0026 F0                MOVX    @DPTR,A
+0027 EF                MOV     A,R7
+0028 70F6              JNZ     ?C0053
+                                           ; SOURCE LINE # 299
+002A 900000      R     MOV     DPTR,#i
+002D E0                MOVX    A,@DPTR
+002E 14                DEC     A
+002F FF                MOV     R7,A
+0030 F0                MOVX    @DPTR,A
+0031 EF                MOV     A,R7
+0032 70EC              JNZ     ?C0053
+                                           ; SOURCE LINE # 300
+0034 900000      R     MOV     DPTR,#ms
+0037 74FF              MOV     A,#0FFH
+0039 75F0FF            MOV     B,#0FFH
+003C 120000      E     LCALL   ?C?IILDX
+003F AFF0              MOV     R7,B
+0041 FE                MOV     R6,A
+0042 EF                MOV     A,R7
+0043 4E                ORL     A,R6
+0044 70CC              JNZ     ?C0049
+                                           ; SOURCE LINE # 301
+0046 22                RET     
+             ; FUNCTION _Delay_Ms (END)
+
+C51 COMPILER V9.60.0.0   IIC                                                               01/05/2022 14:26:36 PAGE 34  
+
+NAME                                    CLASS   MSPACE  TYPE    OFFSET  SIZE
+====                                    =====   ======  ====    ======  ====
+
+
+uint16_t . . . . . . . . . . . . . . .  TYPEDEF  -----  U_INT    -----  2
+P0 . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0080H  1
+P1 . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0090H  1
+High . . . . . . . . . . . . . . . . .  E_CONST  -----  U_CHAR   -----  1
+P2 . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00A0H  1
+P3 . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00B0H  1
+P4 . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00C0H  1
+P5 . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00C8H  1
+_I2C_Set_SDA . . . . . . . . . . . . .  STATIC   CODE   PROC     0000H  -----
+  channel. . . . . . . . . . . . . . .  * REG *  DATA   U_CHAR   0007H  1
+  sate . . . . . . . . . . . . . . . .  * REG *  DATA   U_CHAR   0005H  1
+  ret. . . . . . . . . . . . . . . . .  * REG *  DATA   U_CHAR   0006H  1
+P6 . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00E8H  1
+int32_t. . . . . . . . . . . . . . . .  TYPEDEF  -----  LONG     -----  4
+P7 . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00F8H  1
+_I2C_SendNAck. . . . . . . . . . . . .  PUBLIC   CODE   PROC     0000H  -----
+  channel. . . . . . . . . . . . . . .  AUTO     XDATA  U_CHAR   0000H  1
+IE . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00A8H  1
+_I2C_Set_SCL . . . . . . . . . . . . .  STATIC   CODE   PROC     0000H  -----
+  channel. . . . . . . . . . . . . . .  * REG *  DATA   U_CHAR   0007H  1
+  sate . . . . . . . . . . . . . . . .  * REG *  DATA   U_CHAR   0005H  1
+  ret. . . . . . . . . . . . . . . . .  * REG *  DATA   U_CHAR   0006H  1
+size_t . . . . . . . . . . . . . . . .  TYPEDEF  -----  U_INT    -----  2
+_Delay_Ms. . . . . . . . . . . . . . .  PUBLIC   CODE   PROC     0000H  -----
+  ms . . . . . . . . . . . . . . . . .  AUTO     XDATA  U_INT    0000H  2
+  i. . . . . . . . . . . . . . . . . .  AUTO     XDATA  U_CHAR   0002H  1
+  j. . . . . . . . . . . . . . . . . .  AUTO     XDATA  U_CHAR   0003H  1
+IP . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00B8H  1
+_Delay_Us. . . . . . . . . . . . . . .  PUBLIC   CODE   PROC     0000H  -----
+  us . . . . . . . . . . . . . . . . .  AUTO     XDATA  U_INT    0000H  2
+CCON . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00D8H  1
+_I2C_Start . . . . . . . . . . . . . .  PUBLIC   CODE   PROC     0000H  -----
+  channel. . . . . . . . . . . . . . .  AUTO     XDATA  U_CHAR   0000H  1
+Low. . . . . . . . . . . . . . . . . .  E_CONST  -----  U_CHAR   -----  1
+_I2C_ReadByte. . . . . . . . . . . . .  PUBLIC   CODE   PROC     0000H  -----
+  channel. . . . . . . . . . . . . . .  AUTO     XDATA  U_CHAR   0000H  1
+  readByte . . . . . . . . . . . . . .  AUTO     XDATA  U_CHAR   0001H  1
+  i. . . . . . . . . . . . . . . . . .  AUTO     XDATA  U_CHAR   0002H  1
+SCON . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0098H  1
+TCON . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0088H  1
+_I2C_SendAck . . . . . . . . . . . . .  PUBLIC   CODE   PROC     0000H  -----
+  channel. . . . . . . . . . . . . . .  AUTO     XDATA  U_CHAR   0000H  1
+_I2C_SendByte. . . . . . . . . . . . .  PUBLIC   CODE   PROC     0000H  -----
+  channel. . . . . . . . . . . . . . .  AUTO     XDATA  U_CHAR   0000H  1
+  sendByte . . . . . . . . . . . . . .  AUTO     XDATA  U_CHAR   0001H  1
+  i. . . . . . . . . . . . . . . . . .  AUTO     XDATA  U_CHAR   0002H  1
+IIC_Pin_State. . . . . . . . . . . . .  TYPEDEF  -----  U_CHAR   -----  1
+_I2C_WaitAck . . . . . . . . . . . . .  PUBLIC   CODE   PROC     0000H  -----
+  channel. . . . . . . . . . . . . . .  AUTO     XDATA  U_CHAR   0000H  1
+  timeout. . . . . . . . . . . . . . .  AUTO     XDATA  U_INT    0001H  2
+_I2C_Stop. . . . . . . . . . . . . . .  PUBLIC   CODE   PROC     0000H  -----
+  channel. . . . . . . . . . . . . . .  AUTO     XDATA  U_CHAR   0000H  1
+uint8_t. . . . . . . . . . . . . . . .  TYPEDEF  -----  U_CHAR   -----  1
+Delay_5Us. . . . . . . . . . . . . . .  PUBLIC   CODE   PROC     0000H  -----
+  us . . . . . . . . . . . . . . . . .  AUTO     XDATA  U_CHAR   0000H  1
+__IO . . . . . . . . . . . . . . . . .  TYPEDEF  -----  INT      -----  2
+int8_t . . . . . . . . . . . . . . . .  TYPEDEF  -----  CHAR     -----  1
+C51 COMPILER V9.60.0.0   IIC                                                               01/05/2022 14:26:36 PAGE 35  
+
+NAME                                    CLASS   MSPACE  TYPE    OFFSET  SIZE
+====                                    =====   ======  ====    ======  ====
+
+
+SDA_CHANNEL0 . . . . . . . . . . . . .  ABSBIT   -----  BIT      00A7H  1
+SDA_CHANNEL1 . . . . . . . . . . . . .  ABSBIT   -----  BIT      0085H  1
+SDA_CHANNEL2 . . . . . . . . . . . . .  ABSBIT   -----  BIT      0094H  1
+wchar_t. . . . . . . . . . . . . . . .  TYPEDEF  -----  CHAR     -----  1
+Channel0 . . . . . . . . . . . . . . .  E_CONST  -----  U_CHAR   -----  1
+Channel1 . . . . . . . . . . . . . . .  E_CONST  -----  U_CHAR   -----  1
+Channel2 . . . . . . . . . . . . . . .  E_CONST  -----  U_CHAR   -----  1
+SCL_CHANNEL0 . . . . . . . . . . . . .  ABSBIT   -----  BIT      0080H  1
+SCL_CHANNEL1 . . . . . . . . . . . . .  ABSBIT   -----  BIT      0092H  1
+SCL_CHANNEL2 . . . . . . . . . . . . .  ABSBIT   -----  BIT      00C4H  1
+IIC_Channel. . . . . . . . . . . . . .  TYPEDEF  -----  U_CHAR   -----  1
+va_list. . . . . . . . . . . . . . . .  TYPEDEF  -----  PTR      -----  3
+PSW. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00D0H  1
+uint32_t . . . . . . . . . . . . . . .  TYPEDEF  -----  U_LONG   -----  4
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    703    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =      7      13
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

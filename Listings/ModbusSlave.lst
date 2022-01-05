@@ -1,0 +1,2048 @@
+C51 COMPILER V9.60.0.0   MODBUSSLAVE                                                       09/13/2021 00:48:18 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE MODBUSSLAVE
+OBJECT MODULE PLACED IN .\Objects\ModbusSlave.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE Src\ModbusSlave.c LARGE OPTIMIZE(0,SPEED) BROWSE FLOATFUZZY(4) INCDIR(.\
+                    -Inc) DEBUG OBJECTEXTEND CODE LISTINCLUDE SYMBOLS PRINT(.\Listings\ModbusSlave.lst) OBJECT(.\Objects\ModbusSlave.obj)
+
+line level    source
+
+   1          /*
+   2           * ModbusSlave.c
+   3           *
+   4           *  Created on: 2021年1月29日
+   5           *      Author: play
+   6           */
+   7          #include "ModbusSlave.h"
+   1      =1  /*
+   2      =1   * ModbusSlave.h
+   3      =1   *
+   4      =1   *  Created on: 2021年1月29日
+   5      =1   *      Author: play
+   6      =1   */
+   7      =1  
+   8      =1  #ifndef INC_MODBUSSLAVE_H_
+   9      =1  #define INC_MODBUSSLAVE_H_
+  10      =1  
+  11      =1  #include "config.h"
+   1      =2  #ifndef __CONFIG_H_
+   2      =2  #define __CONFIG_H_
+   3      =2  
+   4      =2  #include <STC8.H>
+   1      =3  #ifndef __STC8F_H_
+   2      =3  #define __STC8F_H_
+   3      =3  
+   4      =3  /////////////////////////////////////////////////
+   5      =3  
+   6      =3  //包含本头文件后,不用另外再包含"REG51.H"
+   7      =3  
+   8      =3  //内核特殊功能寄存器
+   9      =3  sfr ACC         =   0xe0;
+  10      =3  sfr B           =   0xf0;
+  11      =3  sfr PSW         =   0xd0;
+  12      =3  sbit CY         =   PSW^7;
+  13      =3  sbit AC         =   PSW^6;
+  14      =3  sbit F0         =   PSW^5;
+  15      =3  sbit RS1        =   PSW^4;
+  16      =3  sbit RS0        =   PSW^3;
+  17      =3  sbit OV         =   PSW^2;
+  18      =3  sbit P          =   PSW^0;
+  19      =3  sfr SP          =   0x81;
+  20      =3  sfr DPL         =   0x82;
+  21      =3  sfr DPH         =   0x83;
+  22      =3  sfr TA          =   0xae;
+  23      =3  sfr DPS         =   0xe3;
+  24      =3  sfr DPL1        =   0xe4;
+  25      =3  sfr DPH1        =   0xe5;
+  26      =3  
+  27      =3  
+  28      =3  //I/O 口特殊功能寄存器
+  29      =3  sfr P0          =   0x80;
+  30      =3  sfr P1          =   0x90;
+  31      =3  sfr P2          =   0xa0;
+  32      =3  sfr P3          =   0xb0;
+C51 COMPILER V9.60.0.0   MODBUSSLAVE                                                       09/13/2021 00:48:18 PAGE 2   
+
+  33      =3  sfr P4          =   0xc0;
+  34      =3  sfr P5          =   0xc8;
+  35      =3  sfr P6          =   0xe8;
+  36      =3  sfr P7          =   0xf8;
+  37      =3  sfr P0M0        =   0x94;
+  38      =3  sfr P0M1        =   0x93;
+  39      =3  sfr P1M0        =   0x92;
+  40      =3  sfr P1M1        =   0x91;
+  41      =3  sfr P2M0        =   0x96;
+  42      =3  sfr P2M1        =   0x95;
+  43      =3  sfr P3M0        =   0xb2;
+  44      =3  sfr P3M1        =   0xb1;
+  45      =3  sfr P4M0        =   0xb4;
+  46      =3  sfr P4M1        =   0xb3;
+  47      =3  sfr P5M0        =   0xca;
+  48      =3  sfr P5M1        =   0xc9;
+  49      =3  sfr P6M0        =   0xcc;
+  50      =3  sfr P6M1        =   0xcb;
+  51      =3  sfr P7M0        =   0xe2;
+  52      =3  sfr P7M1        =   0xe1;
+  53      =3  
+  54      =3  sbit P00        =   P0^0;
+  55      =3  sbit P01        =   P0^1;
+  56      =3  sbit P02        =   P0^2;
+  57      =3  sbit P03        =   P0^3;
+  58      =3  sbit P04        =   P0^4;
+  59      =3  sbit P05        =   P0^5;
+  60      =3  sbit P06        =   P0^6;
+  61      =3  sbit P07        =   P0^7;
+  62      =3  sbit P10        =   P1^0;
+  63      =3  sbit P11        =   P1^1;
+  64      =3  sbit P12        =   P1^2;
+  65      =3  sbit P13        =   P1^3;
+  66      =3  sbit P14        =   P1^4;
+  67      =3  sbit P15        =   P1^5;
+  68      =3  sbit P16        =   P1^6;
+  69      =3  sbit P17        =   P1^7;
+  70      =3  sbit P20        =   P2^0;
+  71      =3  sbit P21        =   P2^1;
+  72      =3  sbit P22        =   P2^2;
+  73      =3  sbit P23        =   P2^3;
+  74      =3  sbit P24        =   P2^4;
+  75      =3  sbit P25        =   P2^5;
+  76      =3  sbit P26        =   P2^6;
+  77      =3  sbit P27        =   P2^7;
+  78      =3  sbit P30        =   P3^0;
+  79      =3  sbit P31        =   P3^1;
+  80      =3  sbit P32        =   P3^2;
+  81      =3  sbit P33        =   P3^3;
+  82      =3  sbit P34        =   P3^4;
+  83      =3  sbit P35        =   P3^5;
+  84      =3  sbit P36        =   P3^6;
+  85      =3  sbit P37        =   P3^7;
+  86      =3  sbit P40        =   P4^0;
+  87      =3  sbit P41        =   P4^1;
+  88      =3  sbit P42        =   P4^2;
+  89      =3  sbit P43        =   P4^3;
+  90      =3  sbit P44        =   P4^4;
+  91      =3  sbit P45        =   P4^5;
+  92      =3  sbit P46        =   P4^6;
+  93      =3  sbit P47        =   P4^7;
+  94      =3  sbit P50        =   P5^0;
+C51 COMPILER V9.60.0.0   MODBUSSLAVE                                                       09/13/2021 00:48:18 PAGE 3   
+
+  95      =3  sbit P51        =   P5^1;
+  96      =3  sbit P52        =   P5^2;
+  97      =3  sbit P53        =   P5^3;
+  98      =3  sbit P54        =   P5^4;
+  99      =3  sbit P55        =   P5^5;
+ 100      =3  sbit P56        =   P5^6;
+ 101      =3  sbit P57        =   P5^7;
+ 102      =3  sbit P60        =   P6^0;
+ 103      =3  sbit P61        =   P6^1;
+ 104      =3  sbit P62        =   P6^2;
+ 105      =3  sbit P63        =   P6^3;
+ 106      =3  sbit P64        =   P6^4;
+ 107      =3  sbit P65        =   P6^5;
+ 108      =3  sbit P66        =   P6^6;
+ 109      =3  sbit P67        =   P6^7;
+ 110      =3  sbit P70        =   P7^0;
+ 111      =3  sbit P71        =   P7^1;
+ 112      =3  sbit P72        =   P7^2;
+ 113      =3  sbit P73        =   P7^3;
+ 114      =3  sbit P74        =   P7^4;
+ 115      =3  sbit P75        =   P7^5;
+ 116      =3  sbit P76        =   P7^6;
+ 117      =3  sbit P77        =   P7^7;
+ 118      =3  
+ 119      =3  //如下特殊功能寄存器位于扩展RAM区域
+ 120      =3  //访问这些寄存器,需先将P_SW2的BIT7设置为1,才可正常读写
+ 121      =3  #define P0PU        (*(unsigned char volatile xdata *)0xfe10)
+ 122      =3  #define P1PU        (*(unsigned char volatile xdata *)0xfe11)
+ 123      =3  #define P2PU        (*(unsigned char volatile xdata *)0xfe12)
+ 124      =3  #define P3PU        (*(unsigned char volatile xdata *)0xfe13)
+ 125      =3  #define P4PU        (*(unsigned char volatile xdata *)0xfe14)
+ 126      =3  #define P5PU        (*(unsigned char volatile xdata *)0xfe15)
+ 127      =3  #define P6PU        (*(unsigned char volatile xdata *)0xfe16)
+ 128      =3  #define P7PU        (*(unsigned char volatile xdata *)0xfe17)
+ 129      =3  #define P0NCS       (*(unsigned char volatile xdata *)0xfe18)
+ 130      =3  #define P1NCS       (*(unsigned char volatile xdata *)0xfe19)
+ 131      =3  #define P2NCS       (*(unsigned char volatile xdata *)0xfe1a)
+ 132      =3  #define P3NCS       (*(unsigned char volatile xdata *)0xfe1b)
+ 133      =3  #define P4NCS       (*(unsigned char volatile xdata *)0xfe1c)
+ 134      =3  #define P5NCS       (*(unsigned char volatile xdata *)0xfe1d)
+ 135      =3  #define P6NCS       (*(unsigned char volatile xdata *)0xfe1e)
+ 136      =3  #define P7NCS       (*(unsigned char volatile xdata *)0xfe1f)
+ 137      =3  
+ 138      =3  //系统管理特殊功能寄存器
+ 139      =3  sfr PCON        =   0x87;
+ 140      =3  #define SMOD        0x80
+ 141      =3  #define SMOD0       0x40
+ 142      =3  #define LVDF        0x20
+ 143      =3  #define POF         0x10
+ 144      =3  #define GF1         0x08
+ 145      =3  #define GF0         0x04
+ 146      =3  #define PD          0x02
+ 147      =3  #define IDL         0x01
+ 148      =3  sfr AUXR        =   0x8e;
+ 149      =3  #define T0x12       0x80
+ 150      =3  #define T1x12       0x40
+ 151      =3  #define UART_M0x6   0x20
+ 152      =3  #define T2R         0x10
+ 153      =3  #define T2_CT       0x08
+ 154      =3  #define T2x12       0x04
+ 155      =3  #define EXTRAM      0x02
+ 156      =3  #define S1ST2       0x01
+C51 COMPILER V9.60.0.0   MODBUSSLAVE                                                       09/13/2021 00:48:18 PAGE 4   
+
+ 157      =3  sfr AUXR2       =   0x97;
+ 158      =3  #define TXLNRX      0x10
+ 159      =3  sfr BUS_SPEED   =   0xa1;
+ 160      =3  sfr P_SW1       =   0xa2;
+ 161      =3  sfr P_SW2       =   0xba;
+ 162      =3  #define EAXFR       0x80
+ 163      =3  sfr VOCTRL      =   0xbb;
+ 164      =3  sfr RSTCFG      =   0xff;
+ 165      =3  
+ 166      =3  //如下特殊功能寄存器位于扩展RAM区域
+ 167      =3  //访问这些寄存器,需先将P_SW2的BIT7设置为1,才可正常读写
+ 168      =3  #define CKSEL       (*(unsigned char volatile xdata *)0xfe00)
+ 169      =3  #define CLKDIV      (*(unsigned char volatile xdata *)0xfe01)
+ 170      =3  #define IRC24MCR    (*(unsigned char volatile xdata *)0xfe02)
+ 171      =3  #define XOSCCR      (*(unsigned char volatile xdata *)0xfe03)
+ 172      =3  #define IRC32KCR    (*(unsigned char volatile xdata *)0xfe04)
+ 173      =3  
+ 174      =3  //中断特殊功能寄存器
+ 175      =3  sfr IE          =   0xa8;
+ 176      =3  sbit EA         =   IE^7;
+ 177      =3  sbit ELVD       =   IE^6;
+ 178      =3  sbit EADC       =   IE^5;
+ 179      =3  sbit ES         =   IE^4;
+ 180      =3  sbit ET1        =   IE^3;
+ 181      =3  sbit EX1        =   IE^2;
+ 182      =3  sbit ET0        =   IE^1;
+ 183      =3  sbit EX0        =   IE^0;
+ 184      =3  sfr IE2         =   0xaf;
+ 185      =3  #define ET4         0x40
+ 186      =3  #define ET3         0x20
+ 187      =3  #define ES4         0x10
+ 188      =3  #define ES3         0x08
+ 189      =3  #define ET2         0x04
+ 190      =3  #define ESPI        0x02
+ 191      =3  #define ES2         0x01
+ 192      =3  sfr IP          =   0xb8;
+ 193      =3  sbit PPCA       =   IP^7;
+ 194      =3  sbit PLVD       =   IP^6;
+ 195      =3  sbit PADC       =   IP^5;
+ 196      =3  sbit PS         =   IP^4;
+ 197      =3  sbit PT1        =   IP^3;
+ 198      =3  sbit PX1        =   IP^2;
+ 199      =3  sbit PT0        =   IP^1;
+ 200      =3  sbit PX0        =   IP^0;
+ 201      =3  sfr IP2         =   0xb5;
+ 202      =3  #define PI2C        0x40
+ 203      =3  #define PCMP        0x20
+ 204      =3  #define PX4         0x10
+ 205      =3  #define PPWMFD      0x08
+ 206      =3  #define PPWM        0x04
+ 207      =3  #define PSPI        0x02
+ 208      =3  #define PS2         0x01
+ 209      =3  sfr IPH         =   0xb7;
+ 210      =3  #define PPCAH       0x80
+ 211      =3  #define PLVDH       0x40
+ 212      =3  #define PADCH       0x20
+ 213      =3  #define PSH         0x10
+ 214      =3  #define PT1H        0x08
+ 215      =3  #define PX1H        0x04
+ 216      =3  #define PT0H        0x02
+ 217      =3  #define PX0H        0x01
+ 218      =3  sfr IP2H        =   0xb6;
+C51 COMPILER V9.60.0.0   MODBUSSLAVE                                                       09/13/2021 00:48:18 PAGE 5   
+
+ 219      =3  #define PI2CH       0x40
+ 220      =3  #define PCMPH       0x20
+ 221      =3  #define PX4H        0x10
+ 222      =3  #define PPWMFDH     0x08
+ 223      =3  #define PPWMH       0x04
+ 224      =3  #define PSPIH       0x02
+ 225      =3  #define PS2H        0x01
+ 226      =3  sfr INTCLKO     =   0x8f;
+ 227      =3  #define EX4         0x40
+ 228      =3  #define EX3         0x20
+ 229      =3  #define EX2         0x10
+ 230      =3  #define T2CLKO      0x04
+ 231      =3  #define T1CLKO      0x02
+ 232      =3  #define T0CLKO      0x01
+ 233      =3  sfr AUXINTIF    =   0xef;
+ 234      =3  #define INT4IF      0x40
+ 235      =3  #define INT3IF      0x20
+ 236      =3  #define INT2IF      0x10
+ 237      =3  #define T4IF        0x04
+ 238      =3  #define T3IF        0x02
+ 239      =3  #define T2IF        0x01
+ 240      =3  
+ 241      =3  //定时器特殊功能寄存器
+ 242      =3  sfr TCON        =   0x88;
+ 243      =3  sbit TF1        =   TCON^7;
+ 244      =3  sbit TR1        =   TCON^6;
+ 245      =3  sbit TF0        =   TCON^5;
+ 246      =3  sbit TR0        =   TCON^4;
+ 247      =3  sbit IE1        =   TCON^3;
+ 248      =3  sbit IT1        =   TCON^2;
+ 249      =3  sbit IE0        =   TCON^1;
+ 250      =3  sbit IT0        =   TCON^0;
+ 251      =3  sfr TMOD        =   0x89;
+ 252      =3  #define T1_GATE     0x80
+ 253      =3  #define T1_CT       0x40
+ 254      =3  #define T1_M1       0x20
+ 255      =3  #define T1_M0       0x10
+ 256      =3  #define T0_GATE     0x08
+ 257      =3  #define T0_CT       0x04
+ 258      =3  #define T0_M1       0x02
+ 259      =3  #define T0_M0       0x01
+ 260      =3  sfr TL0         =   0x8a;
+ 261      =3  sfr TL1         =   0x8b;
+ 262      =3  sfr TH0         =   0x8c;
+ 263      =3  sfr TH1         =   0x8d;
+ 264      =3  sfr T4T3M       =   0xd1;
+ 265      =3  #define T4R         0x80
+ 266      =3  #define T4_CT       0x40
+ 267      =3  #define T4x12       0x20
+ 268      =3  #define T4CLKO      0x10
+ 269      =3  #define T3R         0x08
+ 270      =3  #define T3_CT       0x04
+ 271      =3  #define T3x12       0x02
+ 272      =3  #define T3CLKO      0x01
+ 273      =3  sfr T4H         =   0xd2;
+ 274      =3  sfr T4L         =   0xd3;
+ 275      =3  sfr T3H         =   0xd4;
+ 276      =3  sfr T3L         =   0xd5;
+ 277      =3  sfr T2H         =   0xd6;
+ 278      =3  sfr T2L         =   0xd7;
+ 279      =3  sfr TH4         =   0xd2;
+ 280      =3  sfr TL4         =   0xd3;
+C51 COMPILER V9.60.0.0   MODBUSSLAVE                                                       09/13/2021 00:48:18 PAGE 6   
+
+ 281      =3  sfr TH3         =   0xd4;
+ 282      =3  sfr TL3         =   0xd5;
+ 283      =3  sfr TH2         =   0xd6;
+ 284      =3  sfr TL2         =   0xd7;
+ 285      =3  sfr WKTCL       =   0xaa;
+ 286      =3  sfr WKTCH       =   0xab;
+ 287      =3  #define WKTEN       0x80
+ 288      =3  sfr WDT_CONTR   =   0xc1;
+ 289      =3  #define WDT_FLAG    0x80
+ 290      =3  #define EN_WDT      0x20
+ 291      =3  #define CLR_WDT     0x10
+ 292      =3  #define IDL_WDT     0x08
+ 293      =3  
+ 294      =3  //串行口特殊功能寄存器
+ 295      =3  sfr SCON        =   0x98;
+ 296      =3  sbit SM0        =   SCON^7;
+ 297      =3  sbit SM1        =   SCON^6;
+ 298      =3  sbit SM2        =   SCON^5;
+ 299      =3  sbit REN        =   SCON^4;
+ 300      =3  sbit TB8        =   SCON^3;
+ 301      =3  sbit RB8        =   SCON^2;
+ 302      =3  sbit TI         =   SCON^1;
+ 303      =3  sbit RI         =   SCON^0;
+ 304      =3  sfr SBUF        =   0x99;
+ 305      =3  sfr S2CON       =   0x9a;
+ 306      =3  #define S2SM0       0x80
+ 307      =3  #define S2ST4       0x40
+ 308      =3  #define S2SM2       0x20
+ 309      =3  #define S2REN       0x10
+ 310      =3  #define S2TB8       0x08
+ 311      =3  #define S2RB8       0x04
+ 312      =3  #define S2TI        0x02
+ 313      =3  #define S2RI        0x01
+ 314      =3  sfr S2BUF       =   0x9b;
+ 315      =3  sfr S3CON       =   0xac;
+ 316      =3  #define S3SM0       0x80
+ 317      =3  #define S3ST4       0x40
+ 318      =3  #define S3SM2       0x20
+ 319      =3  #define S3REN       0x10
+ 320      =3  #define S3TB8       0x08
+ 321      =3  #define S3RB8       0x04
+ 322      =3  #define S3TI        0x02
+ 323      =3  #define S3RI        0x01
+ 324      =3  sfr S3BUF       =   0xad;
+ 325      =3  sfr S4CON       =   0x84;
+ 326      =3  #define S4SM0       0x80
+ 327      =3  #define S4ST4       0x40
+ 328      =3  #define S4SM2       0x20
+ 329      =3  #define S4REN       0x10
+ 330      =3  #define S4TB8       0x08
+ 331      =3  #define S4RB8       0x04
+ 332      =3  #define S4TI        0x02
+ 333      =3  #define S4RI        0x01
+ 334      =3  sfr S4BUF       =   0x85;
+ 335      =3  sfr SADDR       =   0xa9;
+ 336      =3  sfr SADEN       =   0xb9;
+ 337      =3  
+ 338      =3  //ADC 特殊功能寄存器
+ 339      =3  sfr ADC_CONTR   =   0xbc;
+ 340      =3  #define ADC_POWER   0x80
+ 341      =3  #define ADC_START   0x40
+ 342      =3  #define ADC_FLAG    0x20
+C51 COMPILER V9.60.0.0   MODBUSSLAVE                                                       09/13/2021 00:48:18 PAGE 7   
+
+ 343      =3  sfr ADC_RES     =   0xbd;
+ 344      =3  sfr ADC_RESL    =   0xbe;
+ 345      =3  sfr ADCCFG      =   0xde;
+ 346      =3  #define ADC_RESFMT  0x20
+ 347      =3  
+ 348      =3  //SPI 特殊功能寄存器
+ 349      =3  sfr SPSTAT      =   0xcd;
+ 350      =3  #define SPIF        0x80
+ 351      =3  #define WCOL        0x40
+ 352      =3  sfr SPCTL       =   0xce;
+ 353      =3  #define SSIG        0x80
+ 354      =3  #define SPEN        0x40
+ 355      =3  #define DORD        0x20
+ 356      =3  #define MSTR        0x10
+ 357      =3  #define CPOL        0x08
+ 358      =3  #define CPHA        0x04
+ 359      =3  sfr SPDAT       =   0xcf;
+ 360      =3  
+ 361      =3  //IAP/ISP 特殊功能寄存器
+ 362      =3  sfr IAP_DATA    =   0xc2;
+ 363      =3  sfr IAP_ADDRH   =   0xc3;
+ 364      =3  sfr IAP_ADDRL   =   0xc4;
+ 365      =3  sfr IAP_CMD     =   0xc5;
+ 366      =3  #define IAP_IDL     0x00
+ 367      =3  #define IAP_READ    0x01
+ 368      =3  #define IAP_WRITE   0x02
+ 369      =3  #define IAP_ERASE   0x03
+ 370      =3  sfr IAP_TRIG    =   0xc6;
+ 371      =3  sfr IAP_CONTR   =   0xc7;
+ 372      =3  #define IAPEN       0x80
+ 373      =3  #define SWBS        0x40
+ 374      =3  #define SWRST       0x20
+ 375      =3  #define CMD_FAIL    0x10
+ 376      =3  sfr ISP_DATA    =   0xc2;
+ 377      =3  sfr ISP_ADDRH   =   0xc3;
+ 378      =3  sfr ISP_ADDRL   =   0xc4;
+ 379      =3  sfr ISP_CMD     =   0xc5;
+ 380      =3  sfr ISP_TRIG    =   0xc6;
+ 381      =3  sfr ISP_CONTR   =   0xc7;
+ 382      =3  
+ 383      =3  //比较器特殊功能寄存器
+ 384      =3  sfr CMPCR1      =   0xe6;
+ 385      =3  #define CMPEN       0x80
+ 386      =3  #define CMPIF       0x40
+ 387      =3  #define PIE         0x20
+ 388      =3  #define NIE         0x10
+ 389      =3  #define PIS         0x08
+ 390      =3  #define NIS         0x04
+ 391      =3  #define CMPOE       0x02
+ 392      =3  #define CMPRES      0x01
+ 393      =3  sfr CMPCR2      =   0xe7;
+ 394      =3  #define INVCMPO     0x80
+ 395      =3  #define DISFLT      0x40
+ 396      =3  
+ 397      =3  //PCA/PWM 特殊功能寄存器
+ 398      =3  sfr CCON        =   0xd8;
+ 399      =3  sbit CF         =   CCON^7;
+ 400      =3  sbit CR         =   CCON^6;
+ 401      =3  sbit CCF3       =   CCON^3;
+ 402      =3  sbit CCF2       =   CCON^2;
+ 403      =3  sbit CCF1       =   CCON^1;
+ 404      =3  sbit CCF0       =   CCON^0;
+C51 COMPILER V9.60.0.0   MODBUSSLAVE                                                       09/13/2021 00:48:18 PAGE 8   
+
+ 405      =3  sfr CMOD        =   0xd9;
+ 406      =3  #define CIDL        0x80
+ 407      =3  #define ECF         0x01
+ 408      =3  sfr CL          =   0xe9;
+ 409      =3  sfr CH          =   0xf9;
+ 410      =3  sfr CCAPM0      =   0xda;
+ 411      =3  #define ECOM0       0x40
+ 412      =3  #define CCAPP0      0x20
+ 413      =3  #define CCAPN0      0x10
+ 414      =3  #define MAT0        0x08
+ 415      =3  #define TOG0        0x04
+ 416      =3  #define PWM0        0x02
+ 417      =3  #define ECCF0       0x01
+ 418      =3  sfr CCAPM1      =   0xdb;
+ 419      =3  #define ECOM1       0x40
+ 420      =3  #define CCAPP1      0x20
+ 421      =3  #define CCAPN1      0x10
+ 422      =3  #define MAT1        0x08
+ 423      =3  #define TOG1        0x04
+ 424      =3  #define PWM1        0x02
+ 425      =3  #define ECCF1       0x01
+ 426      =3  sfr CCAPM2      =   0xdc;
+ 427      =3  #define ECOM2       0x40
+ 428      =3  #define CCAPP2      0x20
+ 429      =3  #define CCAPN2      0x10
+ 430      =3  #define MAT2        0x08
+ 431      =3  #define TOG2        0x04
+ 432      =3  #define PWM2        0x02
+ 433      =3  #define ECCF2       0x01
+ 434      =3  sfr CCAPM3      =   0xdd;
+ 435      =3  #define ECOM3       0x40
+ 436      =3  #define CCAPP3      0x20
+ 437      =3  #define CCAPN3      0x10
+ 438      =3  #define MAT3        0x08
+ 439      =3  #define TOG3        0x04
+ 440      =3  #define PWM3        0x02
+ 441      =3  #define ECCF3       0x01
+ 442      =3  sfr CCAP0L      =   0xea;
+ 443      =3  sfr CCAP1L      =   0xeb;
+ 444      =3  sfr CCAP2L      =   0xec;
+ 445      =3  sfr CCAP3L      =   0xed;
+ 446      =3  sfr CCAP0H      =   0xfa;
+ 447      =3  sfr CCAP1H      =   0xfb;
+ 448      =3  sfr CCAP2H      =   0xfc;
+ 449      =3  sfr CCAP3H      =   0xfd;
+ 450      =3  sfr PCA_PWM0    =   0xf2;
+ 451      =3  sfr PCA_PWM1    =   0xf3;
+ 452      =3  sfr PCA_PWM2    =   0xf4;
+ 453      =3  sfr PCA_PWM3    =   0xf5;
+ 454      =3  
+ 455      =3  //增强型PWM波形发生器特殊功能寄存器
+ 456      =3  sfr PWMCFG      =   0xf1;
+ 457      =3  #define CBIF        0x80
+ 458      =3  #define ETADC       0x40
+ 459      =3  sfr PWMIF       =   0xf6;
+ 460      =3  #define C7IF        0x80
+ 461      =3  #define C6IF        0x40
+ 462      =3  #define C5IF        0x20
+ 463      =3  #define C4IF        0x10
+ 464      =3  #define C3IF        0x08
+ 465      =3  #define C2IF        0x04
+ 466      =3  #define C1IF        0x02
+C51 COMPILER V9.60.0.0   MODBUSSLAVE                                                       09/13/2021 00:48:18 PAGE 9   
+
+ 467      =3  #define C0IF        0x01
+ 468      =3  sfr PWMFDCR     =   0xf7;
+ 469      =3  #define INVCMP      0x80
+ 470      =3  #define INVIO       0x40
+ 471      =3  #define ENFD        0x20
+ 472      =3  #define FLTFLIO     0x10
+ 473      =3  #define EFDI        0x08
+ 474      =3  #define FDCMP       0x04
+ 475      =3  #define FDIO        0x02
+ 476      =3  #define FDIF        0x01
+ 477      =3  sfr PWMCR       =   0xfe;
+ 478      =3  #define ENPWM       0x80
+ 479      =3  #define ECBI        0x40
+ 480      =3  
+ 481      =3  //如下特殊功能寄存器位于扩展RAM区域
+ 482      =3  //访问这些寄存器,需先将P_SW2的BIT7设置为1,才可正常读写
+ 483      =3  #define PWMC        (*(unsigned int  volatile xdata *)0xfff0)
+ 484      =3  #define PWMCH       (*(unsigned char volatile xdata *)0xfff0)
+ 485      =3  #define PWMCL       (*(unsigned char volatile xdata *)0xfff1)
+ 486      =3  #define PWMCKS      (*(unsigned char volatile xdata *)0xfff2)
+ 487      =3  #define TADCP       (*(unsigned char volatile xdata *)0xfff3)
+ 488      =3  #define TADCPH      (*(unsigned char volatile xdata *)0xfff3)
+ 489      =3  #define TADCPL      (*(unsigned char volatile xdata *)0xfff4)
+ 490      =3  #define PWM0T1      (*(unsigned int  volatile xdata *)0xff00)
+ 491      =3  #define PWM0T1H     (*(unsigned char volatile xdata *)0xff00)
+ 492      =3  #define PWM0T1L     (*(unsigned char volatile xdata *)0xff01)
+ 493      =3  #define PWM0T2      (*(unsigned int  volatile xdata *)0xff02)
+ 494      =3  #define PWM0T2H     (*(unsigned char volatile xdata *)0xff02)
+ 495      =3  #define PWM0T2L     (*(unsigned char volatile xdata *)0xff03)
+ 496      =3  #define PWM0CR      (*(unsigned char volatile xdata *)0xff04)
+ 497      =3  #define PWM0HLD     (*(unsigned char volatile xdata *)0xff05)
+ 498      =3  #define PWM1T1      (*(unsigned int  volatile xdata *)0xff10)
+ 499      =3  #define PWM1T1H     (*(unsigned char volatile xdata *)0xff10)
+ 500      =3  #define PWM1T1L     (*(unsigned char volatile xdata *)0xff11)
+ 501      =3  #define PWM1T2      (*(unsigned int  volatile xdata *)0xff12)
+ 502      =3  #define PWM1T2H     (*(unsigned char volatile xdata *)0xff12)
+ 503      =3  #define PWM1T2L     (*(unsigned char volatile xdata *)0xff13)
+ 504      =3  #define PWM1CR      (*(unsigned char volatile xdata *)0xff14)
+ 505      =3  #define PWM1HLD     (*(unsigned char volatile xdata *)0xff15)
+ 506      =3  #define PWM2T1      (*(unsigned int  volatile xdata *)0xff20)
+ 507      =3  #define PWM2T1H     (*(unsigned char volatile xdata *)0xff20)
+ 508      =3  #define PWM2T1L     (*(unsigned char volatile xdata *)0xff21)
+ 509      =3  #define PWM2T2      (*(unsigned int  volatile xdata *)0xff22)
+ 510      =3  #define PWM2T2H     (*(unsigned char volatile xdata *)0xff22)
+ 511      =3  #define PWM2T2L     (*(unsigned char volatile xdata *)0xff23)
+ 512      =3  #define PWM2CR      (*(unsigned char volatile xdata *)0xff24)
+ 513      =3  #define PWM2HLD     (*(unsigned char volatile xdata *)0xff25)
+ 514      =3  #define PWM3T1      (*(unsigned int  volatile xdata *)0xff30)
+ 515      =3  #define PWM3T1H     (*(unsigned char volatile xdata *)0xff30)
+ 516      =3  #define PWM3T1L     (*(unsigned char volatile xdata *)0xff31)
+ 517      =3  #define PWM3T2      (*(unsigned int  volatile xdata *)0xff32)
+ 518      =3  #define PWM3T2H     (*(unsigned char volatile xdata *)0xff32)
+ 519      =3  #define PWM3T2L     (*(unsigned char volatile xdata *)0xff33)
+ 520      =3  #define PWM3CR      (*(unsigned char volatile xdata *)0xff34)
+ 521      =3  #define PWM3HLD     (*(unsigned char volatile xdata *)0xff35)
+ 522      =3  #define PWM4T1      (*(unsigned int  volatile xdata *)0xff40)
+ 523      =3  #define PWM4T1H     (*(unsigned char volatile xdata *)0xff40)
+ 524      =3  #define PWM4T1L     (*(unsigned char volatile xdata *)0xff41)
+ 525      =3  #define PWM4T2      (*(unsigned int  volatile xdata *)0xff42)
+ 526      =3  #define PWM4T2H     (*(unsigned char volatile xdata *)0xff42)
+ 527      =3  #define PWM4T2L     (*(unsigned char volatile xdata *)0xff43)
+ 528      =3  #define PWM4CR      (*(unsigned char volatile xdata *)0xff44)
+C51 COMPILER V9.60.0.0   MODBUSSLAVE                                                       09/13/2021 00:48:18 PAGE 10  
+
+ 529      =3  #define PWM4HLD     (*(unsigned char volatile xdata *)0xff45)
+ 530      =3  #define PWM5T1      (*(unsigned int  volatile xdata *)0xff50)
+ 531      =3  #define PWM5T1H     (*(unsigned char volatile xdata *)0xff50)
+ 532      =3  #define PWM5T1L     (*(unsigned char volatile xdata *)0xff51)
+ 533      =3  #define PWM5T2      (*(unsigned int  volatile xdata *)0xff52)
+ 534      =3  #define PWM5T2H     (*(unsigned char volatile xdata *)0xff52)
+ 535      =3  #define PWM5T2L     (*(unsigned char volatile xdata *)0xff53)
+ 536      =3  #define PWM5CR      (*(unsigned char volatile xdata *)0xff54)
+ 537      =3  #define PWM5HLD     (*(unsigned char volatile xdata *)0xff55)
+ 538      =3  #define PWM6T1      (*(unsigned int  volatile xdata *)0xff60)
+ 539      =3  #define PWM6T1H     (*(unsigned char volatile xdata *)0xff60)
+ 540      =3  #define PWM6T1L     (*(unsigned char volatile xdata *)0xff61)
+ 541      =3  #define PWM6T2      (*(unsigned int  volatile xdata *)0xff62)
+ 542      =3  #define PWM6T2H     (*(unsigned char volatile xdata *)0xff62)
+ 543      =3  #define PWM6T2L     (*(unsigned char volatile xdata *)0xff63)
+ 544      =3  #define PWM6CR      (*(unsigned char volatile xdata *)0xff64)
+ 545      =3  #define PWM6HLD     (*(unsigned char volatile xdata *)0xff65)
+ 546      =3  #define PWM7T1      (*(unsigned int  volatile xdata *)0xff70)
+ 547      =3  #define PWM7T1H     (*(unsigned char volatile xdata *)0xff70)
+ 548      =3  #define PWM7T1L     (*(unsigned char volatile xdata *)0xff71)
+ 549      =3  #define PWM7T2      (*(unsigned int  volatile xdata *)0xff72)
+ 550      =3  #define PWM7T2H     (*(unsigned char volatile xdata *)0xff72)
+ 551      =3  #define PWM7T2L     (*(unsigned char volatile xdata *)0xff73)
+ 552      =3  #define PWM7CR      (*(unsigned char volatile xdata *)0xff74)
+ 553      =3  #define PWM7HLD     (*(unsigned char volatile xdata *)0xff75)
+ 554      =3  
+ 555      =3  //I2C特殊功能寄存器
+ 556      =3  //如下特殊功能寄存器位于扩展RAM区域
+ 557      =3  //访问这些寄存器,需先将P_SW2的BIT7设置为1,才可正常读写
+ 558      =3  #define I2CCFG      (*(unsigned char volatile xdata *)0xfe80)
+ 559      =3  #define ENI2C       0x80
+ 560      =3  #define MSSL        0x40
+ 561      =3  #define I2CMSCR     (*(unsigned char volatile xdata *)0xfe81)
+ 562      =3  #define EMSI        0x80
+ 563      =3  #define I2CMSST     (*(unsigned char volatile xdata *)0xfe82)
+ 564      =3  #define MSBUSY      0x80
+ 565      =3  #define MSIF        0x40
+ 566      =3  #define MSACKI      0x02
+ 567      =3  #define MSACKO      0x01
+ 568      =3  #define I2CSLCR     (*(unsigned char volatile xdata *)0xfe83)
+ 569      =3  #define ESTAI       0x40
+ 570      =3  #define ERXI        0x20
+ 571      =3  #define ETXI        0x10
+ 572      =3  #define ESTOI       0x08
+ 573      =3  #define SLRST       0x01
+ 574      =3  #define I2CSLST     (*(unsigned char volatile xdata *)0xfe84)
+ 575      =3  #define SLBUSY      0x80
+ 576      =3  #define STAIF       0x40
+ 577      =3  #define RXIF        0x20
+ 578      =3  #define TXIF        0x10
+ 579      =3  #define STOIF       0x08
+ 580      =3  #define TXING       0x04
+ 581      =3  #define SLACKI      0x02
+ 582      =3  #define SLACKO      0x01
+ 583      =3  #define I2CSLADR    (*(unsigned char volatile xdata *)0xfe85)
+ 584      =3  #define I2CTXD      (*(unsigned char volatile xdata *)0xfe86)
+ 585      =3  #define I2CRXD      (*(unsigned char volatile xdata *)0xfe87)
+ 586      =3  
+ 587      =3  /////////////////////////////////////////////////
+ 588      =3  
+ 589      =3  #endif
+ 590      =3  
+C51 COMPILER V9.60.0.0   MODBUSSLAVE                                                       09/13/2021 00:48:18 PAGE 11  
+
+   5      =2  #include <stdio.h>
+   1      =3  /*--------------------------------------------------------------------------
+   2      =3  STDIO.H
+   3      =3  
+   4      =3  Prototypes for standard I/O functions.
+   5      =3  Copyright (c) 1988-2002 Keil Elektronik GmbH and Keil Software, Inc.
+   6      =3  All rights reserved.
+   7      =3  --------------------------------------------------------------------------*/
+   8      =3  
+   9      =3  #ifndef __STDIO_H__
+  10      =3  #define __STDIO_H__
+  11      =3  
+  12      =3  #ifndef EOF
+  13      =3   #define EOF -1
+  14      =3  #endif
+  15      =3  
+  16      =3  #ifndef NULL
+  17      =3   #define NULL ((void *) 0)
+  18      =3  #endif
+  19      =3  
+  20      =3  #ifndef _SIZE_T
+  21      =3   #define _SIZE_T
+  22      =3   typedef unsigned int size_t;
+  23      =3  #endif
+  24      =3  
+  25      =3  #pragma SAVE
+  26      =3  #pragma REGPARMS
+  27      =3  extern char _getkey (void);
+  28      =3  extern char getchar (void);
+  29      =3  extern char ungetchar (char);
+  30      =3  extern char putchar (char);
+  31      =3  extern int printf   (const char *, ...);
+  32      =3  extern int sprintf  (char *, const char *, ...);
+  33      =3  extern int vprintf  (const char *, char *);
+  34      =3  extern int vsprintf (char *, const char *, char *);
+  35      =3  extern char *gets (char *, int n);
+  36      =3  extern int scanf (const char *, ...);
+  37      =3  extern int sscanf (char *, const char *, ...);
+  38      =3  extern int puts (const char *);
+  39      =3  
+  40      =3  #pragma RESTORE
+  41      =3  
+  42      =3  #endif
+  43      =3  
+   6      =2  #include <intrins.h>
+   1      =3  /*--------------------------------------------------------------------------
+   2      =3  INTRINS.H
+   3      =3  
+   4      =3  Intrinsic functions for C51.
+   5      =3  Copyright (c) 1988-2010 Keil Elektronik GmbH and ARM Germany GmbH
+   6      =3  All rights reserved.
+   7      =3  --------------------------------------------------------------------------*/
+   8      =3  
+   9      =3  #ifndef __INTRINS_H__
+  10      =3  #define __INTRINS_H__
+  11      =3  
+  12      =3  #pragma SAVE
+  13      =3  
+  14      =3  #if defined (__CX2__)
+           =3 #pragma FUNCTIONS(STATIC)
+           =3 /* intrinsic functions are reentrant, but need static attribute */
+           =3 #endif
+C51 COMPILER V9.60.0.0   MODBUSSLAVE                                                       09/13/2021 00:48:18 PAGE 12  
+
+  18      =3  
+  19      =3  extern void          _nop_     (void);
+  20      =3  extern bit           _testbit_ (bit);
+  21      =3  extern unsigned char _cror_    (unsigned char, unsigned char);
+  22      =3  extern unsigned int  _iror_    (unsigned int,  unsigned char);
+  23      =3  extern unsigned long _lror_    (unsigned long, unsigned char);
+  24      =3  extern unsigned char _crol_    (unsigned char, unsigned char);
+  25      =3  extern unsigned int  _irol_    (unsigned int,  unsigned char);
+  26      =3  extern unsigned long _lrol_    (unsigned long, unsigned char);
+  27      =3  extern unsigned char _chkfloat_(float);
+  28      =3  #if defined (__CX2__)
+           =3 extern int           abs       (int);
+           =3 extern void          _illop_   (void);
+           =3 #endif
+  32      =3  #if !defined (__CX2__)
+  33      =3  extern void          _push_    (unsigned char _sfr);
+  34      =3  extern void          _pop_     (unsigned char _sfr);
+  35      =3  #endif
+  36      =3  
+  37      =3  #pragma RESTORE
+  38      =3  
+  39      =3  #endif
+  40      =3  
+   7      =2  #include <string.h>
+   1      =3  /*--------------------------------------------------------------------------
+   2      =3  STRING.H
+   3      =3  
+   4      =3  String functions.
+   5      =3  Copyright (c) 1988-2008 Keil Elektronik GmbH and Keil Software, Inc.
+   6      =3  Copyright (c) 2008-2016 ARM Germany GmbH
+   7      =3  All rights reserved.
+   8      =3  --------------------------------------------------------------------------*/
+   9      =3  
+  10      =3  #ifndef __STRING_H__
+  11      =3  #define __STRING_H__
+  12      =3  
+  13      =3  #ifndef _SIZE_T
+           =3  #define _SIZE_T
+           =3  typedef unsigned int size_t;
+           =3 #endif
+  17      =3  
+  18      =3  #ifndef NULL
+           =3  #define NULL ((void *)0)
+           =3 #endif
+  21      =3  
+  22      =3  #pragma SAVE
+  23      =3  #pragma REGPARMS
+  24      =3  extern char  *strcat  (char *s1, const char *s2);
+  25      =3  extern char  *strncat (char *s1, const char *s2, size_t n);
+  26      =3  
+  27      =3  extern char   strcmp  (const char *s1, const char *s2);
+  28      =3  extern char   strncmp (const char *s1, const char *s2, size_t n);
+  29      =3  
+  30      =3  extern char  *strcpy  (char *s1, const char *s2);
+  31      =3  extern char  *strncpy (char *s1, const char *s2, size_t n);
+  32      =3  
+  33      =3  extern size_t strlen  (const char *);
+  34      =3  
+  35      =3  extern char  *strchr  (const char *s, char c);
+  36      =3  extern int    strpos  (const char *s, char c);
+  37      =3  extern char  *strrchr (const char *s, char c);
+  38      =3  extern int    strrpos (const char *s, char c);
+C51 COMPILER V9.60.0.0   MODBUSSLAVE                                                       09/13/2021 00:48:18 PAGE 13  
+
+  39      =3  
+  40      =3  extern size_t strspn  (const char *s, const char *set);
+  41      =3  extern size_t strcspn (const char *s, const char *set);
+  42      =3  extern char  *strpbrk (const char *s, const char *set);
+  43      =3  extern char  *strrpbrk(const char *s, const char *set);
+  44      =3  extern char  *strstr  (const char *s, const char *sub);
+  45      =3  extern char  *strtok  (char *str, const char *set);
+  46      =3  
+  47      =3  extern char   memcmp  (const void *s1, const void *s2, size_t n);
+  48      =3  extern void  *memcpy  (void *s1, const void *s2, size_t n);
+  49      =3  extern void  *memchr  (const void *s, char val, size_t n);
+  50      =3  extern void  *memccpy (void *s1, const void *s2, char val, size_t n);
+  51      =3  extern void  *memmove (void *s1, const void *s2, size_t n);
+  52      =3  extern void  *memset  (void *s, char val, size_t n);
+  53      =3  #pragma RESTORE
+  54      =3  
+  55      =3  #endif
+   8      =2  #include <stdlib.h>
+   1      =3  /*--------------------------------------------------------------------------
+   2      =3  STDLIB.H
+   3      =3  
+   4      =3  Standard functions.
+   5      =3  Copyright (c) 1988-2008 Keil Elektronik GmbH and Keil Software, Inc.
+   6      =3  Copyright (c) 2008-2016 ARM Germany GmbH
+   7      =3  All rights reserved.
+   8      =3  --------------------------------------------------------------------------*/
+   9      =3  
+  10      =3  #ifndef __STDLIB_H__
+  11      =3  #define __STDLIB_H__
+  12      =3  
+  13      =3  #ifndef _SIZE_T
+           =3  #define _SIZE_T
+           =3  typedef unsigned int size_t;
+           =3 #endif
+  17      =3  
+  18      =3  #ifndef NULL
+           =3  #define NULL ((void *)0)
+           =3 #endif
+  21      =3  
+  22      =3  #ifndef _WCHAR_T_DEFINED_
+  23      =3  #define _WCHAR_T_DEFINED_
+  24      =3  typedef char wchar_t;
+  25      =3  #endif
+  26      =3  
+  27      =3  #if defined (__CX2__)
+           =3 #ifndef _DIV_T_DEFINED
+           =3 typedef struct _div_t {
+           =3         int quot;
+           =3         int rem;
+           =3 } div_t;
+           =3 typedef struct _ldiv_t {
+           =3         long quot;
+           =3         long rem;
+           =3 } ldiv_t;
+           =3 #define _DIV_T_DEFINED
+           =3 #endif // _DIV_T_DEFINED
+           =3 #endif // __CX2__
+  40      =3  
+  41      =3  #ifndef RAND_MAX
+  42      =3   #define RAND_MAX  32767u
+  43      =3  #endif
+  44      =3  
+C51 COMPILER V9.60.0.0   MODBUSSLAVE                                                       09/13/2021 00:48:18 PAGE 14  
+
+  45      =3  #if defined (__CX2__)
+           =3 #pragma SAVE
+           =3 #pragma FUNCTIONS(STATIC)
+           =3 /* intrinsic functions are reentrant, but need static attribute */
+           =3 extern int    abs  (int   val);
+           =3 #pragma RESTORE
+           =3 #endif // __CX2__
+  52      =3  
+  53      =3  #pragma SAVE
+  54      =3  #pragma REGPARMS
+  55      =3  
+  56      =3  extern char   cabs (char  val);
+  57      =3  #if !defined (__CX2__)
+  58      =3  extern int    abs  (int   val);
+  59      =3  #endif // __CX2__
+  60      =3  extern long   labs (long  val);
+  61      =3  
+  62      =3  extern float  atof (const char *s1);
+  63      =3  extern long   atol (const char *s1);
+  64      =3  extern int    atoi (const char *s1);
+  65      =3  extern int    rand (void);
+  66      =3  extern void   srand (unsigned int seed);
+  67      =3  
+  68      =3  #ifdef _DIV_T_DEFINED
+           =3 extern div_t  __div (int numer, int denom);
+           =3 #define div(numer,denom)  __div((numer),(denom));
+           =3 extern ldiv_t ldiv (long numer, long denom);
+           =3 #endif // _DIV_T_DEFINED
+  73      =3  
+  74      =3  extern float         strtod  (const char *nptr, char **endptr);
+  75      =3  extern long          strtol  (const char *nptr, char **endptr, unsigned char base);
+  76      =3  extern unsigned long strtoul (const char *nptr, char **endptr, unsigned char base);
+  77      =3  
+  78      =3  #define _MALLOC_MEM_    xdata
+  79      =3  
+  80      =3  extern void init_mempool          (void _MALLOC_MEM_ *p, size_t size);
+  81      =3  extern void _MALLOC_MEM_ *malloc  (size_t size);
+  82      =3  extern void free                  (void _MALLOC_MEM_ *p);
+  83      =3  extern void _MALLOC_MEM_ *realloc (void _MALLOC_MEM_ *p, size_t size);
+  84      =3  extern void _MALLOC_MEM_ *calloc  (size_t nmemb, size_t size);
+  85      =3  
+  86      =3  #if defined (__CX2__)
+           =3 extern void abort(void);
+           =3 #endif // __CX2__
+  89      =3  
+  90      =3  #pragma RESTORE
+  91      =3  
+  92      =3  #endif // __STDLIB_H__
+   9      =2  #include <string.h>
+   1      =3  /*--------------------------------------------------------------------------
+   2      =3  STRING.H
+   3      =3  
+   4      =3  String functions.
+   5      =3  Copyright (c) 1988-2008 Keil Elektronik GmbH and Keil Software, Inc.
+   6      =3  Copyright (c) 2008-2016 ARM Germany GmbH
+   7      =3  All rights reserved.
+   8      =3  --------------------------------------------------------------------------*/
+   9      =3  
+  10      =3  #ifndef __STRING_H__
+           =3 #define __STRING_H__
+           =3 
+           =3 #ifndef _SIZE_T
+C51 COMPILER V9.60.0.0   MODBUSSLAVE                                                       09/13/2021 00:48:18 PAGE 15  
+
+           =3  #define _SIZE_T
+           =3  typedef unsigned int size_t;
+           =3 #endif
+           =3 
+           =3 #ifndef NULL
+           =3  #define NULL ((void *)0)
+           =3 #endif
+           =3 
+           =3 #pragma SAVE
+           =3 #pragma REGPARMS
+           =3 extern char  *strcat  (char *s1, const char *s2);
+           =3 extern char  *strncat (char *s1, const char *s2, size_t n);
+           =3 
+           =3 extern char   strcmp  (const char *s1, const char *s2);
+           =3 extern char   strncmp (const char *s1, const char *s2, size_t n);
+           =3 
+           =3 extern char  *strcpy  (char *s1, const char *s2);
+           =3 extern char  *strncpy (char *s1, const char *s2, size_t n);
+           =3 
+           =3 extern size_t strlen  (const char *);
+           =3 
+           =3 extern char  *strchr  (const char *s, char c);
+           =3 extern int    strpos  (const char *s, char c);
+           =3 extern char  *strrchr (const char *s, char c);
+           =3 extern int    strrpos (const char *s, char c);
+           =3 
+           =3 extern size_t strspn  (const char *s, const char *set);
+           =3 extern size_t strcspn (const char *s, const char *set);
+           =3 extern char  *strpbrk (const char *s, const char *set);
+           =3 extern char  *strrpbrk(const char *s, const char *set);
+           =3 extern char  *strstr  (const char *s, const char *sub);
+           =3 extern char  *strtok  (char *str, const char *set);
+           =3 
+           =3 extern char   memcmp  (const void *s1, const void *s2, size_t n);
+           =3 extern void  *memcpy  (void *s1, const void *s2, size_t n);
+           =3 extern void  *memchr  (const void *s, char val, size_t n);
+           =3 extern void  *memccpy (void *s1, const void *s2, char val, size_t n);
+           =3 extern void  *memmove (void *s1, const void *s2, size_t n);
+           =3 extern void  *memset  (void *s, char val, size_t n);
+           =3 #pragma RESTORE
+           =3 
+           =3 #endif
+  10      =2  #include <absacc.h> //可直接操作内存地址
+   1      =3  /*--------------------------------------------------------------------------
+   2      =3  ABSACC.H
+   3      =3  
+   4      =3  Direct access to 8051, extended 8051 and NXP 8051MX memory areas.
+   5      =3  Copyright (c) 1988-2010 Keil Elektronik GmbH and ARM Germany GmbH
+   6      =3  All rights reserved.
+   7      =3  --------------------------------------------------------------------------*/
+   8      =3  
+   9      =3  #ifndef __ABSACC_H__
+  10      =3  #define __ABSACC_H__
+  11      =3  
+  12      =3  #define CBYTE ((unsigned char volatile code  *) 0)
+  13      =3  #define DBYTE ((unsigned char volatile data  *) 0)
+  14      =3  #if !defined (__CX2__)
+  15      =3  #define PBYTE ((unsigned char volatile pdata *) 0)
+  16      =3  #endif
+  17      =3  #define XBYTE ((unsigned char volatile xdata *) 0)
+  18      =3  
+  19      =3  #define CWORD ((unsigned int volatile code  *) 0)
+C51 COMPILER V9.60.0.0   MODBUSSLAVE                                                       09/13/2021 00:48:18 PAGE 16  
+
+  20      =3  #define DWORD ((unsigned int volatile data  *) 0)
+  21      =3  #if !defined (__CX2__)
+  22      =3  #define PWORD ((unsigned int volatile pdata *) 0)
+  23      =3  #endif
+  24      =3  #define XWORD ((unsigned int volatile xdata *) 0)
+  25      =3  
+  26      =3  
+  27      =3  #if defined (__CX51__) || defined (__CX2__)
+           =3 #define FVAR(object, addr)   (*((object volatile far *) (addr)))
+           =3 #define FARRAY(object, base) ((object volatile far *) (base))
+           =3 #define FCVAR(object, addr)   (*((object const far *) (addr)))
+           =3 #define FCARRAY(object, base) ((object const far *) (base))
+           =3 #else
+  33      =3  #define FVAR(object, addr)    (*((object volatile far *) ((addr)+0x10000L)))
+  34      =3  #define FCVAR(object, addr)   (*((object const far *) ((addr)+0x810000L)))
+  35      =3  #define FARRAY(object, base)  ((object volatile far *) ((base)+0x10000L))
+  36      =3  #define FCARRAY(object, base) ((object const far *) ((base)+0x810000L))
+  37      =3  #endif
+  38      =3  
+  39      =3  #if defined (__CX2__)
+           =3 #define HBYTE ((unsigned char volatile huge *)  0)
+           =3 #define HWORD ((unsigned int volatile huge *)  0)
+           =3 #define HVAR(object, addr)   (*((object volatile huge *) (addr)))
+           =3 #define HARRAY(object, base) ((object volatile huge *) (base))
+           =3 #endif
+  45      =3  
+  46      =3  #define CVAR(object, addr)   (*((object volatile code *) (addr)))
+  47      =3  #define CARRAY(object, base) ((object volatile code *) (base))
+  48      =3  #define DVAR(object, addr)   (*((object volatile data *) (addr)))
+  49      =3  #define DARRAY(object, base) ((object volatile data *) (base))
+  50      =3  #define XVAR(object, addr)   (*((object volatile xdata *) (addr)))
+  51      =3  #define XARRAY(object, base) ((object volatile xdata *) (base))
+  52      =3  
+  53      =3  #endif
+  11      =2  #include "stdarg.h"
+   1      =3  /*--------------------------------------------------------------------------
+   2      =3  STDARG.H
+   3      =3  
+   4      =3  Prototypes for variable argument lists.
+   5      =3  Copyright (c) 1988-2008 Keil Elektronik GmbH and Keil Software, Inc.
+   6      =3  Copyright (c) 2008-2016 ARM Germany GmbH
+   7      =3  All rights reserved.
+   8      =3  --------------------------------------------------------------------------*/
+   9      =3  
+  10      =3  #ifndef __STDARG_H__
+  11      =3  #define __STDARG_H__
+  12      =3  
+  13      =3  #ifndef __CX2__
+  14      =3  #ifndef NULL
+           =3  #define NULL ((void *)0)
+           =3 #endif
+  17      =3  #endif
+  18      =3  
+  19      =3  #ifndef _VA_LIST_DEFINED
+  20      =3  typedef char *va_list;
+  21      =3  #define _VA_LIST_DEFINED
+  22      =3  #endif
+  23      =3  
+  24      =3  #if defined __CX2__ && __CX2__ >= 558
+           =3   #define va_start(ap,v) ap = _va_start_ (&v, sizeof(v))
+           =3   extern void *_va_start_ (void *ap, int sz);   // intrinsic
+           =3 #else
+C51 COMPILER V9.60.0.0   MODBUSSLAVE                                                       09/13/2021 00:48:18 PAGE 17  
+
+  28      =3    #define va_start(ap,v) ap = (va_list)&v + sizeof(v)
+  29      =3  #endif
+  30      =3  
+  31      =3  #define va_arg(ap,t) (((t *)ap)++[0])
+  32      =3  #define va_end(ap)   (ap = (va_list)0)
+  33      =3  
+  34      =3  #endif
+  12      =2  
+  13      =2  
+  14      =2  /**********************布尔变量定义**********************/
+  15      =2  #define true  1
+  16      =2  #define false 0
+  17      =2  /**********************布尔变量定义**********************/
+  18      =2  
+  19      =2  /***********************************API配置接口***********************************/
+  20      =2  /*使用外部晶振*/
+  21      =2  #define EXTERNAL_CRYSTAL 0 
+  22      =2  /*调试是否启用串口*/
+  23      =2  #define USE_PRINTF_DEBUG 0 
+  24      =2  /*调试选项*/
+  25      =2  #define DEBUGGING    1
+  26      =2  
+  27      =2  #define COUNTMAX     65536U
+  28      =2  
+  29      =2  /*消除编译器未使用变量警告*/
+  30      =2  #define UNUSED_VARIABLE(x)      ((void)(x))
+  31      =2  #define UNUSED_PARAMETER(x) UNUSED_VARIABLE(x)
+  32      =2  
+  33      =2  //(1/FOSC)*count =times(us)->count = time*FOSC/1000(ms)
+  34      =2  #define FOSC         27000000UL//11059200UL
+  35      =2  /*1ms(时钟频率越高，所能产生的时间越小)*/  
+  36      =2  #define TIMES        10U  
+  37      =2  /*定时器模式选择*/
+  38      =2  #define TIMER_MODE   12U
+  39      =2  /*定时器分频系数，默认为一分频*/  
+  40      =2  #define TIME_DIV     1U  
+  41      =2  #define T12_MODE (TIMES * FOSC / 1000 / 12 / TIME_DIV) 
+  42      =2  #define T1_MODE  (TIMES * FOSC/ 1000 / TIME_DIV)
+  43      =2  #define TIMERS_OVERFLOW (COUNTMAX * 1000 * TIMER_MODE * TIME_DIV) / FOSC
+  44      =2  
+  45      =2  #define OPEN_GLOBAL_OUTAGE()  (EA = 1 << 0)
+  46      =2  #define CLOSE_GLOBAL_OUTAGE() (EA = 0 << 0)
+  47      =2  /*判断延时数是否超出硬件允许范围*/
+  48      =2  #if(TIMES > TIMERS_OVERFLOW)
+           =2 #error The timer cannot generate the current duration!
+           =2 #endif
+  51      =2  /***********************************API配置接口***********************************/
+  52      =2  
+  53      =2  /***********************************常用的数据类型***********************************/
+  54      =2  // #define uint8_t unsigned char
+  55      =2  // #define int8_t signed char
+  56      =2  // #define uint16_t unsigned short int
+  57      =2  // #define int16_t signed short int
+  58      =2  // #define uint32_t unsigned long
+  59      =2  // #define int32_t signed long
+  60      =2  // #define __IO    volatile
+  61      =2  
+  62      =2  typedef unsigned char  uint8_t;
+  63      =2  typedef signed char    int8_t;
+  64      =2  typedef unsigned short int  uint16_t;
+  65      =2  typedef unsigned long  uint32_t;
+  66      =2  typedef signed long    int32_t;
+C51 COMPILER V9.60.0.0   MODBUSSLAVE                                                       09/13/2021 00:48:18 PAGE 18  
+
+  67      =2  typedef volatile       __IO;   
+  68      =2  
+  69      =2  /***********************************常用的数据类型***********************************/
+  70      =2  
+  71      =2  /***********************************系统上电参数***********************************/
+  72      =2  #define DEFAULT_SYSTEM_PARAMETER  "\xFF\xFF\xFF\xFF\x02\x01\x00\x84\x50"
+  73      =2  #define START_SAVEADDRESS          0x0000   //参数存储开始地址
+  74      =2  #define BAUDRATE_SAVEADDRESS       0x0004   //波特率
+  75      =2  #define PLCSTAE_SAVEADDRESS        0x0005   //PLC状态
+  76      =2  #define COMMUNICATION_SAVEADDRESS  0x0006   //通讯类型
+  77      =2  #define PASSWORDBITS            4        //密码位数
+  78      =2  
+  79      =2  typedef struct
+  80      =2  {
+  81      =2      uint8_t  PassWordbuff[PASSWORDBITS];
+  82      =2      uint8_t  Index;
+  83      =2  } PASSWORDSTRUCT;
+  84      =2  
+  85      =2  
+  86      =2  typedef struct
+  87      =2  {
+  88      =2      PASSWORDSTRUCT  PSWNext;   //密码
+  89      =2      uint8_t BaudIndex;         //波特率
+  90      =2      uint8_t PlcState;          //PLC状态
+  91      =2      uint8_t CommunicationType; //通讯类型
+  92      =2      uint16_t CRC16;            //CRC校验码
+  93      =2  } SYSTEM_PARAMETER; //系统参数
+  94      =2  
+  95      =2  extern SYSTEM_PARAMETER System_Parameter;
+  96      =2  /***********************************系统上电参数***********************************/
+  97      =2  
+  98      =2  /***********************************结构体的妙用 ***********************************/
+  99      =2  #define offsetof(TYPE, MEMBER) ((size_t) &((TYPE *)0)->MEMBER) //获取结构体成员对首地址偏移�
+             -�
+ 100      =2  #define container_of(ptr, type, member) ({ \
+ 101      =2          const typeof( ((type *)0)->member ) *__mptr = (ptr); \
+ 102      =2          (type *)( (char *)__mptr - offsetof(type,member) );})  //过结构体成员变量获得对应的�
+             -�构体首地址
+ 103      =2  /***********************************结构体的妙用 ***********************************/
+ 104      =2  
+ 105      =2  
+ 106      =2  extern const uint8_t g_TimerNumbers;
+ 107      =2  /***********************************函数声明***********************************/
+ 108      =2  void  Gpio_Init(void);
+ 109      =2  /***********************************函数声明***********************************/
+ 110      =2  #endif
+  12      =1  
+  13      =1  #define  SLAVEADDRESS         0x02
+  14      =1  #define  MOD_RX_BUF_SIZE      512U
+  15      =1  #define  MOD_TX_BUF_SIZE      512U
+  16      =1  
+  17      =1  /*一键快充地址*/
+  18      =1  #define QUICKCHARGING_ADDR    0x00
+  19      =1  /*关闭充电器地址*/
+  20      =1  #define CLOSECHARGER_ADDR     0x01
+  21      =1  
+  22      =1  /*错误码状态*/
+  23      =1  #define RSP_OK                            0             // 成功
+  24      =1  #define RSP_ERR_CMD                       0x01  // 不支持的功能码
+  25      =1  #define RSP_ERR_REG_ADDR          0x02  // 寄存器地址错误
+  26      =1  #define RSP_ERR_VALUE             0x03  // 数据值域错误
+  27      =1  #define RSP_ERR_WRITE             0x04  // 写入失败
+C51 COMPILER V9.60.0.0   MODBUSSLAVE                                                       09/13/2021 00:48:18 PAGE 19  
+
+  28      =1  
+  29      =1  typedef struct
+  30      =1  {
+  31      =1          uint8_t RxBuf[MOD_RX_BUF_SIZE];
+  32      =1          uint16_t RxCount;
+  33      =1          uint8_t RxStatus;
+  34      =1          uint8_t RxNewFlag;
+  35      =1  
+  36      =1          uint8_t TxBuf[MOD_TX_BUF_SIZE];
+  37      =1          uint16_t TxCount;
+  38      =1  }MODS_T;
+  39      =1  
+  40      =1  extern MODS_T g_tModS;
+  41      =1  
+  42      =1  
+  43      =1  typedef enum
+  44      =1  {
+  45      =1          Area_DO,      /*数字输出*/
+  46      =1          Area_DI,          /*数字输入*/
+  47      =1          Area_AI,          /*模拟输入*/
+  48      =1          Area_KEEP,        /*保持区域*/
+  49      =1  }Areatype;
+  50      =1  
+  51      =1  typedef struct
+  52      =1  {
+  53      =1          uint8_t* p;
+  54      =1          uint16_t Length;
+  55      =1  }ModbusMap;
+  56      =1  
+  57      =1  uint16_t GetCrc16(uint8_t *ptr, uint8_t length, uint16_t IniDat);    //获取CRC16值
+  58      =1  uint8_t checkCrc16(uint8_t *ptr, uint8_t length);      //检查CRC16值
+  59      =1  
+  60      =1  
+  61      =1  void MODS_SendWithCRC(uint8_t *_pBuf, uint8_t _ucLen);
+  62      =1  void MODS_AnalyzeApp(void);    //Mosbus数据解析
+  63      =1  void MODS_ReciveNew(uint8_t * rxBuf,uint16_t Len);
+  64      =1  void MODS_InportMap(Areatype area,uint8_t* pmap,uint16_t Len);
+  65      =1  void MODS_SlaveInit(void);
+  66      =1  void MODS_Poll(void);
+  67      =1  
+  68      =1  void MODS_01H(void);
+  69      =1  void MODS_02H(void);
+  70      =1  void MODS_03H(void);
+  71      =1  void MODS_04H(void);
+  72      =1  void MODS_05H(void);
+  73      =1  void MODS_06H(void);
+  74      =1  void MODS_0FH(void);
+  75      =1  void MODS_10H(void);
+  76      =1  
+  77      =1  #endif /* INC_MODBUSSLAVE_H_ */
+   8          #include "usart.h"
+   1      =1  #ifndef __USART_H
+   2      =1  #define __USART_H
+   3      =1           
+   4      =1  #include "config.h"      
+   1      =2  #ifndef __CONFIG_H_
+           =2 #define __CONFIG_H_
+           =2 
+           =2 #include <STC8.H>
+           =2 #include <stdio.h>
+           =2 #include <intrins.h>
+           =2 #include <string.h>
+C51 COMPILER V9.60.0.0   MODBUSSLAVE                                                       09/13/2021 00:48:18 PAGE 20  
+
+           =2 #include <stdlib.h>
+           =2 #include <string.h>
+           =2 #include <absacc.h> //可直接操作内存地址
+           =2 #include "stdarg.h"
+           =2 
+           =2 
+           =2 /**********************布尔变量定义**********************/
+           =2 #define true  1
+           =2 #define false 0
+           =2 /**********************布尔变量定义**********************/
+           =2 
+           =2 /***********************************API配置接口***********************************/
+           =2 /*使用外部晶振*/
+           =2 #define EXTERNAL_CRYSTAL 0 
+           =2 /*调试是否启用串口*/
+           =2 #define USE_PRINTF_DEBUG 0 
+           =2 /*调试选项*/
+           =2 #define DEBUGGING    1
+           =2 
+           =2 #define COUNTMAX     65536U
+           =2 
+           =2 /*消除编译器未使用变量警告*/
+           =2 #define UNUSED_VARIABLE(x)      ((void)(x))
+           =2 #define UNUSED_PARAMETER(x) UNUSED_VARIABLE(x)
+           =2 
+           =2 //(1/FOSC)*count =times(us)->count = time*FOSC/1000(ms)
+           =2 #define FOSC         27000000UL//11059200UL
+           =2 /*1ms(时钟频率越高，所能产生的时间越小)*/  
+           =2 #define TIMES        10U  
+           =2 /*定时器模式选择*/
+           =2 #define TIMER_MODE   12U
+           =2 /*定时器分频系数，默认为一分频*/  
+           =2 #define TIME_DIV     1U  
+           =2 #define T12_MODE (TIMES * FOSC / 1000 / 12 / TIME_DIV) 
+           =2 #define T1_MODE  (TIMES * FOSC/ 1000 / TIME_DIV)
+           =2 #define TIMERS_OVERFLOW (COUNTMAX * 1000 * TIMER_MODE * TIME_DIV) / FOSC
+           =2 
+           =2 #define OPEN_GLOBAL_OUTAGE()  (EA = 1 << 0)
+           =2 #define CLOSE_GLOBAL_OUTAGE() (EA = 0 << 0)
+           =2 /*判断延时数是否超出硬件允许范围*/
+           =2 #if(TIMES > TIMERS_OVERFLOW)
+           =2 #error The timer cannot generate the current duration!
+           =2 #endif
+           =2 /***********************************API配置接口***********************************/
+           =2 
+           =2 /***********************************常用的数据类型***********************************/
+           =2 // #define uint8_t unsigned char
+           =2 // #define int8_t signed char
+           =2 // #define uint16_t unsigned short int
+           =2 // #define int16_t signed short int
+           =2 // #define uint32_t unsigned long
+           =2 // #define int32_t signed long
+           =2 // #define __IO    volatile
+           =2 
+           =2 typedef unsigned char  uint8_t;
+           =2 typedef signed char    int8_t;
+           =2 typedef unsigned short int  uint16_t;
+           =2 typedef unsigned long  uint32_t;
+           =2 typedef signed long    int32_t;
+           =2 typedef volatile       __IO;   
+           =2 
+           =2 /***********************************常用的数据类型***********************************/
+C51 COMPILER V9.60.0.0   MODBUSSLAVE                                                       09/13/2021 00:48:18 PAGE 21  
+
+           =2 
+           =2 /***********************************系统上电参数***********************************/
+           =2 #define DEFAULT_SYSTEM_PARAMETER  "\xFF\xFF\xFF\xFF\x02\x01\x00\x84\x50"
+           =2 #define START_SAVEADDRESS          0x0000   //参数存储开始地址
+           =2 #define BAUDRATE_SAVEADDRESS       0x0004   //波特率
+           =2 #define PLCSTAE_SAVEADDRESS        0x0005   //PLC状态
+           =2 #define COMMUNICATION_SAVEADDRESS  0x0006   //通讯类型
+           =2 #define PASSWORDBITS            4        //密码位数
+           =2 
+           =2 typedef struct
+           =2 {
+           =2     uint8_t  PassWordbuff[PASSWORDBITS];
+           =2     uint8_t  Index;
+           =2 } PASSWORDSTRUCT;
+           =2 
+           =2 
+           =2 typedef struct
+           =2 {
+           =2     PASSWORDSTRUCT  PSWNext;   //密码
+           =2     uint8_t BaudIndex;         //波特率
+           =2     uint8_t PlcState;          //PLC状态
+           =2     uint8_t CommunicationType; //通讯类型
+           =2     uint16_t CRC16;            //CRC校验码
+           =2 } SYSTEM_PARAMETER; //系统参数
+           =2 
+           =2 extern SYSTEM_PARAMETER System_Parameter;
+           =2 /***********************************系统上电参数***********************************/
+           =2 
+           =2 /***********************************结构体的妙用 ***********************************/
+           =2 #define offsetof(TYPE, MEMBER) ((size_t) &((TYPE *)0)->MEMBER) //获取结构体成员对首地址偏移�
+             -�
+           =2 #define container_of(ptr, type, member) ({ \
+           =2         const typeof( ((type *)0)->member ) *__mptr = (ptr); \
+           =2         (type *)( (char *)__mptr - offsetof(type,member) );})  //过结构体成员变量获得对应的�
+             -�构体首地址
+           =2 /***********************************结构体的妙用 ***********************************/
+           =2 
+           =2 
+           =2 extern const uint8_t g_TimerNumbers;
+           =2 /***********************************函数声明***********************************/
+           =2 void  Gpio_Init(void);
+           =2 /***********************************函数声明***********************************/
+           =2 #endif
+   5      =1           
+   6      =1  
+   7      =1  //以下宏定义用于改变串口的输出引脚
+   8      =1  //串口1默认是p30 p31  以下定义的是串口1的切换
+   9      =1  // P_SW1 = 0xa2   P_SW2 = 0xba
+  10      =1  
+  11      =1  
+  12      =1  #define USART1_USE_P30_P31         P_SW1 = 0x00
+  13      =1  #define USART1_USE_P36_P37         P_SW1 = 0x40
+  14      =1  #define USART1_USE_P16_P17         P_SW1 = 0x80
+  15      =1  #define USART1_USE_P43_P44         P_SW1 = 0xC0
+  16      =1  
+  17      =1  //串口2的默认输出引脚为       P10 P11
+  18      =1  
+  19      =1  #define USART2_USE_P10_P11         P_SW2 = 0x00
+  20      =1  #define USART2_USE_P40_P42         P_SW2 = 0x01
+  21      =1  
+  22      =1  //串口3的默认输出引脚是 P00 P01
+  23      =1  
+C51 COMPILER V9.60.0.0   MODBUSSLAVE                                                       09/13/2021 00:48:18 PAGE 22  
+
+  24      =1  #define USART3_USE_P00_P01         P_SW2 = 0x00
+  25      =1  #define USART3_USE_P50_P51         P_SW2 = 0x02
+  26      =1  
+  27      =1  //串口4的默认输出引脚为 P02 P03
+  28      =1  #define USART3_USE_P02_P03         P_SW1 = 0x00
+  29      =1  #define USART3_USE_P52_P53         P_SW1 = 0x04
+  30      =1  
+  31      =1  
+  32      =1  //*******************外加485芯片的定义*******************//
+  33      =1  #define USART3_EN                       P36
+  34      =1  //******************************************************//
+  35      =1  
+  36      =1  
+  37      =1  
+  38      =1  #define USEING_PRINTF 0
+  39      =1  
+  40      =1  /***********************************常用通讯波特率***********************************/
+  41      =1  #define BAUD_921600  921600UL
+  42      =1  #define BAUD_115200  115200UL
+  43      =1  #define BAUD_57600       57600UL
+  44      =1  #define BAUD_56000       56000UL
+  45      =1  #define BAUD_38400       38400UL
+  46      =1  #define BAUD_19200   19200UL
+  47      =1  #define BAUD_14400   14400UL
+  48      =1  #define BAUD_9600    9600UL
+  49      =1  #define BAUD_4800    4800UL
+  50      =1  #define BAUD_2400    2400UL
+  51      =1  #define BAUD_1200    1200UL
+  52      =1  /***********************************常用通讯波特率***********************************/
+  53      =1  
+  54      =1  #define UART_DIV 4
+  55      =1  #define UART_BYTE_SENDOVERTIME (uint16_t)5000U
+  56      =1  
+  57      =1  #define BRT_1T(BAUD)  (COUNTMAX-FOSC/BAUD/UART_DIV) //1T
+  58      =1  #define BRT_12T(BAUD) (COUNTMAX-FOSC/BAUD/UART_DIV/12) //12T
+  59      =1  
+  60      =1  
+  61      =1  typedef enum
+  62      =1  {
+  63      =1          UART1 = 0x01,
+  64      =1          UART2,
+  65      =1          UART3,
+  66      =1          UART4
+  67      =1  }Uart_TypsDef;
+  68      =1  
+  69      =1  
+  70      =1  typedef struct //串口中断优先级
+  71      =1  {
+  72      =1          uint8_t Register_IP;
+  73      =1          uint8_t Register_IPH;
+  74      =1  }UART_NVIC_TypeDef;
+  75      =1  
+  76      =1  typedef struct
+  77      =1  {
+  78      =1          Uart_TypsDef Instance;
+  79      =1          uint8_t Register_SCON;
+  80      =1          uint8_t Uart_Mode;
+  81      =1          uint16_t Uart_Count;
+  82      =1          uint8_t RunUart_Enable:1;
+  83      =1          uint8_t Interrupt_Enable;
+  84      =1          uint8_t Register_AUXR;
+  85      =1          uint8_t Uartx_busy:1; //串口接收占用标志
+C51 COMPILER V9.60.0.0   MODBUSSLAVE                                                       09/13/2021 00:48:18 PAGE 23  
+
+  86      =1          UART_NVIC_TypeDef Uart_NVIC;
+  87      =1  }Uart_HandleTypeDef;
+  88      =1  
+  89      =1  
+  90      =1  void Uart_Base_MspInit(Uart_HandleTypeDef *uart_baseHandle);
+  91      =1  extern void Uart1_Init(void);
+  92      =1  extern void Uart2_Init(void);
+  93      =1  extern void Uart3_Init(void);
+  94      =1  extern void Uart4_Init(void);
+  95      =1  
+  96      =1  
+  97      =1   void Uartx_SendStr(Uart_HandleTypeDef *const Uart, uint8_t *p, uint16_t time_out);
+  98      =1  void Busy_Await(Uart_HandleTypeDef *const Uart, uint16_t overtime);
+  99      =1  void Uartx_Printf(Uart_HandleTypeDef *const uart, const char *format, ...);
+ 100      =1  
+ 101      =1  extern Uart_HandleTypeDef Uart1; //串口1句柄
+ 102      =1  extern Uart_HandleTypeDef Uart2; //串口2句柄
+ 103      =1  extern Uart_HandleTypeDef Uart3; //串口3句柄
+ 104      =1  extern Uart_HandleTypeDef Uart4; //串口4句柄
+ 105      =1  
+ 106      =1  #endif
+   9          #include "stdio.h"
+   1      =1  /*--------------------------------------------------------------------------
+   2      =1  STDIO.H
+   3      =1  
+   4      =1  Prototypes for standard I/O functions.
+   5      =1  Copyright (c) 1988-2002 Keil Elektronik GmbH and Keil Software, Inc.
+   6      =1  All rights reserved.
+   7      =1  --------------------------------------------------------------------------*/
+   8      =1  
+   9      =1  #ifndef __STDIO_H__
+           =1 #define __STDIO_H__
+           =1 
+           =1 #ifndef EOF
+           =1  #define EOF -1
+           =1 #endif
+           =1 
+           =1 #ifndef NULL
+           =1  #define NULL ((void *) 0)
+           =1 #endif
+           =1 
+           =1 #ifndef _SIZE_T
+           =1  #define _SIZE_T
+           =1  typedef unsigned int size_t;
+           =1 #endif
+           =1 
+           =1 #pragma SAVE
+           =1 #pragma REGPARMS
+           =1 extern char _getkey (void);
+           =1 extern char getchar (void);
+           =1 extern char ungetchar (char);
+           =1 extern char putchar (char);
+           =1 extern int printf   (const char *, ...);
+           =1 extern int sprintf  (char *, const char *, ...);
+           =1 extern int vprintf  (const char *, char *);
+           =1 extern int vsprintf (char *, const char *, char *);
+           =1 extern char *gets (char *, int n);
+           =1 extern int scanf (const char *, ...);
+           =1 extern int sscanf (char *, const char *, ...);
+           =1 extern int puts (const char *);
+           =1 
+           =1 #pragma RESTORE
+C51 COMPILER V9.60.0.0   MODBUSSLAVE                                                       09/13/2021 00:48:18 PAGE 24  
+
+           =1 
+           =1 #endif
+  43      =1  
+  10          #include "string.h"
+   1      =1  /*--------------------------------------------------------------------------
+   2      =1  STRING.H
+   3      =1  
+   4      =1  String functions.
+   5      =1  Copyright (c) 1988-2008 Keil Elektronik GmbH and Keil Software, Inc.
+   6      =1  Copyright (c) 2008-2016 ARM Germany GmbH
+   7      =1  All rights reserved.
+   8      =1  --------------------------------------------------------------------------*/
+   9      =1  
+  10      =1  #ifndef __STRING_H__
+           =1 #define __STRING_H__
+           =1 
+           =1 #ifndef _SIZE_T
+           =1  #define _SIZE_T
+           =1  typedef unsigned int size_t;
+           =1 #endif
+           =1 
+           =1 #ifndef NULL
+           =1  #define NULL ((void *)0)
+           =1 #endif
+           =1 
+           =1 #pragma SAVE
+           =1 #pragma REGPARMS
+           =1 extern char  *strcat  (char *s1, const char *s2);
+           =1 extern char  *strncat (char *s1, const char *s2, size_t n);
+           =1 
+           =1 extern char   strcmp  (const char *s1, const char *s2);
+           =1 extern char   strncmp (const char *s1, const char *s2, size_t n);
+           =1 
+           =1 extern char  *strcpy  (char *s1, const char *s2);
+           =1 extern char  *strncpy (char *s1, const char *s2, size_t n);
+           =1 
+           =1 extern size_t strlen  (const char *);
+           =1 
+           =1 extern char  *strchr  (const char *s, char c);
+           =1 extern int    strpos  (const char *s, char c);
+           =1 extern char  *strrchr (const char *s, char c);
+           =1 extern int    strrpos (const char *s, char c);
+           =1 
+           =1 extern size_t strspn  (const char *s, const char *set);
+           =1 extern size_t strcspn (const char *s, const char *set);
+           =1 extern char  *strpbrk (const char *s, const char *set);
+           =1 extern char  *strrpbrk(const char *s, const char *set);
+           =1 extern char  *strstr  (const char *s, const char *sub);
+           =1 extern char  *strtok  (char *str, const char *set);
+           =1 
+           =1 extern char   memcmp  (const void *s1, const void *s2, size_t n);
+           =1 extern void  *memcpy  (void *s1, const void *s2, size_t n);
+           =1 extern void  *memchr  (const void *s, char val, size_t n);
+           =1 extern void  *memccpy (void *s1, const void *s2, char val, size_t n);
+           =1 extern void  *memmove (void *s1, const void *s2, size_t n);
+           =1 extern void  *memset  (void *s, char val, size_t n);
+           =1 #pragma RESTORE
+           =1 
+           =1 #endif
+  11          
+  12          MODS_T g_tModS;
+  13          
+C51 COMPILER V9.60.0.0   MODBUSSLAVE                                                       09/13/2021 00:48:18 PAGE 25  
+
+  14          ModbusMap DoMap;
+  15          ModbusMap DiMap;
+  16          ModbusMap AiMap;
+  17          ModbusMap KeepMap;
+  18          
+  19          /*
+  20          *********************************************************************************************************
+  21          *       函 数 名:   GetCrc16
+  22          *       功能说明: CRC16检测
+  23          *       形    参: 无
+  24          *       返 回 值: 无
+  25          *********************************************************************************************************
+  26          */
+  27          uint16_t GetCrc16(uint8_t *ptr, uint8_t length, uint16_t IniDat)
+  28          {
+  29   1          uint8_t iix;
+  30   1          uint16_t iiy;
+  31   1          uint16_t crc16 = IniDat;
+  32   1      
+  33   1          for(iix = 0; iix < length; iix++)
+  34   1          {
+  35   2              crc16 ^= *ptr++;
+  36   2      
+  37   2              for(iiy = 0; iiy < 8; iiy++)
+  38   2              {
+  39   3                  if(crc16 & 0x0001)
+  40   3                  {
+  41   4                      crc16 = (crc16 >> 1) ^ 0xa001;
+  42   4                  }
+  43   3                  else
+  44   3                  {
+  45   4                      crc16 = crc16 >> 1;
+  46   4                  }
+  47   3              }
+  48   2          }
+  49   1      
+  50   1          return(crc16);
+  51   1      }
+  52          /*
+  53          *********************************************************************************************************
+  54          *       函 数 名:   checkCrc16
+  55          *       功能说明: CRC16检测
+  56          *       形    参: 无
+  57          *       返 回 值: 无
+  58          *********************************************************************************************************
+  59          */
+  60          uint8_t checkCrc16(uint8_t *ptr, uint8_t length)
+  61          {
+  62   1          uint16_t crc1;
+  63   1          uint16_t crc2;
+  64   1      
+  65   1          crc1 = GetCrc16(ptr, length - 2, 0xFFFF);
+  66   1      
+  67   1          crc2 = *(ptr + length - 1) << 8;        // CRC MSB
+  68   1          crc2 += *(ptr + length - 2);            // CRC LSB
+  69   1      
+  70   1          // 如果数据校验和位置为0xCCCC或0xcccc则说明不校验CRC
+  71   1          if((crc1 == crc2) || (crc2 == 0xCCCC) || (crc2 == 0xcccc))
+  72   1              return 1;
+  73   1      
+  74   1          return 0;
+  75   1      }
+C51 COMPILER V9.60.0.0   MODBUSSLAVE                                                       09/13/2021 00:48:18 PAGE 26  
+
+  76          
+  77          /*
+  78          *********************************************************************************************************
+  79          *       函 数 名: MODS_ReciveNew
+  80          *       功能说明: 获取新的数据
+  81          *       形    参: 无
+  82          *       返 回 值: 无
+  83          *********************************************************************************************************
+  84          */
+  85          void MODS_ReciveNew(uint8_t * rxBuf, uint16_t Len)
+  86          {
+  87   1          uint16_t i;
+  88   1      
+  89   1          for(i = 0; i < Len; i++)
+  90   1          {
+  91   2              g_tModS.RxBuf[i] = rxBuf[i];
+  92   2          }
+  93   1      
+  94   1          g_tModS.RxCount = Len;
+  95   1      }
+  96          
+  97          /*
+  98          *********************************************************************************************************
+  99          *       函 数 名: MODS_Poll
+ 100          *       功能说明: 解析数据包. 在主程序中轮流调用。
+ 101          *       形    参: 无
+ 102          *       返 回 值: 无
+ 103          *********************************************************************************************************
+ 104          */
+ 105          void MODS_Poll(void)
+ 106          {
+ 107   1          uint16_t crc1;
+ 108   1      
+ 109   1          crc1 = checkCrc16(g_tModS.RxBuf, g_tModS.RxCount);
+ 110   1      
+ 111   1          if(!crc1)
+ 112   1          {
+ 113   2              //goto err_ret;
+ 114   2          }
+ 115   1      
+ 116   1              /* 接收到的数据小于4个字节就认为错误 */
+ 117   1              /*第一字节，从站地址 */
+ 118   1              if((g_tModS.RxCount < 4) && (g_tModS.RxBuf[0] != SLAVEADDRESS))
+ 119   1              {
+ 120   2                      g_tModS.RxCount = 0;
+ 121   2                      return ;
+ 122   2              }
+ 123   1      
+ 124   1          MODS_AnalyzeApp();
+ 125   1              
+ 126   1              //HAL_UART_Transmit(&huart1,g_tModS.RxBuf,sizeof(g_tModS.RxBuf),0xffff);
+ 127   1      }
+ 128          
+ 129          
+ 130          /*
+ 131          *********************************************************************************************************
+ 132          *       函 数 名: MODS_SendAckErr
+ 133          *       功能说明: 发送错误应答
+ 134          *       形    参: _ucErrCode : 错误代码
+ 135          *       返 回 值: 无
+ 136          *********************************************************************************************************
+ 137          */
+C51 COMPILER V9.60.0.0   MODBUSSLAVE                                                       09/13/2021 00:48:18 PAGE 27  
+
+ 138          void MODS_SendAckErr(uint8_t _ucErrCode)
+ 139          {
+ 140   1          g_tModS.TxCount = 0;
+ 141   1          g_tModS.TxBuf[g_tModS.TxCount++] = g_tModS.RxBuf[0];
+ 142   1          g_tModS.TxBuf[g_tModS.TxCount++] = g_tModS.RxBuf[1];
+ 143   1          g_tModS.TxBuf[g_tModS.TxCount++] = _ucErrCode;
+ 144   1      
+ 145   1          MODS_SendWithCRC(g_tModS.TxBuf, g_tModS.TxCount);
+ 146   1      }
+ 147          
+ 148          /*
+ 149          *********************************************************************************************************
+ 150          *       函 数 名: MODS_SendAckOk
+ 151          *       功能说明: 发送正确的应答.
+ 152          *       形    参: 无
+ 153          *       返 回 值: 无
+ 154          *********************************************************************************************************
+ 155          */
+ 156          void MODS_SendAckOk(void)
+ 157          {
+ 158   1      
+ 159   1      }
+ 160          
+ 161          /*
+ 162          *********************************************************************************************************
+ 163          *       函 数 名:  MODS_InportMap
+ 164          *       功能说明:  导入地址映射.
+ 165          *       形    参: 无
+ 166          *       返 回 值: 无
+ 167          *********************************************************************************************************
+ 168          */
+ 169          void MODS_InportMap(Areatype area, uint8_t* pmap, uint16_t Len)
+ 170          {
+ 171   1          switch(area)
+ 172   1          {
+ 173   2              case Area_DO:
+ 174   2              {
+ 175   3                  DoMap.p = pmap;
+ 176   3                  DoMap.Length = Len;
+ 177   3                  break;
+ 178   3              }
+ 179   2      
+ 180   2              case Area_DI:
+ 181   2              {
+ 182   3                  DiMap.p = pmap;
+ 183   3                  DiMap.Length = Len;
+ 184   3                  break;
+ 185   3              }
+ 186   2      
+ 187   2              case Area_AI:
+ 188   2              {
+ 189   3                  AiMap.p = pmap;
+ 190   3                  AiMap.Length = Len;
+ 191   3                  break;
+ 192   3              }
+ 193   2      
+ 194   2              case Area_KEEP:
+ 195   2              {
+ 196   3                  KeepMap.p = pmap;
+ 197   3                  KeepMap.Length = Len;
+ 198   3                  break;
+ 199   3              }
+C51 COMPILER V9.60.0.0   MODBUSSLAVE                                                       09/13/2021 00:48:18 PAGE 28  
+
+ 200   2          }
+ 201   1      }
+ 202          
+ 203          /*
+ 204          *********************************************************************************************************
+ 205          *       函 数 名: MODS_AnalyzeApp
+ 206          *       功能说明: 数据解析
+ 207          *       形    参: 无
+ 208          *       返 回 值: 无
+ 209          *********************************************************************************************************
+ 210          */
+ 211          void MODS_AnalyzeApp(void)    //Mosbus数据解析
+ 212          {
+ 213   1          switch (g_tModS.RxBuf[1])                           /* 第2个字节 功能码 */
+ 214   1          {
+ 215   2              case 0x01:                                                      /* 读取线圈状态*/
+ 216   2                  MODS_01H();
+ 217   2                  break;
+ 218   2      
+ 219   2              case 0x02:                                                      /* 读取输入状态*/
+ 220   2                  MODS_02H();
+ 221   2                  break;
+ 222   2      
+ 223   2              case 0x03:                                                      /* 读取保持寄存器*/
+ 224   2                  MODS_03H();
+ 225   2                  break;
+ 226   2      
+ 227   2              case 0x04:                                                      /* 读取输入寄存器*/
+ 228   2                  MODS_04H();
+ 229   2                  break;
+ 230   2      
+ 231   2              case 0x05:                                                      /* 强制单线圈*/
+ 232   2                  MODS_05H();
+ 233   2                  break;
+ 234   2      
+ 235   2              case 0x06:                                                      /* 写单个保存寄存器*/
+ 236   2                  MODS_06H();
+ 237   2                  break;
+ 238   2      
+ 239   2              case 0x0F:                                                      /* 写多个线圈*/
+ 240   2                  MODS_0FH();
+ 241   2                  break;
+ 242   2      
+ 243   2              case 0x10:                                                      /* 写多个保存寄存器*/
+ 244   2                  MODS_10H();
+ 245   2                  break;
+ 246   2      
+ 247   2              default:
+ 248   2                  MODS_SendAckErr(RSP_ERR_CMD);       /* 告诉主机命令错误 */
+ 249   2                  break;
+ 250   2          }
+ 251   1      }
+ 252          
+ 253          void MODS_01H(void)
+ 254          {
+ 255   1          /* 举例：
+ 256   1                      主机发送:
+ 257   1                      [0]     11 从机地址
+ 258   1                      [1]     01 功能码
+ 259   1                      [2]     00 寄存器起始地址高字节
+ 260   1                      [3]     13 寄存器起始地址低字节
+ 261   1                      [4]     00 寄存器数量高字节
+C51 COMPILER V9.60.0.0   MODBUSSLAVE                                                       09/13/2021 00:48:18 PAGE 29  
+
+ 262   1                      [5]     25 寄存器数量低字节
+ 263   1                      [6]     0E CRC校验高字节
+ 264   1                      [7]     84 CRC校验低字节
+ 265   1      
+ 266   1                      从机应答:   1代表ON，0代表OFF。若返回的线圈数不为8的倍数，则在最后数据�
+             -�节未尾使用0代替. BIT0对应第1个
+ 267   1                              11 从机地址
+ 268   1                              01 功能码
+ 269   1                              05 返回字节数
+ 270   1                              CD 数据1(线圈0013H-线圈001AH)
+ 271   1                              6B 数据2(线圈001BH-线圈0022H)
+ 272   1                              B2 数据3(线圈0023H-线圈002AH)
+ 273   1                              0E 数据4(线圈0032H-线圈002BH)
+ 274   1                              1B 数据5(线圈0037H-线圈0033H)
+ 275   1                              45 CRC校验高字节
+ 276   1                              E6 CRC校验低字节
+ 277   1              */
+ 278   1      }
+ 279          void MODS_02H(void)
+ 280          {
+ 281   1      }
+ 282          void MODS_03H(void)
+ 283          {
+ 284   1          /*
+ 285   1              主机发送:
+ 286   1                      11 从机地址
+ 287   1                      03 功能码
+ 288   1                      00 寄存器地址高字节
+ 289   1                      6B 寄存器地址低字节
+ 290   1                      00 寄存器数量高字节
+ 291   1                      03 寄存器数量低字节
+ 292   1                      76 CRC高字节
+ 293   1                      87 CRC低字节
+ 294   1      
+ 295   1              从机应答:   保持寄存器的长度为2个字节。对于单个保持寄存器而言，寄存器�
+             -��字节数据先被传输，
+ 296   1                                      低字节数据后被传输。保持寄存器之间，低地址寄存器先被传输，高地址�
+             -�存器后被传输。
+ 297   1                      11 从机地址
+ 298   1                      03 功能码
+ 299   1                      06 字节数
+ 300   1                      00 数据1高字节(006BH)
+ 301   1                      6B 数据1低字节(006BH)
+ 302   1                      00 数据2高字节(006CH)
+ 303   1                      13 数据2 低字节(006CH)
+ 304   1                      00 数据3高字节(006DH)
+ 305   1                      00 数据3低字节(006DH)
+ 306   1                      38 CRC高字节
+ 307   1                      B9 CRC低字节
+ 308   1          */
+ 309   1      
+ 310   1          uint16_t addr;
+ 311   1          uint16_t num;
+ 312   1      
+ 313   1          if(g_tModS.RxCount != 8)
+ 314   1          {
+ 315   2              MODS_SendAckErr(RSP_ERR_REG_ADDR);
+ 316   2              return;
+ 317   2          }
+ 318   1      
+ 319   1          addr = (uint16_t)g_tModS.RxBuf[2] | g_tModS.RxBuf[3];
+ 320   1          num  = (uint16_t)g_tModS.RxBuf[4] | g_tModS.RxBuf[5];
+C51 COMPILER V9.60.0.0   MODBUSSLAVE                                                       09/13/2021 00:48:18 PAGE 30  
+
+ 321   1      
+ 322   1      //    /* 地址范围判断 */
+ 323   1      //    if((addr + num) > KeepMap.Length)
+ 324   1      //    {
+ 325   1      //        MODS_SendAckErr(RSP_ERR_REG_ADDR);
+ 326   1      //        return;
+ 327   1      //    }
+ 328   1          MODS_SendWithCRC(g_tModS.TxBuf, g_tModS.TxCount);
+ 329   1      }
+ 330          
+ 331          void MODS_04H(void)
+ 332          {
+ 333   1      }
+ 334          
+ 335          /*写单个线圈指令解析*/
+ 336          void  Write_SingleCoil_Explain(uint8_t addr)
+ 337          {
+ 338   1              switch(addr)
+ 339   1              {
+ 340   2                      case QUICKCHARGING_ADDR: 
+ 341   2                      {
+ 342   3      //                      /*网络丢包导致的数据错误*/
+ 343   3      //                      if(!checkCrc16(g_tModS.RxBuf, g_tModS.RxCount))
+ 344   3      //                      {
+ 345   3      //                              return; 
+ 346   3      //                      }
+ 347   3                              
+ 348   3                              if(g_tModS.RxBuf[4] == 0xFF) //第五字节可以直接丢弃0xFF00/0x0000
+ 349   3                              {
+ 350   4                                      g_PresentBatteryInfo.QuickChargingFlag = true;
+*** ERROR C200 IN LINE 350 OF Src\ModbusSlave.c: left side of '.' requires struct/union
+ 351   4      //                              /*只有在恒流模式下才能开启快充功能*/
+ 352   4      //                              if(g_PresentBatteryInfo.Cstate == constant_current)
+ 353   4      //                              {
+ 354   4      //                                      temp_current *=  FAST_CHARGE_CURRENT_COEFFICENT;
+ 355   4      //                              }
+ 356   4                              }
+ 357   3                              else //0x0000
+ 358   3                              {
+ 359   4                                      g_PresentBatteryInfo.QuickChargingFlag  = false;
+ 360   4                                      /*只有在恒流模式下关闭快充才有效*/
+ 361   4      //                              if(g_PresentBatteryInfo.Cstate == constant_current)
+ 362   4      //                              {
+ 363   4      //                                      temp_current /=  FAST_CHARGE_CURRENT_COEFFICENT;
+ 364   4      //                              }
+ 365   4                              }
+ 366   3                      }break;
+ 367   2                      
+ 368   2                      case CLOSECHARGER_ADDR:
+ 369   2                      {
+ 370   3                      
+ 371   3                      }break;
+ 372   2                      default : break;
+ 373   2              }
+ 374   1      }
+ 375          
+ 376          void MODS_05H(void)
+ 377          {
+ 378   1          uint16_t addr;
+ 379   1              
+ 380   1              if(g_tModS.RxCount != 8)
+ 381   1          {
+C51 COMPILER V9.60.0.0   MODBUSSLAVE                                                       09/13/2021 00:48:18 PAGE 31  
+
+ 382   2              MODS_SendAckErr(RSP_ERR_REG_ADDR);
+ 383   2              return;
+ 384   2          }
+ 385   1              
+ 386   1              addr = (uint16_t)g_tModS.RxBuf[2] | g_tModS.RxBuf[3];
+ 387   1              
+ 388   1          Write_SingleCoil_Explain(addr);
+ 389   1              /*05H指令响应数据和接收相同*/
+ 390   1          MODS_SendWithCRC(g_tModS.RxBuf, g_tModS.RxCount - 2U); 
+ 391   1      //      HAL_UART_Transmit_DMA(&huart1, g_tModS.RxBuf, g_tModS.RxCount);
+ 392   1      //      while (__HAL_UART_GET_FLAG(&huart1,UART_FLAG_TC) == RESET) { }
+ 393   1              /*05指令比较特殊，收到什么就原样子返回什么*/
+ 394   1      }
+ 395          
+ 396          void MODS_06H(void)
+ 397          {
+ 398   1          /*
+ 399   1          写保持寄存器。注意06指令只能操作单个保持寄存器，16指令可以设置单个或�
+             -�个保持寄存器
+ 400   1          主机发送:
+ 401   1              11 从机地址
+ 402   1              06 功能码
+ 403   1              00 寄存器地址高字节
+ 404   1              01 寄存器地址低字节
+ 405   1              00 数据1高字节
+ 406   1              01 数据1低字节
+ 407   1              9A CRC校验高字节
+ 408   1              9B CRC校验低字节
+ 409   1      
+ 410   1          从机响应:
+ 411   1              11 从机地址
+ 412   1              06 功能码
+ 413   1              00 寄存器地址高字节
+ 414   1              01 寄存器地址低字节
+ 415   1              00 数据1高字节
+ 416   1              01 数据1低字节
+ 417   1              1B CRC校验高字节
+ 418   1              5A      CRC校验低字节
+ 419   1          */
+ 420   1          uint16_t addr;
+ 421   1          uint16_t value;
+ 422   1              
+ 423   1              uint8_t buffer[2] = { 0 };
+ 424   1      
+ 425   1          if(g_tModS.RxCount != 8)
+ 426   1          {
+ 427   2              MODS_SendAckErr(RSP_ERR_REG_ADDR);
+ 428   2              return;
+ 429   2          }
+ 430   1      
+ 431   1          addr  = (uint16_t)g_tModS.RxBuf[2] | g_tModS.RxBuf[3];
+ 432   1          value = (uint16_t)g_tModS.RxBuf[4] | g_tModS.RxBuf[5];
+ 433   1              
+ 434   1      //    /*地址判断*/
+ 435   1      //    if(addr > KeepMap.Length)
+ 436   1      //    {
+ 437   1      //        MODS_SendAckErr(RSP_ERR_REG_ADDR);
+ 438   1      //        return;
+ 439   1      //    }
+ 440   1      
+ 441   1      //    /*赋值*/
+ 442   1      //    /*
+C51 COMPILER V9.60.0.0   MODBUSSLAVE                                                       09/13/2021 00:48:18 PAGE 32  
+
+ 443   1      //     * 暂时不用改，刚好不是16位的数组
+ 444   1      //     */
+ 445   1      //    KeepMap.p[addr] = value;
+ 446   1      
+ 447   1          /*响应为接收帧*/
+ 448   1          MODS_SendWithCRC(g_tModS.RxBuf, g_tModS.RxCount - 2U);
+ 449   1      }
+ 450          
+ 451          void MODS_0FH(void)
+ 452          {
+ 453   1      }
+ 454          void MODS_10H(void)
+ 455          {
+ 456   1      }
+ 457          
+ 458          
+ 459          /*
+ 460          *********************************************************************************************************
+ 461          *       函 数 名: MODS_SlaveInit
+ 462          *       功能说明: Modbus从站初始化
+ 463          *       形    参: 无
+ 464          *       返 回 值: 无
+ 465          *********************************************************************************************************
+ 466          */
+ 467          void MODS_SlaveInit(void)
+ 468          {
+ 469   1          DoMap.p = NULL;
+ 470   1          DoMap.Length = 0;
+ 471   1          DiMap.p = NULL;;
+ 472   1          AiMap.Length = 0;
+ 473   1          KeepMap.p = NULL;
+ 474   1          KeepMap.Length = 0;
+ 475   1      
+ 476   1          //MODS_InportMap(Area_KEEP,EBM_Mapbuff,sizeof(EBM_Mapbuff));     //导入保持地址映射表
+ 477   1      }
+ 478          
+ 479          /*
+ 480          *********************************************************************************************************
+ 481          *       函 数 名:  MODS_SendWithCRC
+ 482          *       功能说明: 带CRC的发送从站数据
+ 483          *       形    参: 无
+ 484          *       返 回 值: 无
+ 485          *********************************************************************************************************
+ 486          */
+ 487          void MODS_SendWithCRC(uint8_t *_pBuf, uint8_t _ucLen)
+ 488          {
+ 489   1          uint16_t crc;
+ 490   1          uint8_t buf[MOD_TX_BUF_SIZE];
+ 491   1      
+ 492   1          memcpy(buf, _pBuf, _ucLen);
+ 493   1          crc = GetCrc16(_pBuf, _ucLen, 0xffff);
+ 494   1          buf[_ucLen++] = crc;
+ 495   1          buf[_ucLen++] = crc >> 8;
+ 496   1      
+ 497   1          HAL_UART_Transmit_DMA(&huart1, buf, _ucLen);
+*** ERROR C202 IN LINE 497 OF Src\ModbusSlave.c: 'huart1': undefined identifier
+ 498   1              while (__HAL_UART_GET_FLAG(&huart1,UART_FLAG_TC) == RESET) { }
+*** ERROR C202 IN LINE 498 OF Src\ModbusSlave.c: 'huart1': undefined identifier
+ 499   1      }
+ 500          
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  3 ERROR(S)

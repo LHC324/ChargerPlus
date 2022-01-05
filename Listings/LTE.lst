@@ -1,0 +1,2447 @@
+C51 COMPILER V9.60.0.0   LTE                                                               09/08/2021 15:19:43 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE LTE
+OBJECT MODULE PLACED IN .\Objects\LTE.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE Src\LTE.c LARGE OPTIMIZE(0,SPEED) BROWSE INCDIR(.\Inc) DEBUG OBJECTEXTEN
+                    -D CODE LISTINCLUDE SYMBOLS PRINT(.\Listings\LTE.lst) OBJECT(.\Objects\LTE.obj)
+
+line level    source
+
+   1          #include "LTE.h"
+   1      =1  #ifndef __LTE_H
+   2      =1  #define __LTE_H
+   3      =1  #include <STC8.h>
+   1      =2  #ifndef __STC8F_H_
+   2      =2  #define __STC8F_H_
+   3      =2  
+   4      =2  /////////////////////////////////////////////////
+   5      =2  
+   6      =2  //包含本头文件后,不用另外再包含"REG51.H"
+   7      =2  
+   8      =2  //内核特殊功能寄存器
+   9      =2  sfr ACC         =   0xe0;
+  10      =2  sfr B           =   0xf0;
+  11      =2  sfr PSW         =   0xd0;
+  12      =2  sbit CY         =   PSW^7;
+  13      =2  sbit AC         =   PSW^6;
+  14      =2  sbit F0         =   PSW^5;
+  15      =2  sbit RS1        =   PSW^4;
+  16      =2  sbit RS0        =   PSW^3;
+  17      =2  sbit OV         =   PSW^2;
+  18      =2  sbit P          =   PSW^0;
+  19      =2  sfr SP          =   0x81;
+  20      =2  sfr DPL         =   0x82;
+  21      =2  sfr DPH         =   0x83;
+  22      =2  sfr TA          =   0xae;
+  23      =2  sfr DPS         =   0xe3;
+  24      =2  sfr DPL1        =   0xe4;
+  25      =2  sfr DPH1        =   0xe5;
+  26      =2  
+  27      =2  
+  28      =2  //I/O 口特殊功能寄存器
+  29      =2  sfr P0          =   0x80;
+  30      =2  sfr P1          =   0x90;
+  31      =2  sfr P2          =   0xa0;
+  32      =2  sfr P3          =   0xb0;
+  33      =2  sfr P4          =   0xc0;
+  34      =2  sfr P5          =   0xc8;
+  35      =2  sfr P6          =   0xe8;
+  36      =2  sfr P7          =   0xf8;
+  37      =2  sfr P0M0        =   0x94;
+  38      =2  sfr P0M1        =   0x93;
+  39      =2  sfr P1M0        =   0x92;
+  40      =2  sfr P1M1        =   0x91;
+  41      =2  sfr P2M0        =   0x96;
+  42      =2  sfr P2M1        =   0x95;
+  43      =2  sfr P3M0        =   0xb2;
+  44      =2  sfr P3M1        =   0xb1;
+  45      =2  sfr P4M0        =   0xb4;
+  46      =2  sfr P4M1        =   0xb3;
+  47      =2  sfr P5M0        =   0xca;
+  48      =2  sfr P5M1        =   0xc9;
+  49      =2  sfr P6M0        =   0xcc;
+  50      =2  sfr P6M1        =   0xcb;
+C51 COMPILER V9.60.0.0   LTE                                                               09/08/2021 15:19:43 PAGE 2   
+
+  51      =2  sfr P7M0        =   0xe2;
+  52      =2  sfr P7M1        =   0xe1;
+  53      =2  
+  54      =2  sbit P00        =   P0^0;
+  55      =2  sbit P01        =   P0^1;
+  56      =2  sbit P02        =   P0^2;
+  57      =2  sbit P03        =   P0^3;
+  58      =2  sbit P04        =   P0^4;
+  59      =2  sbit P05        =   P0^5;
+  60      =2  sbit P06        =   P0^6;
+  61      =2  sbit P07        =   P0^7;
+  62      =2  sbit P10        =   P1^0;
+  63      =2  sbit P11        =   P1^1;
+  64      =2  sbit P12        =   P1^2;
+  65      =2  sbit P13        =   P1^3;
+  66      =2  sbit P14        =   P1^4;
+  67      =2  sbit P15        =   P1^5;
+  68      =2  sbit P16        =   P1^6;
+  69      =2  sbit P17        =   P1^7;
+  70      =2  sbit P20        =   P2^0;
+  71      =2  sbit P21        =   P2^1;
+  72      =2  sbit P22        =   P2^2;
+  73      =2  sbit P23        =   P2^3;
+  74      =2  sbit P24        =   P2^4;
+  75      =2  sbit P25        =   P2^5;
+  76      =2  sbit P26        =   P2^6;
+  77      =2  sbit P27        =   P2^7;
+  78      =2  sbit P30        =   P3^0;
+  79      =2  sbit P31        =   P3^1;
+  80      =2  sbit P32        =   P3^2;
+  81      =2  sbit P33        =   P3^3;
+  82      =2  sbit P34        =   P3^4;
+  83      =2  sbit P35        =   P3^5;
+  84      =2  sbit P36        =   P3^6;
+  85      =2  sbit P37        =   P3^7;
+  86      =2  sbit P40        =   P4^0;
+  87      =2  sbit P41        =   P4^1;
+  88      =2  sbit P42        =   P4^2;
+  89      =2  sbit P43        =   P4^3;
+  90      =2  sbit P44        =   P4^4;
+  91      =2  sbit P45        =   P4^5;
+  92      =2  sbit P46        =   P4^6;
+  93      =2  sbit P47        =   P4^7;
+  94      =2  sbit P50        =   P5^0;
+  95      =2  sbit P51        =   P5^1;
+  96      =2  sbit P52        =   P5^2;
+  97      =2  sbit P53        =   P5^3;
+  98      =2  sbit P54        =   P5^4;
+  99      =2  sbit P55        =   P5^5;
+ 100      =2  sbit P56        =   P5^6;
+ 101      =2  sbit P57        =   P5^7;
+ 102      =2  sbit P60        =   P6^0;
+ 103      =2  sbit P61        =   P6^1;
+ 104      =2  sbit P62        =   P6^2;
+ 105      =2  sbit P63        =   P6^3;
+ 106      =2  sbit P64        =   P6^4;
+ 107      =2  sbit P65        =   P6^5;
+ 108      =2  sbit P66        =   P6^6;
+ 109      =2  sbit P67        =   P6^7;
+ 110      =2  sbit P70        =   P7^0;
+ 111      =2  sbit P71        =   P7^1;
+ 112      =2  sbit P72        =   P7^2;
+C51 COMPILER V9.60.0.0   LTE                                                               09/08/2021 15:19:43 PAGE 3   
+
+ 113      =2  sbit P73        =   P7^3;
+ 114      =2  sbit P74        =   P7^4;
+ 115      =2  sbit P75        =   P7^5;
+ 116      =2  sbit P76        =   P7^6;
+ 117      =2  sbit P77        =   P7^7;
+ 118      =2  
+ 119      =2  //如下特殊功能寄存器位于扩展RAM区域
+ 120      =2  //访问这些寄存器,需先将P_SW2的BIT7设置为1,才可正常读写
+ 121      =2  #define P0PU        (*(unsigned char volatile xdata *)0xfe10)
+ 122      =2  #define P1PU        (*(unsigned char volatile xdata *)0xfe11)
+ 123      =2  #define P2PU        (*(unsigned char volatile xdata *)0xfe12)
+ 124      =2  #define P3PU        (*(unsigned char volatile xdata *)0xfe13)
+ 125      =2  #define P4PU        (*(unsigned char volatile xdata *)0xfe14)
+ 126      =2  #define P5PU        (*(unsigned char volatile xdata *)0xfe15)
+ 127      =2  #define P6PU        (*(unsigned char volatile xdata *)0xfe16)
+ 128      =2  #define P7PU        (*(unsigned char volatile xdata *)0xfe17)
+ 129      =2  #define P0NCS       (*(unsigned char volatile xdata *)0xfe18)
+ 130      =2  #define P1NCS       (*(unsigned char volatile xdata *)0xfe19)
+ 131      =2  #define P2NCS       (*(unsigned char volatile xdata *)0xfe1a)
+ 132      =2  #define P3NCS       (*(unsigned char volatile xdata *)0xfe1b)
+ 133      =2  #define P4NCS       (*(unsigned char volatile xdata *)0xfe1c)
+ 134      =2  #define P5NCS       (*(unsigned char volatile xdata *)0xfe1d)
+ 135      =2  #define P6NCS       (*(unsigned char volatile xdata *)0xfe1e)
+ 136      =2  #define P7NCS       (*(unsigned char volatile xdata *)0xfe1f)
+ 137      =2  
+ 138      =2  //系统管理特殊功能寄存器
+ 139      =2  sfr PCON        =   0x87;
+ 140      =2  #define SMOD        0x80
+ 141      =2  #define SMOD0       0x40
+ 142      =2  #define LVDF        0x20
+ 143      =2  #define POF         0x10
+ 144      =2  #define GF1         0x08
+ 145      =2  #define GF0         0x04
+ 146      =2  #define PD          0x02
+ 147      =2  #define IDL         0x01
+ 148      =2  sfr AUXR        =   0x8e;
+ 149      =2  #define T0x12       0x80
+ 150      =2  #define T1x12       0x40
+ 151      =2  #define UART_M0x6   0x20
+ 152      =2  #define T2R         0x10
+ 153      =2  #define T2_CT       0x08
+ 154      =2  #define T2x12       0x04
+ 155      =2  #define EXTRAM      0x02
+ 156      =2  #define S1ST2       0x01
+ 157      =2  sfr AUXR2       =   0x97;
+ 158      =2  #define TXLNRX      0x10
+ 159      =2  sfr BUS_SPEED   =   0xa1;
+ 160      =2  sfr P_SW1       =   0xa2;
+ 161      =2  sfr P_SW2       =   0xba;
+ 162      =2  #define EAXFR       0x80
+ 163      =2  sfr VOCTRL      =   0xbb;
+ 164      =2  sfr RSTCFG      =   0xff;
+ 165      =2  
+ 166      =2  //如下特殊功能寄存器位于扩展RAM区域
+ 167      =2  //访问这些寄存器,需先将P_SW2的BIT7设置为1,才可正常读写
+ 168      =2  #define CKSEL       (*(unsigned char volatile xdata *)0xfe00)
+ 169      =2  #define CLKDIV      (*(unsigned char volatile xdata *)0xfe01)
+ 170      =2  #define IRC24MCR    (*(unsigned char volatile xdata *)0xfe02)
+ 171      =2  #define XOSCCR      (*(unsigned char volatile xdata *)0xfe03)
+ 172      =2  #define IRC32KCR    (*(unsigned char volatile xdata *)0xfe04)
+ 173      =2  
+ 174      =2  //中断特殊功能寄存器
+C51 COMPILER V9.60.0.0   LTE                                                               09/08/2021 15:19:43 PAGE 4   
+
+ 175      =2  sfr IE          =   0xa8;
+ 176      =2  sbit EA         =   IE^7;
+ 177      =2  sbit ELVD       =   IE^6;
+ 178      =2  sbit EADC       =   IE^5;
+ 179      =2  sbit ES         =   IE^4;
+ 180      =2  sbit ET1        =   IE^3;
+ 181      =2  sbit EX1        =   IE^2;
+ 182      =2  sbit ET0        =   IE^1;
+ 183      =2  sbit EX0        =   IE^0;
+ 184      =2  sfr IE2         =   0xaf;
+ 185      =2  #define ET4         0x40
+ 186      =2  #define ET3         0x20
+ 187      =2  #define ES4         0x10
+ 188      =2  #define ES3         0x08
+ 189      =2  #define ET2         0x04
+ 190      =2  #define ESPI        0x02
+ 191      =2  #define ES2         0x01
+ 192      =2  sfr IP          =   0xb8;
+ 193      =2  sbit PPCA       =   IP^7;
+ 194      =2  sbit PLVD       =   IP^6;
+ 195      =2  sbit PADC       =   IP^5;
+ 196      =2  sbit PS         =   IP^4;
+ 197      =2  sbit PT1        =   IP^3;
+ 198      =2  sbit PX1        =   IP^2;
+ 199      =2  sbit PT0        =   IP^1;
+ 200      =2  sbit PX0        =   IP^0;
+ 201      =2  sfr IP2         =   0xb5;
+ 202      =2  #define PI2C        0x40
+ 203      =2  #define PCMP        0x20
+ 204      =2  #define PX4         0x10
+ 205      =2  #define PPWMFD      0x08
+ 206      =2  #define PPWM        0x04
+ 207      =2  #define PSPI        0x02
+ 208      =2  #define PS2         0x01
+ 209      =2  sfr IPH         =   0xb7;
+ 210      =2  #define PPCAH       0x80
+ 211      =2  #define PLVDH       0x40
+ 212      =2  #define PADCH       0x20
+ 213      =2  #define PSH         0x10
+ 214      =2  #define PT1H        0x08
+ 215      =2  #define PX1H        0x04
+ 216      =2  #define PT0H        0x02
+ 217      =2  #define PX0H        0x01
+ 218      =2  sfr IP2H        =   0xb6;
+ 219      =2  #define PI2CH       0x40
+ 220      =2  #define PCMPH       0x20
+ 221      =2  #define PX4H        0x10
+ 222      =2  #define PPWMFDH     0x08
+ 223      =2  #define PPWMH       0x04
+ 224      =2  #define PSPIH       0x02
+ 225      =2  #define PS2H        0x01
+ 226      =2  sfr INTCLKO     =   0x8f;
+ 227      =2  #define EX4         0x40
+ 228      =2  #define EX3         0x20
+ 229      =2  #define EX2         0x10
+ 230      =2  #define T2CLKO      0x04
+ 231      =2  #define T1CLKO      0x02
+ 232      =2  #define T0CLKO      0x01
+ 233      =2  sfr AUXINTIF    =   0xef;
+ 234      =2  #define INT4IF      0x40
+ 235      =2  #define INT3IF      0x20
+ 236      =2  #define INT2IF      0x10
+C51 COMPILER V9.60.0.0   LTE                                                               09/08/2021 15:19:43 PAGE 5   
+
+ 237      =2  #define T4IF        0x04
+ 238      =2  #define T3IF        0x02
+ 239      =2  #define T2IF        0x01
+ 240      =2  
+ 241      =2  //定时器特殊功能寄存器
+ 242      =2  sfr TCON        =   0x88;
+ 243      =2  sbit TF1        =   TCON^7;
+ 244      =2  sbit TR1        =   TCON^6;
+ 245      =2  sbit TF0        =   TCON^5;
+ 246      =2  sbit TR0        =   TCON^4;
+ 247      =2  sbit IE1        =   TCON^3;
+ 248      =2  sbit IT1        =   TCON^2;
+ 249      =2  sbit IE0        =   TCON^1;
+ 250      =2  sbit IT0        =   TCON^0;
+ 251      =2  sfr TMOD        =   0x89;
+ 252      =2  #define T1_GATE     0x80
+ 253      =2  #define T1_CT       0x40
+ 254      =2  #define T1_M1       0x20
+ 255      =2  #define T1_M0       0x10
+ 256      =2  #define T0_GATE     0x08
+ 257      =2  #define T0_CT       0x04
+ 258      =2  #define T0_M1       0x02
+ 259      =2  #define T0_M0       0x01
+ 260      =2  sfr TL0         =   0x8a;
+ 261      =2  sfr TL1         =   0x8b;
+ 262      =2  sfr TH0         =   0x8c;
+ 263      =2  sfr TH1         =   0x8d;
+ 264      =2  sfr T4T3M       =   0xd1;
+ 265      =2  #define T4R         0x80
+ 266      =2  #define T4_CT       0x40
+ 267      =2  #define T4x12       0x20
+ 268      =2  #define T4CLKO      0x10
+ 269      =2  #define T3R         0x08
+ 270      =2  #define T3_CT       0x04
+ 271      =2  #define T3x12       0x02
+ 272      =2  #define T3CLKO      0x01
+ 273      =2  sfr T4H         =   0xd2;
+ 274      =2  sfr T4L         =   0xd3;
+ 275      =2  sfr T3H         =   0xd4;
+ 276      =2  sfr T3L         =   0xd5;
+ 277      =2  sfr T2H         =   0xd6;
+ 278      =2  sfr T2L         =   0xd7;
+ 279      =2  sfr TH4         =   0xd2;
+ 280      =2  sfr TL4         =   0xd3;
+ 281      =2  sfr TH3         =   0xd4;
+ 282      =2  sfr TL3         =   0xd5;
+ 283      =2  sfr TH2         =   0xd6;
+ 284      =2  sfr TL2         =   0xd7;
+ 285      =2  sfr WKTCL       =   0xaa;
+ 286      =2  sfr WKTCH       =   0xab;
+ 287      =2  #define WKTEN       0x80
+ 288      =2  sfr WDT_CONTR   =   0xc1;
+ 289      =2  #define WDT_FLAG    0x80
+ 290      =2  #define EN_WDT      0x20
+ 291      =2  #define CLR_WDT     0x10
+ 292      =2  #define IDL_WDT     0x08
+ 293      =2  
+ 294      =2  //串行口特殊功能寄存器
+ 295      =2  sfr SCON        =   0x98;
+ 296      =2  sbit SM0        =   SCON^7;
+ 297      =2  sbit SM1        =   SCON^6;
+ 298      =2  sbit SM2        =   SCON^5;
+C51 COMPILER V9.60.0.0   LTE                                                               09/08/2021 15:19:43 PAGE 6   
+
+ 299      =2  sbit REN        =   SCON^4;
+ 300      =2  sbit TB8        =   SCON^3;
+ 301      =2  sbit RB8        =   SCON^2;
+ 302      =2  sbit TI         =   SCON^1;
+ 303      =2  sbit RI         =   SCON^0;
+ 304      =2  sfr SBUF        =   0x99;
+ 305      =2  sfr S2CON       =   0x9a;
+ 306      =2  #define S2SM0       0x80
+ 307      =2  #define S2ST4       0x40
+ 308      =2  #define S2SM2       0x20
+ 309      =2  #define S2REN       0x10
+ 310      =2  #define S2TB8       0x08
+ 311      =2  #define S2RB8       0x04
+ 312      =2  #define S2TI        0x02
+ 313      =2  #define S2RI        0x01
+ 314      =2  sfr S2BUF       =   0x9b;
+ 315      =2  sfr S3CON       =   0xac;
+ 316      =2  #define S3SM0       0x80
+ 317      =2  #define S3ST4       0x40
+ 318      =2  #define S3SM2       0x20
+ 319      =2  #define S3REN       0x10
+ 320      =2  #define S3TB8       0x08
+ 321      =2  #define S3RB8       0x04
+ 322      =2  #define S3TI        0x02
+ 323      =2  #define S3RI        0x01
+ 324      =2  sfr S3BUF       =   0xad;
+ 325      =2  sfr S4CON       =   0x84;
+ 326      =2  #define S4SM0       0x80
+ 327      =2  #define S4ST4       0x40
+ 328      =2  #define S4SM2       0x20
+ 329      =2  #define S4REN       0x10
+ 330      =2  #define S4TB8       0x08
+ 331      =2  #define S4RB8       0x04
+ 332      =2  #define S4TI        0x02
+ 333      =2  #define S4RI        0x01
+ 334      =2  sfr S4BUF       =   0x85;
+ 335      =2  sfr SADDR       =   0xa9;
+ 336      =2  sfr SADEN       =   0xb9;
+ 337      =2  
+ 338      =2  //ADC 特殊功能寄存器
+ 339      =2  sfr ADC_CONTR   =   0xbc;
+ 340      =2  #define ADC_POWER   0x80
+ 341      =2  #define ADC_START   0x40
+ 342      =2  #define ADC_FLAG    0x20
+ 343      =2  sfr ADC_RES     =   0xbd;
+ 344      =2  sfr ADC_RESL    =   0xbe;
+ 345      =2  sfr ADCCFG      =   0xde;
+ 346      =2  #define ADC_RESFMT  0x20
+ 347      =2  
+ 348      =2  //SPI 特殊功能寄存器
+ 349      =2  sfr SPSTAT      =   0xcd;
+ 350      =2  #define SPIF        0x80
+ 351      =2  #define WCOL        0x40
+ 352      =2  sfr SPCTL       =   0xce;
+ 353      =2  #define SSIG        0x80
+ 354      =2  #define SPEN        0x40
+ 355      =2  #define DORD        0x20
+ 356      =2  #define MSTR        0x10
+ 357      =2  #define CPOL        0x08
+ 358      =2  #define CPHA        0x04
+ 359      =2  sfr SPDAT       =   0xcf;
+ 360      =2  
+C51 COMPILER V9.60.0.0   LTE                                                               09/08/2021 15:19:43 PAGE 7   
+
+ 361      =2  //IAP/ISP 特殊功能寄存器
+ 362      =2  sfr IAP_DATA    =   0xc2;
+ 363      =2  sfr IAP_ADDRH   =   0xc3;
+ 364      =2  sfr IAP_ADDRL   =   0xc4;
+ 365      =2  sfr IAP_CMD     =   0xc5;
+ 366      =2  #define IAP_IDL     0x00
+ 367      =2  #define IAP_READ    0x01
+ 368      =2  #define IAP_WRITE   0x02
+ 369      =2  #define IAP_ERASE   0x03
+ 370      =2  sfr IAP_TRIG    =   0xc6;
+ 371      =2  sfr IAP_CONTR   =   0xc7;
+ 372      =2  #define IAPEN       0x80
+ 373      =2  #define SWBS        0x40
+ 374      =2  #define SWRST       0x20
+ 375      =2  #define CMD_FAIL    0x10
+ 376      =2  sfr ISP_DATA    =   0xc2;
+ 377      =2  sfr ISP_ADDRH   =   0xc3;
+ 378      =2  sfr ISP_ADDRL   =   0xc4;
+ 379      =2  sfr ISP_CMD     =   0xc5;
+ 380      =2  sfr ISP_TRIG    =   0xc6;
+ 381      =2  sfr ISP_CONTR   =   0xc7;
+ 382      =2  
+ 383      =2  //比较器特殊功能寄存器
+ 384      =2  sfr CMPCR1      =   0xe6;
+ 385      =2  #define CMPEN       0x80
+ 386      =2  #define CMPIF       0x40
+ 387      =2  #define PIE         0x20
+ 388      =2  #define NIE         0x10
+ 389      =2  #define PIS         0x08
+ 390      =2  #define NIS         0x04
+ 391      =2  #define CMPOE       0x02
+ 392      =2  #define CMPRES      0x01
+ 393      =2  sfr CMPCR2      =   0xe7;
+ 394      =2  #define INVCMPO     0x80
+ 395      =2  #define DISFLT      0x40
+ 396      =2  
+ 397      =2  //PCA/PWM 特殊功能寄存器
+ 398      =2  sfr CCON        =   0xd8;
+ 399      =2  sbit CF         =   CCON^7;
+ 400      =2  sbit CR         =   CCON^6;
+ 401      =2  sbit CCF3       =   CCON^3;
+ 402      =2  sbit CCF2       =   CCON^2;
+ 403      =2  sbit CCF1       =   CCON^1;
+ 404      =2  sbit CCF0       =   CCON^0;
+ 405      =2  sfr CMOD        =   0xd9;
+ 406      =2  #define CIDL        0x80
+ 407      =2  #define ECF         0x01
+ 408      =2  sfr CL          =   0xe9;
+ 409      =2  sfr CH          =   0xf9;
+ 410      =2  sfr CCAPM0      =   0xda;
+ 411      =2  #define ECOM0       0x40
+ 412      =2  #define CCAPP0      0x20
+ 413      =2  #define CCAPN0      0x10
+ 414      =2  #define MAT0        0x08
+ 415      =2  #define TOG0        0x04
+ 416      =2  #define PWM0        0x02
+ 417      =2  #define ECCF0       0x01
+ 418      =2  sfr CCAPM1      =   0xdb;
+ 419      =2  #define ECOM1       0x40
+ 420      =2  #define CCAPP1      0x20
+ 421      =2  #define CCAPN1      0x10
+ 422      =2  #define MAT1        0x08
+C51 COMPILER V9.60.0.0   LTE                                                               09/08/2021 15:19:43 PAGE 8   
+
+ 423      =2  #define TOG1        0x04
+ 424      =2  #define PWM1        0x02
+ 425      =2  #define ECCF1       0x01
+ 426      =2  sfr CCAPM2      =   0xdc;
+ 427      =2  #define ECOM2       0x40
+ 428      =2  #define CCAPP2      0x20
+ 429      =2  #define CCAPN2      0x10
+ 430      =2  #define MAT2        0x08
+ 431      =2  #define TOG2        0x04
+ 432      =2  #define PWM2        0x02
+ 433      =2  #define ECCF2       0x01
+ 434      =2  sfr CCAPM3      =   0xdd;
+ 435      =2  #define ECOM3       0x40
+ 436      =2  #define CCAPP3      0x20
+ 437      =2  #define CCAPN3      0x10
+ 438      =2  #define MAT3        0x08
+ 439      =2  #define TOG3        0x04
+ 440      =2  #define PWM3        0x02
+ 441      =2  #define ECCF3       0x01
+ 442      =2  sfr CCAP0L      =   0xea;
+ 443      =2  sfr CCAP1L      =   0xeb;
+ 444      =2  sfr CCAP2L      =   0xec;
+ 445      =2  sfr CCAP3L      =   0xed;
+ 446      =2  sfr CCAP0H      =   0xfa;
+ 447      =2  sfr CCAP1H      =   0xfb;
+ 448      =2  sfr CCAP2H      =   0xfc;
+ 449      =2  sfr CCAP3H      =   0xfd;
+ 450      =2  sfr PCA_PWM0    =   0xf2;
+ 451      =2  sfr PCA_PWM1    =   0xf3;
+ 452      =2  sfr PCA_PWM2    =   0xf4;
+ 453      =2  sfr PCA_PWM3    =   0xf5;
+ 454      =2  
+ 455      =2  //增强型PWM波形发生器特殊功能寄存器
+ 456      =2  sfr PWMCFG      =   0xf1;
+ 457      =2  #define CBIF        0x80
+ 458      =2  #define ETADC       0x40
+ 459      =2  sfr PWMIF       =   0xf6;
+ 460      =2  #define C7IF        0x80
+ 461      =2  #define C6IF        0x40
+ 462      =2  #define C5IF        0x20
+ 463      =2  #define C4IF        0x10
+ 464      =2  #define C3IF        0x08
+ 465      =2  #define C2IF        0x04
+ 466      =2  #define C1IF        0x02
+ 467      =2  #define C0IF        0x01
+ 468      =2  sfr PWMFDCR     =   0xf7;
+ 469      =2  #define INVCMP      0x80
+ 470      =2  #define INVIO       0x40
+ 471      =2  #define ENFD        0x20
+ 472      =2  #define FLTFLIO     0x10
+ 473      =2  #define EFDI        0x08
+ 474      =2  #define FDCMP       0x04
+ 475      =2  #define FDIO        0x02
+ 476      =2  #define FDIF        0x01
+ 477      =2  sfr PWMCR       =   0xfe;
+ 478      =2  #define ENPWM       0x80
+ 479      =2  #define ECBI        0x40
+ 480      =2  
+ 481      =2  //如下特殊功能寄存器位于扩展RAM区域
+ 482      =2  //访问这些寄存器,需先将P_SW2的BIT7设置为1,才可正常读写
+ 483      =2  #define PWMC        (*(unsigned int  volatile xdata *)0xfff0)
+ 484      =2  #define PWMCH       (*(unsigned char volatile xdata *)0xfff0)
+C51 COMPILER V9.60.0.0   LTE                                                               09/08/2021 15:19:43 PAGE 9   
+
+ 485      =2  #define PWMCL       (*(unsigned char volatile xdata *)0xfff1)
+ 486      =2  #define PWMCKS      (*(unsigned char volatile xdata *)0xfff2)
+ 487      =2  #define TADCP       (*(unsigned char volatile xdata *)0xfff3)
+ 488      =2  #define TADCPH      (*(unsigned char volatile xdata *)0xfff3)
+ 489      =2  #define TADCPL      (*(unsigned char volatile xdata *)0xfff4)
+ 490      =2  #define PWM0T1      (*(unsigned int  volatile xdata *)0xff00)
+ 491      =2  #define PWM0T1H     (*(unsigned char volatile xdata *)0xff00)
+ 492      =2  #define PWM0T1L     (*(unsigned char volatile xdata *)0xff01)
+ 493      =2  #define PWM0T2      (*(unsigned int  volatile xdata *)0xff02)
+ 494      =2  #define PWM0T2H     (*(unsigned char volatile xdata *)0xff02)
+ 495      =2  #define PWM0T2L     (*(unsigned char volatile xdata *)0xff03)
+ 496      =2  #define PWM0CR      (*(unsigned char volatile xdata *)0xff04)
+ 497      =2  #define PWM0HLD     (*(unsigned char volatile xdata *)0xff05)
+ 498      =2  #define PWM1T1      (*(unsigned int  volatile xdata *)0xff10)
+ 499      =2  #define PWM1T1H     (*(unsigned char volatile xdata *)0xff10)
+ 500      =2  #define PWM1T1L     (*(unsigned char volatile xdata *)0xff11)
+ 501      =2  #define PWM1T2      (*(unsigned int  volatile xdata *)0xff12)
+ 502      =2  #define PWM1T2H     (*(unsigned char volatile xdata *)0xff12)
+ 503      =2  #define PWM1T2L     (*(unsigned char volatile xdata *)0xff13)
+ 504      =2  #define PWM1CR      (*(unsigned char volatile xdata *)0xff14)
+ 505      =2  #define PWM1HLD     (*(unsigned char volatile xdata *)0xff15)
+ 506      =2  #define PWM2T1      (*(unsigned int  volatile xdata *)0xff20)
+ 507      =2  #define PWM2T1H     (*(unsigned char volatile xdata *)0xff20)
+ 508      =2  #define PWM2T1L     (*(unsigned char volatile xdata *)0xff21)
+ 509      =2  #define PWM2T2      (*(unsigned int  volatile xdata *)0xff22)
+ 510      =2  #define PWM2T2H     (*(unsigned char volatile xdata *)0xff22)
+ 511      =2  #define PWM2T2L     (*(unsigned char volatile xdata *)0xff23)
+ 512      =2  #define PWM2CR      (*(unsigned char volatile xdata *)0xff24)
+ 513      =2  #define PWM2HLD     (*(unsigned char volatile xdata *)0xff25)
+ 514      =2  #define PWM3T1      (*(unsigned int  volatile xdata *)0xff30)
+ 515      =2  #define PWM3T1H     (*(unsigned char volatile xdata *)0xff30)
+ 516      =2  #define PWM3T1L     (*(unsigned char volatile xdata *)0xff31)
+ 517      =2  #define PWM3T2      (*(unsigned int  volatile xdata *)0xff32)
+ 518      =2  #define PWM3T2H     (*(unsigned char volatile xdata *)0xff32)
+ 519      =2  #define PWM3T2L     (*(unsigned char volatile xdata *)0xff33)
+ 520      =2  #define PWM3CR      (*(unsigned char volatile xdata *)0xff34)
+ 521      =2  #define PWM3HLD     (*(unsigned char volatile xdata *)0xff35)
+ 522      =2  #define PWM4T1      (*(unsigned int  volatile xdata *)0xff40)
+ 523      =2  #define PWM4T1H     (*(unsigned char volatile xdata *)0xff40)
+ 524      =2  #define PWM4T1L     (*(unsigned char volatile xdata *)0xff41)
+ 525      =2  #define PWM4T2      (*(unsigned int  volatile xdata *)0xff42)
+ 526      =2  #define PWM4T2H     (*(unsigned char volatile xdata *)0xff42)
+ 527      =2  #define PWM4T2L     (*(unsigned char volatile xdata *)0xff43)
+ 528      =2  #define PWM4CR      (*(unsigned char volatile xdata *)0xff44)
+ 529      =2  #define PWM4HLD     (*(unsigned char volatile xdata *)0xff45)
+ 530      =2  #define PWM5T1      (*(unsigned int  volatile xdata *)0xff50)
+ 531      =2  #define PWM5T1H     (*(unsigned char volatile xdata *)0xff50)
+ 532      =2  #define PWM5T1L     (*(unsigned char volatile xdata *)0xff51)
+ 533      =2  #define PWM5T2      (*(unsigned int  volatile xdata *)0xff52)
+ 534      =2  #define PWM5T2H     (*(unsigned char volatile xdata *)0xff52)
+ 535      =2  #define PWM5T2L     (*(unsigned char volatile xdata *)0xff53)
+ 536      =2  #define PWM5CR      (*(unsigned char volatile xdata *)0xff54)
+ 537      =2  #define PWM5HLD     (*(unsigned char volatile xdata *)0xff55)
+ 538      =2  #define PWM6T1      (*(unsigned int  volatile xdata *)0xff60)
+ 539      =2  #define PWM6T1H     (*(unsigned char volatile xdata *)0xff60)
+ 540      =2  #define PWM6T1L     (*(unsigned char volatile xdata *)0xff61)
+ 541      =2  #define PWM6T2      (*(unsigned int  volatile xdata *)0xff62)
+ 542      =2  #define PWM6T2H     (*(unsigned char volatile xdata *)0xff62)
+ 543      =2  #define PWM6T2L     (*(unsigned char volatile xdata *)0xff63)
+ 544      =2  #define PWM6CR      (*(unsigned char volatile xdata *)0xff64)
+ 545      =2  #define PWM6HLD     (*(unsigned char volatile xdata *)0xff65)
+ 546      =2  #define PWM7T1      (*(unsigned int  volatile xdata *)0xff70)
+C51 COMPILER V9.60.0.0   LTE                                                               09/08/2021 15:19:43 PAGE 10  
+
+ 547      =2  #define PWM7T1H     (*(unsigned char volatile xdata *)0xff70)
+ 548      =2  #define PWM7T1L     (*(unsigned char volatile xdata *)0xff71)
+ 549      =2  #define PWM7T2      (*(unsigned int  volatile xdata *)0xff72)
+ 550      =2  #define PWM7T2H     (*(unsigned char volatile xdata *)0xff72)
+ 551      =2  #define PWM7T2L     (*(unsigned char volatile xdata *)0xff73)
+ 552      =2  #define PWM7CR      (*(unsigned char volatile xdata *)0xff74)
+ 553      =2  #define PWM7HLD     (*(unsigned char volatile xdata *)0xff75)
+ 554      =2  
+ 555      =2  //I2C特殊功能寄存器
+ 556      =2  //如下特殊功能寄存器位于扩展RAM区域
+ 557      =2  //访问这些寄存器,需先将P_SW2的BIT7设置为1,才可正常读写
+ 558      =2  #define I2CCFG      (*(unsigned char volatile xdata *)0xfe80)
+ 559      =2  #define ENI2C       0x80
+ 560      =2  #define MSSL        0x40
+ 561      =2  #define I2CMSCR     (*(unsigned char volatile xdata *)0xfe81)
+ 562      =2  #define EMSI        0x80
+ 563      =2  #define I2CMSST     (*(unsigned char volatile xdata *)0xfe82)
+ 564      =2  #define MSBUSY      0x80
+ 565      =2  #define MSIF        0x40
+ 566      =2  #define MSACKI      0x02
+ 567      =2  #define MSACKO      0x01
+ 568      =2  #define I2CSLCR     (*(unsigned char volatile xdata *)0xfe83)
+ 569      =2  #define ESTAI       0x40
+ 570      =2  #define ERXI        0x20
+ 571      =2  #define ETXI        0x10
+ 572      =2  #define ESTOI       0x08
+ 573      =2  #define SLRST       0x01
+ 574      =2  #define I2CSLST     (*(unsigned char volatile xdata *)0xfe84)
+ 575      =2  #define SLBUSY      0x80
+ 576      =2  #define STAIF       0x40
+ 577      =2  #define RXIF        0x20
+ 578      =2  #define TXIF        0x10
+ 579      =2  #define STOIF       0x08
+ 580      =2  #define TXING       0x04
+ 581      =2  #define SLACKI      0x02
+ 582      =2  #define SLACKO      0x01
+ 583      =2  #define I2CSLADR    (*(unsigned char volatile xdata *)0xfe85)
+ 584      =2  #define I2CTXD      (*(unsigned char volatile xdata *)0xfe86)
+ 585      =2  #define I2CRXD      (*(unsigned char volatile xdata *)0xfe87)
+ 586      =2  
+ 587      =2  /////////////////////////////////////////////////
+ 588      =2  
+ 589      =2  #endif
+ 590      =2  
+   4      =1  
+   5      =1  #define LTE_POWER_KEY     P25   //4Gģ�鿪�ؽ�
+   6      =1  #define LTE_RELOAD                P41   //4Gģ������
+   7      =1  #define LTE_RESET         P20   //4Gģ�鸴λ
+   8      =1  #define LTE_LINKA                 P23   //4Gģ��Link��
+   9      =1  #define LTE_NET_STATE     P37   //4Gģ��״ָ̬ʾ
+  10      =1  
+  11      =1  typedef enum
+  12      =1  {
+  13      =1          FALSE = 0,
+  14      =1          TRUE = !FALSE,
+  15      =1  }bool;
+  16      =1  
+  17      =1  typedef struct
+  18      =1  {
+  19      =1          unsigned char* Cmd;
+  20      =1          unsigned char* Ack;
+  21      =1          unsigned char  Timer;   
+C51 COMPILER V9.60.0.0   LTE                                                               09/08/2021 15:19:43 PAGE 11  
+
+  22      =1  }AT_COMMAND;
+  23      =1  
+  24      =1  void LTEinit(void);                                     //��ʼ��
+  25      =1  void LTEreset(void);                            //��λ
+  26      =1  void LTEreload(void);                           //����
+  27      =1  void LTEconnect(void);                  //���ӷ�����
+  28      =1  bool LTEisLinkA(void);                  //�Ƿ������Ϸ�����A
+  29      =1  bool LTEisLinkB(void);                  //�Ƿ������Ϸ�����B
+  30      =1  void LTEenable(bool Enable);  //ģ����ͣ
+  31      =1  void LTEreport(unsigned char* Payload,unsigned Length);   //ģ���ϱ�����
+  32      =1  //void LTEreciveHandle(unsigned char* Payload,unsigned Length);  //ģ�����ݽ��մ���
+  33      =1   #endif
+   2          #include "systemTimer.h"
+   1      =1  #ifndef _SYSTEMTIMER_H
+   2      =1  #define _SYSTEMTIMER_H
+   3      =1  
+   4      =1  #include "config.h"
+   1      =2  #ifndef __CONFIG_H_
+   2      =2  #define __CONFIG_H_
+   3      =2  
+   4      =2  #include <STC8.H>
+   1      =3  #ifndef __STC8F_H_
+           =3 #define __STC8F_H_
+           =3 
+           =3 /////////////////////////////////////////////////
+           =3 
+           =3 //包含本头文件后,不用另外再包含"REG51.H"
+           =3 
+           =3 //内核特殊功能寄存器
+           =3 sfr ACC         =   0xe0;
+           =3 sfr B           =   0xf0;
+           =3 sfr PSW         =   0xd0;
+           =3 sbit CY         =   PSW^7;
+           =3 sbit AC         =   PSW^6;
+           =3 sbit F0         =   PSW^5;
+           =3 sbit RS1        =   PSW^4;
+           =3 sbit RS0        =   PSW^3;
+           =3 sbit OV         =   PSW^2;
+           =3 sbit P          =   PSW^0;
+           =3 sfr SP          =   0x81;
+           =3 sfr DPL         =   0x82;
+           =3 sfr DPH         =   0x83;
+           =3 sfr TA          =   0xae;
+           =3 sfr DPS         =   0xe3;
+           =3 sfr DPL1        =   0xe4;
+           =3 sfr DPH1        =   0xe5;
+           =3 
+           =3 
+           =3 //I/O 口特殊功能寄存器
+           =3 sfr P0          =   0x80;
+           =3 sfr P1          =   0x90;
+           =3 sfr P2          =   0xa0;
+           =3 sfr P3          =   0xb0;
+           =3 sfr P4          =   0xc0;
+           =3 sfr P5          =   0xc8;
+           =3 sfr P6          =   0xe8;
+           =3 sfr P7          =   0xf8;
+           =3 sfr P0M0        =   0x94;
+           =3 sfr P0M1        =   0x93;
+           =3 sfr P1M0        =   0x92;
+           =3 sfr P1M1        =   0x91;
+           =3 sfr P2M0        =   0x96;
+C51 COMPILER V9.60.0.0   LTE                                                               09/08/2021 15:19:43 PAGE 12  
+
+           =3 sfr P2M1        =   0x95;
+           =3 sfr P3M0        =   0xb2;
+           =3 sfr P3M1        =   0xb1;
+           =3 sfr P4M0        =   0xb4;
+           =3 sfr P4M1        =   0xb3;
+           =3 sfr P5M0        =   0xca;
+           =3 sfr P5M1        =   0xc9;
+           =3 sfr P6M0        =   0xcc;
+           =3 sfr P6M1        =   0xcb;
+           =3 sfr P7M0        =   0xe2;
+           =3 sfr P7M1        =   0xe1;
+           =3 
+           =3 sbit P00        =   P0^0;
+           =3 sbit P01        =   P0^1;
+           =3 sbit P02        =   P0^2;
+           =3 sbit P03        =   P0^3;
+           =3 sbit P04        =   P0^4;
+           =3 sbit P05        =   P0^5;
+           =3 sbit P06        =   P0^6;
+           =3 sbit P07        =   P0^7;
+           =3 sbit P10        =   P1^0;
+           =3 sbit P11        =   P1^1;
+           =3 sbit P12        =   P1^2;
+           =3 sbit P13        =   P1^3;
+           =3 sbit P14        =   P1^4;
+           =3 sbit P15        =   P1^5;
+           =3 sbit P16        =   P1^6;
+           =3 sbit P17        =   P1^7;
+           =3 sbit P20        =   P2^0;
+           =3 sbit P21        =   P2^1;
+           =3 sbit P22        =   P2^2;
+           =3 sbit P23        =   P2^3;
+           =3 sbit P24        =   P2^4;
+           =3 sbit P25        =   P2^5;
+           =3 sbit P26        =   P2^6;
+           =3 sbit P27        =   P2^7;
+           =3 sbit P30        =   P3^0;
+           =3 sbit P31        =   P3^1;
+           =3 sbit P32        =   P3^2;
+           =3 sbit P33        =   P3^3;
+           =3 sbit P34        =   P3^4;
+           =3 sbit P35        =   P3^5;
+           =3 sbit P36        =   P3^6;
+           =3 sbit P37        =   P3^7;
+           =3 sbit P40        =   P4^0;
+           =3 sbit P41        =   P4^1;
+           =3 sbit P42        =   P4^2;
+           =3 sbit P43        =   P4^3;
+           =3 sbit P44        =   P4^4;
+           =3 sbit P45        =   P4^5;
+           =3 sbit P46        =   P4^6;
+           =3 sbit P47        =   P4^7;
+           =3 sbit P50        =   P5^0;
+           =3 sbit P51        =   P5^1;
+           =3 sbit P52        =   P5^2;
+           =3 sbit P53        =   P5^3;
+           =3 sbit P54        =   P5^4;
+           =3 sbit P55        =   P5^5;
+           =3 sbit P56        =   P5^6;
+           =3 sbit P57        =   P5^7;
+           =3 sbit P60        =   P6^0;
+           =3 sbit P61        =   P6^1;
+C51 COMPILER V9.60.0.0   LTE                                                               09/08/2021 15:19:43 PAGE 13  
+
+           =3 sbit P62        =   P6^2;
+           =3 sbit P63        =   P6^3;
+           =3 sbit P64        =   P6^4;
+           =3 sbit P65        =   P6^5;
+           =3 sbit P66        =   P6^6;
+           =3 sbit P67        =   P6^7;
+           =3 sbit P70        =   P7^0;
+           =3 sbit P71        =   P7^1;
+           =3 sbit P72        =   P7^2;
+           =3 sbit P73        =   P7^3;
+           =3 sbit P74        =   P7^4;
+           =3 sbit P75        =   P7^5;
+           =3 sbit P76        =   P7^6;
+           =3 sbit P77        =   P7^7;
+           =3 
+           =3 //如下特殊功能寄存器位于扩展RAM区域
+           =3 //访问这些寄存器,需先将P_SW2的BIT7设置为1,才可正常读写
+           =3 #define P0PU        (*(unsigned char volatile xdata *)0xfe10)
+           =3 #define P1PU        (*(unsigned char volatile xdata *)0xfe11)
+           =3 #define P2PU        (*(unsigned char volatile xdata *)0xfe12)
+           =3 #define P3PU        (*(unsigned char volatile xdata *)0xfe13)
+           =3 #define P4PU        (*(unsigned char volatile xdata *)0xfe14)
+           =3 #define P5PU        (*(unsigned char volatile xdata *)0xfe15)
+           =3 #define P6PU        (*(unsigned char volatile xdata *)0xfe16)
+           =3 #define P7PU        (*(unsigned char volatile xdata *)0xfe17)
+           =3 #define P0NCS       (*(unsigned char volatile xdata *)0xfe18)
+           =3 #define P1NCS       (*(unsigned char volatile xdata *)0xfe19)
+           =3 #define P2NCS       (*(unsigned char volatile xdata *)0xfe1a)
+           =3 #define P3NCS       (*(unsigned char volatile xdata *)0xfe1b)
+           =3 #define P4NCS       (*(unsigned char volatile xdata *)0xfe1c)
+           =3 #define P5NCS       (*(unsigned char volatile xdata *)0xfe1d)
+           =3 #define P6NCS       (*(unsigned char volatile xdata *)0xfe1e)
+           =3 #define P7NCS       (*(unsigned char volatile xdata *)0xfe1f)
+           =3 
+           =3 //系统管理特殊功能寄存器
+           =3 sfr PCON        =   0x87;
+           =3 #define SMOD        0x80
+           =3 #define SMOD0       0x40
+           =3 #define LVDF        0x20
+           =3 #define POF         0x10
+           =3 #define GF1         0x08
+           =3 #define GF0         0x04
+           =3 #define PD          0x02
+           =3 #define IDL         0x01
+           =3 sfr AUXR        =   0x8e;
+           =3 #define T0x12       0x80
+           =3 #define T1x12       0x40
+           =3 #define UART_M0x6   0x20
+           =3 #define T2R         0x10
+           =3 #define T2_CT       0x08
+           =3 #define T2x12       0x04
+           =3 #define EXTRAM      0x02
+           =3 #define S1ST2       0x01
+           =3 sfr AUXR2       =   0x97;
+           =3 #define TXLNRX      0x10
+           =3 sfr BUS_SPEED   =   0xa1;
+           =3 sfr P_SW1       =   0xa2;
+           =3 sfr P_SW2       =   0xba;
+           =3 #define EAXFR       0x80
+           =3 sfr VOCTRL      =   0xbb;
+           =3 sfr RSTCFG      =   0xff;
+           =3 
+C51 COMPILER V9.60.0.0   LTE                                                               09/08/2021 15:19:43 PAGE 14  
+
+           =3 //如下特殊功能寄存器位于扩展RAM区域
+           =3 //访问这些寄存器,需先将P_SW2的BIT7设置为1,才可正常读写
+           =3 #define CKSEL       (*(unsigned char volatile xdata *)0xfe00)
+           =3 #define CLKDIV      (*(unsigned char volatile xdata *)0xfe01)
+           =3 #define IRC24MCR    (*(unsigned char volatile xdata *)0xfe02)
+           =3 #define XOSCCR      (*(unsigned char volatile xdata *)0xfe03)
+           =3 #define IRC32KCR    (*(unsigned char volatile xdata *)0xfe04)
+           =3 
+           =3 //中断特殊功能寄存器
+           =3 sfr IE          =   0xa8;
+           =3 sbit EA         =   IE^7;
+           =3 sbit ELVD       =   IE^6;
+           =3 sbit EADC       =   IE^5;
+           =3 sbit ES         =   IE^4;
+           =3 sbit ET1        =   IE^3;
+           =3 sbit EX1        =   IE^2;
+           =3 sbit ET0        =   IE^1;
+           =3 sbit EX0        =   IE^0;
+           =3 sfr IE2         =   0xaf;
+           =3 #define ET4         0x40
+           =3 #define ET3         0x20
+           =3 #define ES4         0x10
+           =3 #define ES3         0x08
+           =3 #define ET2         0x04
+           =3 #define ESPI        0x02
+           =3 #define ES2         0x01
+           =3 sfr IP          =   0xb8;
+           =3 sbit PPCA       =   IP^7;
+           =3 sbit PLVD       =   IP^6;
+           =3 sbit PADC       =   IP^5;
+           =3 sbit PS         =   IP^4;
+           =3 sbit PT1        =   IP^3;
+           =3 sbit PX1        =   IP^2;
+           =3 sbit PT0        =   IP^1;
+           =3 sbit PX0        =   IP^0;
+           =3 sfr IP2         =   0xb5;
+           =3 #define PI2C        0x40
+           =3 #define PCMP        0x20
+           =3 #define PX4         0x10
+           =3 #define PPWMFD      0x08
+           =3 #define PPWM        0x04
+           =3 #define PSPI        0x02
+           =3 #define PS2         0x01
+           =3 sfr IPH         =   0xb7;
+           =3 #define PPCAH       0x80
+           =3 #define PLVDH       0x40
+           =3 #define PADCH       0x20
+           =3 #define PSH         0x10
+           =3 #define PT1H        0x08
+           =3 #define PX1H        0x04
+           =3 #define PT0H        0x02
+           =3 #define PX0H        0x01
+           =3 sfr IP2H        =   0xb6;
+           =3 #define PI2CH       0x40
+           =3 #define PCMPH       0x20
+           =3 #define PX4H        0x10
+           =3 #define PPWMFDH     0x08
+           =3 #define PPWMH       0x04
+           =3 #define PSPIH       0x02
+           =3 #define PS2H        0x01
+           =3 sfr INTCLKO     =   0x8f;
+           =3 #define EX4         0x40
+C51 COMPILER V9.60.0.0   LTE                                                               09/08/2021 15:19:43 PAGE 15  
+
+           =3 #define EX3         0x20
+           =3 #define EX2         0x10
+           =3 #define T2CLKO      0x04
+           =3 #define T1CLKO      0x02
+           =3 #define T0CLKO      0x01
+           =3 sfr AUXINTIF    =   0xef;
+           =3 #define INT4IF      0x40
+           =3 #define INT3IF      0x20
+           =3 #define INT2IF      0x10
+           =3 #define T4IF        0x04
+           =3 #define T3IF        0x02
+           =3 #define T2IF        0x01
+           =3 
+           =3 //定时器特殊功能寄存器
+           =3 sfr TCON        =   0x88;
+           =3 sbit TF1        =   TCON^7;
+           =3 sbit TR1        =   TCON^6;
+           =3 sbit TF0        =   TCON^5;
+           =3 sbit TR0        =   TCON^4;
+           =3 sbit IE1        =   TCON^3;
+           =3 sbit IT1        =   TCON^2;
+           =3 sbit IE0        =   TCON^1;
+           =3 sbit IT0        =   TCON^0;
+           =3 sfr TMOD        =   0x89;
+           =3 #define T1_GATE     0x80
+           =3 #define T1_CT       0x40
+           =3 #define T1_M1       0x20
+           =3 #define T1_M0       0x10
+           =3 #define T0_GATE     0x08
+           =3 #define T0_CT       0x04
+           =3 #define T0_M1       0x02
+           =3 #define T0_M0       0x01
+           =3 sfr TL0         =   0x8a;
+           =3 sfr TL1         =   0x8b;
+           =3 sfr TH0         =   0x8c;
+           =3 sfr TH1         =   0x8d;
+           =3 sfr T4T3M       =   0xd1;
+           =3 #define T4R         0x80
+           =3 #define T4_CT       0x40
+           =3 #define T4x12       0x20
+           =3 #define T4CLKO      0x10
+           =3 #define T3R         0x08
+           =3 #define T3_CT       0x04
+           =3 #define T3x12       0x02
+           =3 #define T3CLKO      0x01
+           =3 sfr T4H         =   0xd2;
+           =3 sfr T4L         =   0xd3;
+           =3 sfr T3H         =   0xd4;
+           =3 sfr T3L         =   0xd5;
+           =3 sfr T2H         =   0xd6;
+           =3 sfr T2L         =   0xd7;
+           =3 sfr TH4         =   0xd2;
+           =3 sfr TL4         =   0xd3;
+           =3 sfr TH3         =   0xd4;
+           =3 sfr TL3         =   0xd5;
+           =3 sfr TH2         =   0xd6;
+           =3 sfr TL2         =   0xd7;
+           =3 sfr WKTCL       =   0xaa;
+           =3 sfr WKTCH       =   0xab;
+           =3 #define WKTEN       0x80
+           =3 sfr WDT_CONTR   =   0xc1;
+           =3 #define WDT_FLAG    0x80
+C51 COMPILER V9.60.0.0   LTE                                                               09/08/2021 15:19:43 PAGE 16  
+
+           =3 #define EN_WDT      0x20
+           =3 #define CLR_WDT     0x10
+           =3 #define IDL_WDT     0x08
+           =3 
+           =3 //串行口特殊功能寄存器
+           =3 sfr SCON        =   0x98;
+           =3 sbit SM0        =   SCON^7;
+           =3 sbit SM1        =   SCON^6;
+           =3 sbit SM2        =   SCON^5;
+           =3 sbit REN        =   SCON^4;
+           =3 sbit TB8        =   SCON^3;
+           =3 sbit RB8        =   SCON^2;
+           =3 sbit TI         =   SCON^1;
+           =3 sbit RI         =   SCON^0;
+           =3 sfr SBUF        =   0x99;
+           =3 sfr S2CON       =   0x9a;
+           =3 #define S2SM0       0x80
+           =3 #define S2ST4       0x40
+           =3 #define S2SM2       0x20
+           =3 #define S2REN       0x10
+           =3 #define S2TB8       0x08
+           =3 #define S2RB8       0x04
+           =3 #define S2TI        0x02
+           =3 #define S2RI        0x01
+           =3 sfr S2BUF       =   0x9b;
+           =3 sfr S3CON       =   0xac;
+           =3 #define S3SM0       0x80
+           =3 #define S3ST4       0x40
+           =3 #define S3SM2       0x20
+           =3 #define S3REN       0x10
+           =3 #define S3TB8       0x08
+           =3 #define S3RB8       0x04
+           =3 #define S3TI        0x02
+           =3 #define S3RI        0x01
+           =3 sfr S3BUF       =   0xad;
+           =3 sfr S4CON       =   0x84;
+           =3 #define S4SM0       0x80
+           =3 #define S4ST4       0x40
+           =3 #define S4SM2       0x20
+           =3 #define S4REN       0x10
+           =3 #define S4TB8       0x08
+           =3 #define S4RB8       0x04
+           =3 #define S4TI        0x02
+           =3 #define S4RI        0x01
+           =3 sfr S4BUF       =   0x85;
+           =3 sfr SADDR       =   0xa9;
+           =3 sfr SADEN       =   0xb9;
+           =3 
+           =3 //ADC 特殊功能寄存器
+           =3 sfr ADC_CONTR   =   0xbc;
+           =3 #define ADC_POWER   0x80
+           =3 #define ADC_START   0x40
+           =3 #define ADC_FLAG    0x20
+           =3 sfr ADC_RES     =   0xbd;
+           =3 sfr ADC_RESL    =   0xbe;
+           =3 sfr ADCCFG      =   0xde;
+           =3 #define ADC_RESFMT  0x20
+           =3 
+           =3 //SPI 特殊功能寄存器
+           =3 sfr SPSTAT      =   0xcd;
+           =3 #define SPIF        0x80
+           =3 #define WCOL        0x40
+C51 COMPILER V9.60.0.0   LTE                                                               09/08/2021 15:19:43 PAGE 17  
+
+           =3 sfr SPCTL       =   0xce;
+           =3 #define SSIG        0x80
+           =3 #define SPEN        0x40
+           =3 #define DORD        0x20
+           =3 #define MSTR        0x10
+           =3 #define CPOL        0x08
+           =3 #define CPHA        0x04
+           =3 sfr SPDAT       =   0xcf;
+           =3 
+           =3 //IAP/ISP 特殊功能寄存器
+           =3 sfr IAP_DATA    =   0xc2;
+           =3 sfr IAP_ADDRH   =   0xc3;
+           =3 sfr IAP_ADDRL   =   0xc4;
+           =3 sfr IAP_CMD     =   0xc5;
+           =3 #define IAP_IDL     0x00
+           =3 #define IAP_READ    0x01
+           =3 #define IAP_WRITE   0x02
+           =3 #define IAP_ERASE   0x03
+           =3 sfr IAP_TRIG    =   0xc6;
+           =3 sfr IAP_CONTR   =   0xc7;
+           =3 #define IAPEN       0x80
+           =3 #define SWBS        0x40
+           =3 #define SWRST       0x20
+           =3 #define CMD_FAIL    0x10
+           =3 sfr ISP_DATA    =   0xc2;
+           =3 sfr ISP_ADDRH   =   0xc3;
+           =3 sfr ISP_ADDRL   =   0xc4;
+           =3 sfr ISP_CMD     =   0xc5;
+           =3 sfr ISP_TRIG    =   0xc6;
+           =3 sfr ISP_CONTR   =   0xc7;
+           =3 
+           =3 //比较器特殊功能寄存器
+           =3 sfr CMPCR1      =   0xe6;
+           =3 #define CMPEN       0x80
+           =3 #define CMPIF       0x40
+           =3 #define PIE         0x20
+           =3 #define NIE         0x10
+           =3 #define PIS         0x08
+           =3 #define NIS         0x04
+           =3 #define CMPOE       0x02
+           =3 #define CMPRES      0x01
+           =3 sfr CMPCR2      =   0xe7;
+           =3 #define INVCMPO     0x80
+           =3 #define DISFLT      0x40
+           =3 
+           =3 //PCA/PWM 特殊功能寄存器
+           =3 sfr CCON        =   0xd8;
+           =3 sbit CF         =   CCON^7;
+           =3 sbit CR         =   CCON^6;
+           =3 sbit CCF3       =   CCON^3;
+           =3 sbit CCF2       =   CCON^2;
+           =3 sbit CCF1       =   CCON^1;
+           =3 sbit CCF0       =   CCON^0;
+           =3 sfr CMOD        =   0xd9;
+           =3 #define CIDL        0x80
+           =3 #define ECF         0x01
+           =3 sfr CL          =   0xe9;
+           =3 sfr CH          =   0xf9;
+           =3 sfr CCAPM0      =   0xda;
+           =3 #define ECOM0       0x40
+           =3 #define CCAPP0      0x20
+           =3 #define CCAPN0      0x10
+C51 COMPILER V9.60.0.0   LTE                                                               09/08/2021 15:19:43 PAGE 18  
+
+           =3 #define MAT0        0x08
+           =3 #define TOG0        0x04
+           =3 #define PWM0        0x02
+           =3 #define ECCF0       0x01
+           =3 sfr CCAPM1      =   0xdb;
+           =3 #define ECOM1       0x40
+           =3 #define CCAPP1      0x20
+           =3 #define CCAPN1      0x10
+           =3 #define MAT1        0x08
+           =3 #define TOG1        0x04
+           =3 #define PWM1        0x02
+           =3 #define ECCF1       0x01
+           =3 sfr CCAPM2      =   0xdc;
+           =3 #define ECOM2       0x40
+           =3 #define CCAPP2      0x20
+           =3 #define CCAPN2      0x10
+           =3 #define MAT2        0x08
+           =3 #define TOG2        0x04
+           =3 #define PWM2        0x02
+           =3 #define ECCF2       0x01
+           =3 sfr CCAPM3      =   0xdd;
+           =3 #define ECOM3       0x40
+           =3 #define CCAPP3      0x20
+           =3 #define CCAPN3      0x10
+           =3 #define MAT3        0x08
+           =3 #define TOG3        0x04
+           =3 #define PWM3        0x02
+           =3 #define ECCF3       0x01
+           =3 sfr CCAP0L      =   0xea;
+           =3 sfr CCAP1L      =   0xeb;
+           =3 sfr CCAP2L      =   0xec;
+           =3 sfr CCAP3L      =   0xed;
+           =3 sfr CCAP0H      =   0xfa;
+           =3 sfr CCAP1H      =   0xfb;
+           =3 sfr CCAP2H      =   0xfc;
+           =3 sfr CCAP3H      =   0xfd;
+           =3 sfr PCA_PWM0    =   0xf2;
+           =3 sfr PCA_PWM1    =   0xf3;
+           =3 sfr PCA_PWM2    =   0xf4;
+           =3 sfr PCA_PWM3    =   0xf5;
+           =3 
+           =3 //增强型PWM波形发生器特殊功能寄存器
+           =3 sfr PWMCFG      =   0xf1;
+           =3 #define CBIF        0x80
+           =3 #define ETADC       0x40
+           =3 sfr PWMIF       =   0xf6;
+           =3 #define C7IF        0x80
+           =3 #define C6IF        0x40
+           =3 #define C5IF        0x20
+           =3 #define C4IF        0x10
+           =3 #define C3IF        0x08
+           =3 #define C2IF        0x04
+           =3 #define C1IF        0x02
+           =3 #define C0IF        0x01
+           =3 sfr PWMFDCR     =   0xf7;
+           =3 #define INVCMP      0x80
+           =3 #define INVIO       0x40
+           =3 #define ENFD        0x20
+           =3 #define FLTFLIO     0x10
+           =3 #define EFDI        0x08
+           =3 #define FDCMP       0x04
+           =3 #define FDIO        0x02
+C51 COMPILER V9.60.0.0   LTE                                                               09/08/2021 15:19:43 PAGE 19  
+
+           =3 #define FDIF        0x01
+           =3 sfr PWMCR       =   0xfe;
+           =3 #define ENPWM       0x80
+           =3 #define ECBI        0x40
+           =3 
+           =3 //如下特殊功能寄存器位于扩展RAM区域
+           =3 //访问这些寄存器,需先将P_SW2的BIT7设置为1,才可正常读写
+           =3 #define PWMC        (*(unsigned int  volatile xdata *)0xfff0)
+           =3 #define PWMCH       (*(unsigned char volatile xdata *)0xfff0)
+           =3 #define PWMCL       (*(unsigned char volatile xdata *)0xfff1)
+           =3 #define PWMCKS      (*(unsigned char volatile xdata *)0xfff2)
+           =3 #define TADCP       (*(unsigned char volatile xdata *)0xfff3)
+           =3 #define TADCPH      (*(unsigned char volatile xdata *)0xfff3)
+           =3 #define TADCPL      (*(unsigned char volatile xdata *)0xfff4)
+           =3 #define PWM0T1      (*(unsigned int  volatile xdata *)0xff00)
+           =3 #define PWM0T1H     (*(unsigned char volatile xdata *)0xff00)
+           =3 #define PWM0T1L     (*(unsigned char volatile xdata *)0xff01)
+           =3 #define PWM0T2      (*(unsigned int  volatile xdata *)0xff02)
+           =3 #define PWM0T2H     (*(unsigned char volatile xdata *)0xff02)
+           =3 #define PWM0T2L     (*(unsigned char volatile xdata *)0xff03)
+           =3 #define PWM0CR      (*(unsigned char volatile xdata *)0xff04)
+           =3 #define PWM0HLD     (*(unsigned char volatile xdata *)0xff05)
+           =3 #define PWM1T1      (*(unsigned int  volatile xdata *)0xff10)
+           =3 #define PWM1T1H     (*(unsigned char volatile xdata *)0xff10)
+           =3 #define PWM1T1L     (*(unsigned char volatile xdata *)0xff11)
+           =3 #define PWM1T2      (*(unsigned int  volatile xdata *)0xff12)
+           =3 #define PWM1T2H     (*(unsigned char volatile xdata *)0xff12)
+           =3 #define PWM1T2L     (*(unsigned char volatile xdata *)0xff13)
+           =3 #define PWM1CR      (*(unsigned char volatile xdata *)0xff14)
+           =3 #define PWM1HLD     (*(unsigned char volatile xdata *)0xff15)
+           =3 #define PWM2T1      (*(unsigned int  volatile xdata *)0xff20)
+           =3 #define PWM2T1H     (*(unsigned char volatile xdata *)0xff20)
+           =3 #define PWM2T1L     (*(unsigned char volatile xdata *)0xff21)
+           =3 #define PWM2T2      (*(unsigned int  volatile xdata *)0xff22)
+           =3 #define PWM2T2H     (*(unsigned char volatile xdata *)0xff22)
+           =3 #define PWM2T2L     (*(unsigned char volatile xdata *)0xff23)
+           =3 #define PWM2CR      (*(unsigned char volatile xdata *)0xff24)
+           =3 #define PWM2HLD     (*(unsigned char volatile xdata *)0xff25)
+           =3 #define PWM3T1      (*(unsigned int  volatile xdata *)0xff30)
+           =3 #define PWM3T1H     (*(unsigned char volatile xdata *)0xff30)
+           =3 #define PWM3T1L     (*(unsigned char volatile xdata *)0xff31)
+           =3 #define PWM3T2      (*(unsigned int  volatile xdata *)0xff32)
+           =3 #define PWM3T2H     (*(unsigned char volatile xdata *)0xff32)
+           =3 #define PWM3T2L     (*(unsigned char volatile xdata *)0xff33)
+           =3 #define PWM3CR      (*(unsigned char volatile xdata *)0xff34)
+           =3 #define PWM3HLD     (*(unsigned char volatile xdata *)0xff35)
+           =3 #define PWM4T1      (*(unsigned int  volatile xdata *)0xff40)
+           =3 #define PWM4T1H     (*(unsigned char volatile xdata *)0xff40)
+           =3 #define PWM4T1L     (*(unsigned char volatile xdata *)0xff41)
+           =3 #define PWM4T2      (*(unsigned int  volatile xdata *)0xff42)
+           =3 #define PWM4T2H     (*(unsigned char volatile xdata *)0xff42)
+           =3 #define PWM4T2L     (*(unsigned char volatile xdata *)0xff43)
+           =3 #define PWM4CR      (*(unsigned char volatile xdata *)0xff44)
+           =3 #define PWM4HLD     (*(unsigned char volatile xdata *)0xff45)
+           =3 #define PWM5T1      (*(unsigned int  volatile xdata *)0xff50)
+           =3 #define PWM5T1H     (*(unsigned char volatile xdata *)0xff50)
+           =3 #define PWM5T1L     (*(unsigned char volatile xdata *)0xff51)
+           =3 #define PWM5T2      (*(unsigned int  volatile xdata *)0xff52)
+           =3 #define PWM5T2H     (*(unsigned char volatile xdata *)0xff52)
+           =3 #define PWM5T2L     (*(unsigned char volatile xdata *)0xff53)
+           =3 #define PWM5CR      (*(unsigned char volatile xdata *)0xff54)
+           =3 #define PWM5HLD     (*(unsigned char volatile xdata *)0xff55)
+C51 COMPILER V9.60.0.0   LTE                                                               09/08/2021 15:19:43 PAGE 20  
+
+           =3 #define PWM6T1      (*(unsigned int  volatile xdata *)0xff60)
+           =3 #define PWM6T1H     (*(unsigned char volatile xdata *)0xff60)
+           =3 #define PWM6T1L     (*(unsigned char volatile xdata *)0xff61)
+           =3 #define PWM6T2      (*(unsigned int  volatile xdata *)0xff62)
+           =3 #define PWM6T2H     (*(unsigned char volatile xdata *)0xff62)
+           =3 #define PWM6T2L     (*(unsigned char volatile xdata *)0xff63)
+           =3 #define PWM6CR      (*(unsigned char volatile xdata *)0xff64)
+           =3 #define PWM6HLD     (*(unsigned char volatile xdata *)0xff65)
+           =3 #define PWM7T1      (*(unsigned int  volatile xdata *)0xff70)
+           =3 #define PWM7T1H     (*(unsigned char volatile xdata *)0xff70)
+           =3 #define PWM7T1L     (*(unsigned char volatile xdata *)0xff71)
+           =3 #define PWM7T2      (*(unsigned int  volatile xdata *)0xff72)
+           =3 #define PWM7T2H     (*(unsigned char volatile xdata *)0xff72)
+           =3 #define PWM7T2L     (*(unsigned char volatile xdata *)0xff73)
+           =3 #define PWM7CR      (*(unsigned char volatile xdata *)0xff74)
+           =3 #define PWM7HLD     (*(unsigned char volatile xdata *)0xff75)
+           =3 
+           =3 //I2C特殊功能寄存器
+           =3 //如下特殊功能寄存器位于扩展RAM区域
+           =3 //访问这些寄存器,需先将P_SW2的BIT7设置为1,才可正常读写
+           =3 #define I2CCFG      (*(unsigned char volatile xdata *)0xfe80)
+           =3 #define ENI2C       0x80
+           =3 #define MSSL        0x40
+           =3 #define I2CMSCR     (*(unsigned char volatile xdata *)0xfe81)
+           =3 #define EMSI        0x80
+           =3 #define I2CMSST     (*(unsigned char volatile xdata *)0xfe82)
+           =3 #define MSBUSY      0x80
+           =3 #define MSIF        0x40
+           =3 #define MSACKI      0x02
+           =3 #define MSACKO      0x01
+           =3 #define I2CSLCR     (*(unsigned char volatile xdata *)0xfe83)
+           =3 #define ESTAI       0x40
+           =3 #define ERXI        0x20
+           =3 #define ETXI        0x10
+           =3 #define ESTOI       0x08
+           =3 #define SLRST       0x01
+           =3 #define I2CSLST     (*(unsigned char volatile xdata *)0xfe84)
+           =3 #define SLBUSY      0x80
+           =3 #define STAIF       0x40
+           =3 #define RXIF        0x20
+           =3 #define TXIF        0x10
+           =3 #define STOIF       0x08
+           =3 #define TXING       0x04
+           =3 #define SLACKI      0x02
+           =3 #define SLACKO      0x01
+           =3 #define I2CSLADR    (*(unsigned char volatile xdata *)0xfe85)
+           =3 #define I2CTXD      (*(unsigned char volatile xdata *)0xfe86)
+           =3 #define I2CRXD      (*(unsigned char volatile xdata *)0xfe87)
+           =3 
+           =3 /////////////////////////////////////////////////
+           =3 
+           =3 #endif
+ 590      =3  
+   5      =2  #include <stdio.h>
+   1      =3  /*--------------------------------------------------------------------------
+   2      =3  STDIO.H
+   3      =3  
+   4      =3  Prototypes for standard I/O functions.
+   5      =3  Copyright (c) 1988-2002 Keil Elektronik GmbH and Keil Software, Inc.
+   6      =3  All rights reserved.
+   7      =3  --------------------------------------------------------------------------*/
+   8      =3  
+C51 COMPILER V9.60.0.0   LTE                                                               09/08/2021 15:19:43 PAGE 21  
+
+   9      =3  #ifndef __STDIO_H__
+  10      =3  #define __STDIO_H__
+  11      =3  
+  12      =3  #ifndef EOF
+  13      =3   #define EOF -1
+  14      =3  #endif
+  15      =3  
+  16      =3  #ifndef NULL
+  17      =3   #define NULL ((void *) 0)
+  18      =3  #endif
+  19      =3  
+  20      =3  #ifndef _SIZE_T
+  21      =3   #define _SIZE_T
+  22      =3   typedef unsigned int size_t;
+  23      =3  #endif
+  24      =3  
+  25      =3  #pragma SAVE
+  26      =3  #pragma REGPARMS
+  27      =3  extern char _getkey (void);
+  28      =3  extern char getchar (void);
+  29      =3  extern char ungetchar (char);
+  30      =3  extern char putchar (char);
+  31      =3  extern int printf   (const char *, ...);
+  32      =3  extern int sprintf  (char *, const char *, ...);
+  33      =3  extern int vprintf  (const char *, char *);
+  34      =3  extern int vsprintf (char *, const char *, char *);
+  35      =3  extern char *gets (char *, int n);
+  36      =3  extern int scanf (const char *, ...);
+  37      =3  extern int sscanf (char *, const char *, ...);
+  38      =3  extern int puts (const char *);
+  39      =3  
+  40      =3  #pragma RESTORE
+  41      =3  
+  42      =3  #endif
+  43      =3  
+   6      =2  #include <intrins.h>
+   1      =3  /*--------------------------------------------------------------------------
+   2      =3  INTRINS.H
+   3      =3  
+   4      =3  Intrinsic functions for C51.
+   5      =3  Copyright (c) 1988-2010 Keil Elektronik GmbH and ARM Germany GmbH
+   6      =3  All rights reserved.
+   7      =3  --------------------------------------------------------------------------*/
+   8      =3  
+   9      =3  #ifndef __INTRINS_H__
+  10      =3  #define __INTRINS_H__
+  11      =3  
+  12      =3  #pragma SAVE
+  13      =3  
+  14      =3  #if defined (__CX2__)
+           =3 #pragma FUNCTIONS(STATIC)
+           =3 /* intrinsic functions are reentrant, but need static attribute */
+           =3 #endif
+  18      =3  
+  19      =3  extern void          _nop_     (void);
+  20      =3  extern bit           _testbit_ (bit);
+  21      =3  extern unsigned char _cror_    (unsigned char, unsigned char);
+  22      =3  extern unsigned int  _iror_    (unsigned int,  unsigned char);
+  23      =3  extern unsigned long _lror_    (unsigned long, unsigned char);
+  24      =3  extern unsigned char _crol_    (unsigned char, unsigned char);
+  25      =3  extern unsigned int  _irol_    (unsigned int,  unsigned char);
+  26      =3  extern unsigned long _lrol_    (unsigned long, unsigned char);
+C51 COMPILER V9.60.0.0   LTE                                                               09/08/2021 15:19:43 PAGE 22  
+
+  27      =3  extern unsigned char _chkfloat_(float);
+  28      =3  #if defined (__CX2__)
+           =3 extern int           abs       (int);
+           =3 extern void          _illop_   (void);
+           =3 #endif
+  32      =3  #if !defined (__CX2__)
+  33      =3  extern void          _push_    (unsigned char _sfr);
+  34      =3  extern void          _pop_     (unsigned char _sfr);
+  35      =3  #endif
+  36      =3  
+  37      =3  #pragma RESTORE
+  38      =3  
+  39      =3  #endif
+  40      =3  
+   7      =2  #include <string.h>
+   1      =3  /*--------------------------------------------------------------------------
+   2      =3  STRING.H
+   3      =3  
+   4      =3  String functions.
+   5      =3  Copyright (c) 1988-2008 Keil Elektronik GmbH and Keil Software, Inc.
+   6      =3  Copyright (c) 2008-2016 ARM Germany GmbH
+   7      =3  All rights reserved.
+   8      =3  --------------------------------------------------------------------------*/
+   9      =3  
+  10      =3  #ifndef __STRING_H__
+  11      =3  #define __STRING_H__
+  12      =3  
+  13      =3  #ifndef _SIZE_T
+           =3  #define _SIZE_T
+           =3  typedef unsigned int size_t;
+           =3 #endif
+  17      =3  
+  18      =3  #ifndef NULL
+           =3  #define NULL ((void *)0)
+           =3 #endif
+  21      =3  
+  22      =3  #pragma SAVE
+  23      =3  #pragma REGPARMS
+  24      =3  extern char  *strcat  (char *s1, const char *s2);
+  25      =3  extern char  *strncat (char *s1, const char *s2, size_t n);
+  26      =3  
+  27      =3  extern char   strcmp  (const char *s1, const char *s2);
+  28      =3  extern char   strncmp (const char *s1, const char *s2, size_t n);
+  29      =3  
+  30      =3  extern char  *strcpy  (char *s1, const char *s2);
+  31      =3  extern char  *strncpy (char *s1, const char *s2, size_t n);
+  32      =3  
+  33      =3  extern size_t strlen  (const char *);
+  34      =3  
+  35      =3  extern char  *strchr  (const char *s, char c);
+  36      =3  extern int    strpos  (const char *s, char c);
+  37      =3  extern char  *strrchr (const char *s, char c);
+  38      =3  extern int    strrpos (const char *s, char c);
+  39      =3  
+  40      =3  extern size_t strspn  (const char *s, const char *set);
+  41      =3  extern size_t strcspn (const char *s, const char *set);
+  42      =3  extern char  *strpbrk (const char *s, const char *set);
+  43      =3  extern char  *strrpbrk(const char *s, const char *set);
+  44      =3  extern char  *strstr  (const char *s, const char *sub);
+  45      =3  extern char  *strtok  (char *str, const char *set);
+  46      =3  
+  47      =3  extern char   memcmp  (const void *s1, const void *s2, size_t n);
+C51 COMPILER V9.60.0.0   LTE                                                               09/08/2021 15:19:43 PAGE 23  
+
+  48      =3  extern void  *memcpy  (void *s1, const void *s2, size_t n);
+  49      =3  extern void  *memchr  (const void *s, char val, size_t n);
+  50      =3  extern void  *memccpy (void *s1, const void *s2, char val, size_t n);
+  51      =3  extern void  *memmove (void *s1, const void *s2, size_t n);
+  52      =3  extern void  *memset  (void *s, char val, size_t n);
+  53      =3  #pragma RESTORE
+  54      =3  
+  55      =3  #endif
+   8      =2  #include <stdlib.h>
+   1      =3  /*--------------------------------------------------------------------------
+   2      =3  STDLIB.H
+   3      =3  
+   4      =3  Standard functions.
+   5      =3  Copyright (c) 1988-2008 Keil Elektronik GmbH and Keil Software, Inc.
+   6      =3  Copyright (c) 2008-2016 ARM Germany GmbH
+   7      =3  All rights reserved.
+   8      =3  --------------------------------------------------------------------------*/
+   9      =3  
+  10      =3  #ifndef __STDLIB_H__
+  11      =3  #define __STDLIB_H__
+  12      =3  
+  13      =3  #ifndef _SIZE_T
+           =3  #define _SIZE_T
+           =3  typedef unsigned int size_t;
+           =3 #endif
+  17      =3  
+  18      =3  #ifndef NULL
+           =3  #define NULL ((void *)0)
+           =3 #endif
+  21      =3  
+  22      =3  #ifndef _WCHAR_T_DEFINED_
+  23      =3  #define _WCHAR_T_DEFINED_
+  24      =3  typedef char wchar_t;
+  25      =3  #endif
+  26      =3  
+  27      =3  #if defined (__CX2__)
+           =3 #ifndef _DIV_T_DEFINED
+           =3 typedef struct _div_t {
+           =3         int quot;
+           =3         int rem;
+           =3 } div_t;
+           =3 typedef struct _ldiv_t {
+           =3         long quot;
+           =3         long rem;
+           =3 } ldiv_t;
+           =3 #define _DIV_T_DEFINED
+           =3 #endif // _DIV_T_DEFINED
+           =3 #endif // __CX2__
+  40      =3  
+  41      =3  #ifndef RAND_MAX
+  42      =3   #define RAND_MAX  32767u
+  43      =3  #endif
+  44      =3  
+  45      =3  #if defined (__CX2__)
+           =3 #pragma SAVE
+           =3 #pragma FUNCTIONS(STATIC)
+           =3 /* intrinsic functions are reentrant, but need static attribute */
+           =3 extern int    abs  (int   val);
+           =3 #pragma RESTORE
+           =3 #endif // __CX2__
+  52      =3  
+  53      =3  #pragma SAVE
+C51 COMPILER V9.60.0.0   LTE                                                               09/08/2021 15:19:43 PAGE 24  
+
+  54      =3  #pragma REGPARMS
+  55      =3  
+  56      =3  extern char   cabs (char  val);
+  57      =3  #if !defined (__CX2__)
+  58      =3  extern int    abs  (int   val);
+  59      =3  #endif // __CX2__
+  60      =3  extern long   labs (long  val);
+  61      =3  
+  62      =3  extern float  atof (const char *s1);
+  63      =3  extern long   atol (const char *s1);
+  64      =3  extern int    atoi (const char *s1);
+  65      =3  extern int    rand (void);
+  66      =3  extern void   srand (unsigned int seed);
+  67      =3  
+  68      =3  #ifdef _DIV_T_DEFINED
+           =3 extern div_t  __div (int numer, int denom);
+           =3 #define div(numer,denom)  __div((numer),(denom));
+           =3 extern ldiv_t ldiv (long numer, long denom);
+           =3 #endif // _DIV_T_DEFINED
+  73      =3  
+  74      =3  extern float         strtod  (const char *nptr, char **endptr);
+  75      =3  extern long          strtol  (const char *nptr, char **endptr, unsigned char base);
+  76      =3  extern unsigned long strtoul (const char *nptr, char **endptr, unsigned char base);
+  77      =3  
+  78      =3  #define _MALLOC_MEM_    xdata
+  79      =3  
+  80      =3  extern void init_mempool          (void _MALLOC_MEM_ *p, size_t size);
+  81      =3  extern void _MALLOC_MEM_ *malloc  (size_t size);
+  82      =3  extern void free                  (void _MALLOC_MEM_ *p);
+  83      =3  extern void _MALLOC_MEM_ *realloc (void _MALLOC_MEM_ *p, size_t size);
+  84      =3  extern void _MALLOC_MEM_ *calloc  (size_t nmemb, size_t size);
+  85      =3  
+  86      =3  #if defined (__CX2__)
+           =3 extern void abort(void);
+           =3 #endif // __CX2__
+  89      =3  
+  90      =3  #pragma RESTORE
+  91      =3  
+  92      =3  #endif // __STDLIB_H__
+   9      =2  #include <string.h>
+   1      =3  /*--------------------------------------------------------------------------
+   2      =3  STRING.H
+   3      =3  
+   4      =3  String functions.
+   5      =3  Copyright (c) 1988-2008 Keil Elektronik GmbH and Keil Software, Inc.
+   6      =3  Copyright (c) 2008-2016 ARM Germany GmbH
+   7      =3  All rights reserved.
+   8      =3  --------------------------------------------------------------------------*/
+   9      =3  
+  10      =3  #ifndef __STRING_H__
+           =3 #define __STRING_H__
+           =3 
+           =3 #ifndef _SIZE_T
+           =3  #define _SIZE_T
+           =3  typedef unsigned int size_t;
+           =3 #endif
+           =3 
+           =3 #ifndef NULL
+           =3  #define NULL ((void *)0)
+           =3 #endif
+           =3 
+           =3 #pragma SAVE
+C51 COMPILER V9.60.0.0   LTE                                                               09/08/2021 15:19:43 PAGE 25  
+
+           =3 #pragma REGPARMS
+           =3 extern char  *strcat  (char *s1, const char *s2);
+           =3 extern char  *strncat (char *s1, const char *s2, size_t n);
+           =3 
+           =3 extern char   strcmp  (const char *s1, const char *s2);
+           =3 extern char   strncmp (const char *s1, const char *s2, size_t n);
+           =3 
+           =3 extern char  *strcpy  (char *s1, const char *s2);
+           =3 extern char  *strncpy (char *s1, const char *s2, size_t n);
+           =3 
+           =3 extern size_t strlen  (const char *);
+           =3 
+           =3 extern char  *strchr  (const char *s, char c);
+           =3 extern int    strpos  (const char *s, char c);
+           =3 extern char  *strrchr (const char *s, char c);
+           =3 extern int    strrpos (const char *s, char c);
+           =3 
+           =3 extern size_t strspn  (const char *s, const char *set);
+           =3 extern size_t strcspn (const char *s, const char *set);
+           =3 extern char  *strpbrk (const char *s, const char *set);
+           =3 extern char  *strrpbrk(const char *s, const char *set);
+           =3 extern char  *strstr  (const char *s, const char *sub);
+           =3 extern char  *strtok  (char *str, const char *set);
+           =3 
+           =3 extern char   memcmp  (const void *s1, const void *s2, size_t n);
+           =3 extern void  *memcpy  (void *s1, const void *s2, size_t n);
+           =3 extern void  *memchr  (const void *s, char val, size_t n);
+           =3 extern void  *memccpy (void *s1, const void *s2, char val, size_t n);
+           =3 extern void  *memmove (void *s1, const void *s2, size_t n);
+           =3 extern void  *memset  (void *s, char val, size_t n);
+           =3 #pragma RESTORE
+           =3 
+           =3 #endif
+  10      =2  #include <absacc.h> //可直接操作内存地址
+   1      =3  /*--------------------------------------------------------------------------
+   2      =3  ABSACC.H
+   3      =3  
+   4      =3  Direct access to 8051, extended 8051 and NXP 8051MX memory areas.
+   5      =3  Copyright (c) 1988-2010 Keil Elektronik GmbH and ARM Germany GmbH
+   6      =3  All rights reserved.
+   7      =3  --------------------------------------------------------------------------*/
+   8      =3  
+   9      =3  #ifndef __ABSACC_H__
+  10      =3  #define __ABSACC_H__
+  11      =3  
+  12      =3  #define CBYTE ((unsigned char volatile code  *) 0)
+  13      =3  #define DBYTE ((unsigned char volatile data  *) 0)
+  14      =3  #if !defined (__CX2__)
+  15      =3  #define PBYTE ((unsigned char volatile pdata *) 0)
+  16      =3  #endif
+  17      =3  #define XBYTE ((unsigned char volatile xdata *) 0)
+  18      =3  
+  19      =3  #define CWORD ((unsigned int volatile code  *) 0)
+  20      =3  #define DWORD ((unsigned int volatile data  *) 0)
+  21      =3  #if !defined (__CX2__)
+  22      =3  #define PWORD ((unsigned int volatile pdata *) 0)
+  23      =3  #endif
+  24      =3  #define XWORD ((unsigned int volatile xdata *) 0)
+  25      =3  
+  26      =3  
+  27      =3  #if defined (__CX51__) || defined (__CX2__)
+           =3 #define FVAR(object, addr)   (*((object volatile far *) (addr)))
+C51 COMPILER V9.60.0.0   LTE                                                               09/08/2021 15:19:43 PAGE 26  
+
+           =3 #define FARRAY(object, base) ((object volatile far *) (base))
+           =3 #define FCVAR(object, addr)   (*((object const far *) (addr)))
+           =3 #define FCARRAY(object, base) ((object const far *) (base))
+           =3 #else
+  33      =3  #define FVAR(object, addr)    (*((object volatile far *) ((addr)+0x10000L)))
+  34      =3  #define FCVAR(object, addr)   (*((object const far *) ((addr)+0x810000L)))
+  35      =3  #define FARRAY(object, base)  ((object volatile far *) ((base)+0x10000L))
+  36      =3  #define FCARRAY(object, base) ((object const far *) ((base)+0x810000L))
+  37      =3  #endif
+  38      =3  
+  39      =3  #if defined (__CX2__)
+           =3 #define HBYTE ((unsigned char volatile huge *)  0)
+           =3 #define HWORD ((unsigned int volatile huge *)  0)
+           =3 #define HVAR(object, addr)   (*((object volatile huge *) (addr)))
+           =3 #define HARRAY(object, base) ((object volatile huge *) (base))
+           =3 #endif
+  45      =3  
+  46      =3  #define CVAR(object, addr)   (*((object volatile code *) (addr)))
+  47      =3  #define CARRAY(object, base) ((object volatile code *) (base))
+  48      =3  #define DVAR(object, addr)   (*((object volatile data *) (addr)))
+  49      =3  #define DARRAY(object, base) ((object volatile data *) (base))
+  50      =3  #define XVAR(object, addr)   (*((object volatile xdata *) (addr)))
+  51      =3  #define XARRAY(object, base) ((object volatile xdata *) (base))
+  52      =3  
+  53      =3  #endif
+  11      =2  #include "stdarg.h"
+   1      =3  /*--------------------------------------------------------------------------
+   2      =3  STDARG.H
+   3      =3  
+   4      =3  Prototypes for variable argument lists.
+   5      =3  Copyright (c) 1988-2008 Keil Elektronik GmbH and Keil Software, Inc.
+   6      =3  Copyright (c) 2008-2016 ARM Germany GmbH
+   7      =3  All rights reserved.
+   8      =3  --------------------------------------------------------------------------*/
+   9      =3  
+  10      =3  #ifndef __STDARG_H__
+  11      =3  #define __STDARG_H__
+  12      =3  
+  13      =3  #ifndef __CX2__
+  14      =3  #ifndef NULL
+           =3  #define NULL ((void *)0)
+           =3 #endif
+  17      =3  #endif
+  18      =3  
+  19      =3  #ifndef _VA_LIST_DEFINED
+  20      =3  typedef char *va_list;
+  21      =3  #define _VA_LIST_DEFINED
+  22      =3  #endif
+  23      =3  
+  24      =3  #if defined __CX2__ && __CX2__ >= 558
+           =3   #define va_start(ap,v) ap = _va_start_ (&v, sizeof(v))
+           =3   extern void *_va_start_ (void *ap, int sz);   // intrinsic
+           =3 #else
+  28      =3    #define va_start(ap,v) ap = (va_list)&v + sizeof(v)
+  29      =3  #endif
+  30      =3  
+  31      =3  #define va_arg(ap,t) (((t *)ap)++[0])
+  32      =3  #define va_end(ap)   (ap = (va_list)0)
+  33      =3  
+  34      =3  #endif
+  12      =2  
+  13      =2  
+C51 COMPILER V9.60.0.0   LTE                                                               09/08/2021 15:19:43 PAGE 27  
+
+  14      =2  /**********************布尔变量定义**********************/
+  15      =2  #define true  1
+  16      =2  #define false 0
+  17      =2  /**********************布尔变量定义**********************/
+  18      =2  
+  19      =2  /***********************************API配置接口***********************************/
+  20      =2  /*使用外部晶振*/
+  21      =2  #define EXTERNAL_CRYSTAL 0 
+  22      =2  /*调试是否启用串口*/
+  23      =2  #define USE_PRINTF_DEBUG 0 
+  24      =2  /*调试选项*/
+  25      =2  #define DEBUGGING    1
+  26      =2  
+  27      =2  #define COUNTMAX     65536U
+  28      =2  
+  29      =2  //(1/FOSC)*count =times(us)->count = time*FOSC/1000(ms)
+  30      =2  #define FOSC         27000000UL//11059200UL
+  31      =2  /*1ms(时钟频率越高，所能产生的时间越小)*/  
+  32      =2  #define TIMES        10U  
+  33      =2  /*定时器模式选择*/
+  34      =2  #define TIMER_MODE   12U
+  35      =2  /*定时器分频系数，默认为一分频*/  
+  36      =2  #define TIME_DIV     1U  
+  37      =2  #define T12_MODE (TIMES * FOSC / 1000 / 12 / TIME_DIV) 
+  38      =2  #define T1_MODE  (TIMES * FOSC/ 1000 / TIME_DIV)
+  39      =2  #define TIMERS_OVERFLOW (COUNTMAX * 1000 * TIMER_MODE * TIME_DIV) / FOSC
+  40      =2  
+  41      =2  #define OPEN_GLOBAL_OUTAGE()  (EA = 1 << 0)
+  42      =2  #define CLOSE_GLOBAL_OUTAGE() (EA = 0 << 0)
+  43      =2  /*判断延时数是否超出硬件允许范围*/
+  44      =2  #if(TIMES > TIMERS_OVERFLOW)
+           =2 #error The timer cannot generate the current duration!
+           =2 #endif
+  47      =2  /***********************************API配置接口***********************************/
+  48      =2  
+  49      =2  /***********************************常用的数据类型***********************************/
+  50      =2  // #define uint8_t unsigned char
+  51      =2  // #define int8_t signed char
+  52      =2  // #define uint16_t unsigned short int
+  53      =2  // #define int16_t signed short int
+  54      =2  // #define uint32_t unsigned long
+  55      =2  // #define int32_t signed long
+  56      =2  // #define __IO    volatile
+  57      =2  
+  58      =2  typedef unsigned char  uint8_t;
+  59      =2  typedef signed char    int8_t;
+  60      =2  typedef unsigned short int  uint16_t;
+  61      =2  typedef unsigned long  uint32_t;
+  62      =2  typedef signed long    int32_t;
+  63      =2  typedef volatile       __IO;   
+  64      =2  
+  65      =2  /***********************************常用的数据类型***********************************/
+  66      =2  
+  67      =2  /***********************************系统上电参数***********************************/
+  68      =2  #define DEFAULT_SYSTEM_PARAMETER  "\xFF\xFF\xFF\xFF\x02\x01\x00\x84\x50"
+  69      =2  #define START_SAVEADDRESS          0x0000   //参数存储开始地址
+  70      =2  #define BAUDRATE_SAVEADDRESS       0x0004   //波特率
+  71      =2  #define PLCSTAE_SAVEADDRESS        0x0005   //PLC状态
+  72      =2  #define COMMUNICATION_SAVEADDRESS  0x0006   //通讯类型
+  73      =2  #define PASSWORDBITS            4        //密码位数
+  74      =2  
+  75      =2  typedef struct
+C51 COMPILER V9.60.0.0   LTE                                                               09/08/2021 15:19:43 PAGE 28  
+
+  76      =2  {
+  77      =2      uint8_t  PassWordbuff[PASSWORDBITS];
+  78      =2      uint8_t  Index;
+  79      =2  } PASSWORDSTRUCT;
+  80      =2  
+  81      =2  
+  82      =2  typedef struct
+  83      =2  {
+  84      =2      PASSWORDSTRUCT  PSWNext;   //密码
+  85      =2      uint8_t BaudIndex;         //波特率
+  86      =2      uint8_t PlcState;          //PLC状态
+  87      =2      uint8_t CommunicationType; //通讯类型
+  88      =2      uint16_t CRC16;            //CRC校验码
+  89      =2  } SYSTEM_PARAMETER; //系统参数
+  90      =2  
+  91      =2  extern SYSTEM_PARAMETER System_Parameter;
+  92      =2  /***********************************系统上电参数***********************************/
+  93      =2  
+  94      =2  /***********************************结构体的妙用 ***********************************/
+  95      =2  #define offsetof(TYPE, MEMBER) ((size_t) &((TYPE *)0)->MEMBER) //获取结构体成员对首地址偏移�
+             -�
+  96      =2  #define container_of(ptr, type, member) ({ \
+  97      =2          const typeof( ((type *)0)->member ) *__mptr = (ptr); \
+  98      =2          (type *)( (char *)__mptr - offsetof(type,member) );})  //过结构体成员变量获得对应的�
+             -�构体首地址
+  99      =2  /***********************************结构体的妙用 ***********************************/
+ 100      =2  
+ 101      =2  
+ 102      =2  extern const uint8_t g_TimerNumbers;
+ 103      =2  /***********************************函数声明***********************************/
+ 104      =2  void  Init_All(void);
+ 105      =2  /***********************************函数声明***********************************/
+ 106      =2  #endif
+   5      =1  
+   6      =1  /***********************************������ʱ������***********************************/
+   7      =1  #define T_10MS                  1
+   8      =1  #define T_20MS                  2
+   9      =1  #define T_30MS                  3
+  10      =1  #define T_40MS                  4
+  11      =1  #define T_50MS                  5
+  12      =1  #define T_60MS                  6
+  13      =1  #define T_70MS                  7
+  14      =1  #define T_80MS                  8
+  15      =1  #define T_90MS                  9
+  16      =1  #define T_100MS                 10
+  17      =1  #define T_200MS                 20
+  18      =1  #define T_300MS                 30
+  19      =1  #define T_500MS                 50
+  20      =1  
+  21      =1  #define T_1S                    100
+  22      =1  #define T_2S                    200
+  23      =1  #define T_3S                    300
+  24      =1  #define T_4S                400
+  25      =1  #define T_5S                    500
+  26      =1  #define T_6S                    600
+  27      =1  #define T_7S                    700
+  28      =1  #define T_8S                    800
+  29      =1  #define T_9S                    900
+  30      =1  #define T_10S                   1000
+  31      =1  #define T_20S                   2000
+  32      =1  #define T_60S               6000
+  33      =1  /***********************************������ʱ������***********************************/  
+C51 COMPILER V9.60.0.0   LTE                                                               09/08/2021 15:19:43 PAGE 29  
+
+  34      =1  
+  35      =1  /******************************************************************
+  36      =1  * 
+  37      =1  *
+  38      =1  *
+  39      =1  *******************************************************************/
+  40      =1  
+  41      =1  typedef struct 
+  42      =1  {
+  43      =1          unsigned char Timer8Flag:1;     //��ʱ���������־
+  44      =1          unsigned char Timer8Count;      //ʱ�������
+  45      =1  } TIMER8;
+  46      =1   
+  47      =1  typedef struct
+  48      =1  {
+  49      =1          unsigned short Timer16Flag:1;//
+  50      =1          unsigned short Timer16Count;
+  51      =1  
+  52      =1  }TIMER16;
+  53      =1  
+  54      =1  
+  55      =1  typedef struct
+  56      =1  {
+  57      =1          TIMER8 Excample8;//һ����λ��ϵͳ��ʱ��
+  58      =1          TIMER8 refrMainDly;
+  59      =1          TIMER8 Usart4Dly;                        //��ʱ������������
+  60      =1          TIMER8 Uasrt2_3Dly;              //��ʱ������������
+  61      =1          TIMER8 Lte_reportDly;  //����ģ���ϱ���ʱ��
+  62      =1  
+  63      =1  }PUBLIC_TIMER8;
+  64      =1  
+  65      =1  
+  66      =1  typedef struct
+  67      =1  {
+  68      =1          TIMER16 Excample16;      //һ��16λ��ϵͳ��ʱ��
+  69      =1          TIMER16 MenuDly16;       //һ��16λ�Ĳ˵���ʱ��
+  70      =1  
+  71      =1  }PUBLIC_TIMER16;
+  72      =1  
+  73      =1  extern PUBLIC_TIMER8 PublicTimer8;
+  74      =1  extern PUBLIC_TIMER16 PublicTimer16;
+  75      =1  
+  76      =1  void Delay1us();
+  77      =1  void Delay_us(unsigned char ii);
+  78      =1  
+  79      =1  void Delay1ms();
+  80      =1  void Delay_ms(unsigned short time);
+  81      =1  void systemTimer(void);
+  82      =1  
+  83      =1  
+  84      =1  
+  85      =1  #endif  /* _SYSTEMTIMER_H */
+   3          #include "usart.h"
+   1      =1  #ifndef __USART_H
+   2      =1  #define __USART_H
+   3      =1           
+   4      =1  #include "config.h"      
+   1      =2  #ifndef __CONFIG_H_
+           =2 #define __CONFIG_H_
+           =2 
+           =2 #include <STC8.H>
+           =2 #include <stdio.h>
+C51 COMPILER V9.60.0.0   LTE                                                               09/08/2021 15:19:43 PAGE 30  
+
+           =2 #include <intrins.h>
+           =2 #include <string.h>
+           =2 #include <stdlib.h>
+           =2 #include <string.h>
+           =2 #include <absacc.h> //可直接操作内存地址
+           =2 #include "stdarg.h"
+           =2 
+           =2 
+           =2 /**********************布尔变量定义**********************/
+           =2 #define true  1
+           =2 #define false 0
+           =2 /**********************布尔变量定义**********************/
+           =2 
+           =2 /***********************************API配置接口***********************************/
+           =2 /*使用外部晶振*/
+           =2 #define EXTERNAL_CRYSTAL 0 
+           =2 /*调试是否启用串口*/
+           =2 #define USE_PRINTF_DEBUG 0 
+           =2 /*调试选项*/
+           =2 #define DEBUGGING    1
+           =2 
+           =2 #define COUNTMAX     65536U
+           =2 
+           =2 //(1/FOSC)*count =times(us)->count = time*FOSC/1000(ms)
+           =2 #define FOSC         27000000UL//11059200UL
+           =2 /*1ms(时钟频率越高，所能产生的时间越小)*/  
+           =2 #define TIMES        10U  
+           =2 /*定时器模式选择*/
+           =2 #define TIMER_MODE   12U
+           =2 /*定时器分频系数，默认为一分频*/  
+           =2 #define TIME_DIV     1U  
+           =2 #define T12_MODE (TIMES * FOSC / 1000 / 12 / TIME_DIV) 
+           =2 #define T1_MODE  (TIMES * FOSC/ 1000 / TIME_DIV)
+           =2 #define TIMERS_OVERFLOW (COUNTMAX * 1000 * TIMER_MODE * TIME_DIV) / FOSC
+           =2 
+           =2 #define OPEN_GLOBAL_OUTAGE()  (EA = 1 << 0)
+           =2 #define CLOSE_GLOBAL_OUTAGE() (EA = 0 << 0)
+           =2 /*判断延时数是否超出硬件允许范围*/
+           =2 #if(TIMES > TIMERS_OVERFLOW)
+           =2 #error The timer cannot generate the current duration!
+           =2 #endif
+           =2 /***********************************API配置接口***********************************/
+           =2 
+           =2 /***********************************常用的数据类型***********************************/
+           =2 // #define uint8_t unsigned char
+           =2 // #define int8_t signed char
+           =2 // #define uint16_t unsigned short int
+           =2 // #define int16_t signed short int
+           =2 // #define uint32_t unsigned long
+           =2 // #define int32_t signed long
+           =2 // #define __IO    volatile
+           =2 
+           =2 typedef unsigned char  uint8_t;
+           =2 typedef signed char    int8_t;
+           =2 typedef unsigned short int  uint16_t;
+           =2 typedef unsigned long  uint32_t;
+           =2 typedef signed long    int32_t;
+           =2 typedef volatile       __IO;   
+           =2 
+           =2 /***********************************常用的数据类型***********************************/
+           =2 
+           =2 /***********************************系统上电参数***********************************/
+C51 COMPILER V9.60.0.0   LTE                                                               09/08/2021 15:19:43 PAGE 31  
+
+           =2 #define DEFAULT_SYSTEM_PARAMETER  "\xFF\xFF\xFF\xFF\x02\x01\x00\x84\x50"
+           =2 #define START_SAVEADDRESS          0x0000   //参数存储开始地址
+           =2 #define BAUDRATE_SAVEADDRESS       0x0004   //波特率
+           =2 #define PLCSTAE_SAVEADDRESS        0x0005   //PLC状态
+           =2 #define COMMUNICATION_SAVEADDRESS  0x0006   //通讯类型
+           =2 #define PASSWORDBITS            4        //密码位数
+           =2 
+           =2 typedef struct
+           =2 {
+           =2     uint8_t  PassWordbuff[PASSWORDBITS];
+           =2     uint8_t  Index;
+           =2 } PASSWORDSTRUCT;
+           =2 
+           =2 
+           =2 typedef struct
+           =2 {
+           =2     PASSWORDSTRUCT  PSWNext;   //密码
+           =2     uint8_t BaudIndex;         //波特率
+           =2     uint8_t PlcState;          //PLC状态
+           =2     uint8_t CommunicationType; //通讯类型
+           =2     uint16_t CRC16;            //CRC校验码
+           =2 } SYSTEM_PARAMETER; //系统参数
+           =2 
+           =2 extern SYSTEM_PARAMETER System_Parameter;
+           =2 /***********************************系统上电参数***********************************/
+           =2 
+           =2 /***********************************结构体的妙用 ***********************************/
+           =2 #define offsetof(TYPE, MEMBER) ((size_t) &((TYPE *)0)->MEMBER) //获取结构体成员对首地址偏移�
+             -�
+           =2 #define container_of(ptr, type, member) ({ \
+           =2         const typeof( ((type *)0)->member ) *__mptr = (ptr); \
+           =2         (type *)( (char *)__mptr - offsetof(type,member) );})  //过结构体成员变量获得对应的�
+             -�构体首地址
+           =2 /***********************************结构体的妙用 ***********************************/
+           =2 
+           =2 
+           =2 extern const uint8_t g_TimerNumbers;
+           =2 /***********************************函数声明***********************************/
+           =2 void  Init_All(void);
+           =2 /***********************************函数声明***********************************/
+           =2 #endif
+   5      =1           
+   6      =1  
+   7      =1  //以下宏定义用于改变串口的输出引脚
+   8      =1  //串口1默认是p30 p31  以下定义的是串口1的切换
+   9      =1  // P_SW1 = 0xa2   P_SW2 = 0xba
+  10      =1  
+  11      =1  
+  12      =1  #define USART1_USE_P30_P31         P_SW1 = 0x00
+  13      =1  #define USART1_USE_P36_P37         P_SW1 = 0x40
+  14      =1  #define USART1_USE_P16_P17         P_SW1 = 0x80
+  15      =1  #define USART1_USE_P43_P44         P_SW1 = 0xC0
+  16      =1  
+  17      =1  //串口2的默认输出引脚为       P10 P11
+  18      =1  
+  19      =1  #define USART2_USE_P10_P11         P_SW2 = 0x00
+  20      =1  #define USART2_USE_P40_P42         P_SW2 = 0x01
+  21      =1  
+  22      =1  //串口3的默认输出引脚是 P00 P01
+  23      =1  
+  24      =1  #define USART3_USE_P00_P01         P_SW2 = 0x00
+  25      =1  #define USART3_USE_P50_P51         P_SW2 = 0x02
+C51 COMPILER V9.60.0.0   LTE                                                               09/08/2021 15:19:43 PAGE 32  
+
+  26      =1  
+  27      =1  //串口4的默认输出引脚为 P02 P03
+  28      =1  #define USART3_USE_P02_P03         P_SW1 = 0x00
+  29      =1  #define USART3_USE_P52_P53         P_SW1 = 0x04
+  30      =1  
+  31      =1  
+  32      =1  //*******************外加485芯片的定义*******************//
+  33      =1  #define USART3_EN                       P36
+  34      =1  //******************************************************//
+  35      =1  
+  36      =1  
+  37      =1  
+  38      =1  #define USEING_PRINTF 1
+  39      =1  
+  40      =1  /***********************************常用通讯波特率***********************************/
+  41      =1  #define BAUD_921600  921600UL
+  42      =1  #define BAUD_115200  115200UL
+  43      =1  #define BAUD_57600       57600UL
+  44      =1  #define BAUD_56000       56000UL
+  45      =1  #define BAUD_38400       38400UL
+  46      =1  #define BAUD_19200   19200UL
+  47      =1  #define BAUD_14400   14400UL
+  48      =1  #define BAUD_9600    9600UL
+  49      =1  #define BAUD_4800    4800UL
+  50      =1  #define BAUD_2400    2400UL
+  51      =1  #define BAUD_1200    1200UL
+  52      =1  /***********************************常用通讯波特率***********************************/
+  53      =1  
+  54      =1  #define UART_DIV 4
+  55      =1  #define UART_BYTE_SENDOVERTIME (uint16_t)5000U
+  56      =1  
+  57      =1  #define BRT_1T(BAUD)  (COUNTMAX-FOSC/BAUD/UART_DIV) //1T
+  58      =1  #define BRT_12T(BAUD) (COUNTMAX-FOSC/BAUD/UART_DIV/12) //12T
+  59      =1  
+  60      =1  
+  61      =1  typedef enum
+  62      =1  {
+  63      =1          UART1 = 0x01,
+  64      =1          UART2,
+  65      =1          UART3,
+  66      =1          UART4
+  67      =1  }Uart_TypsDef;
+  68      =1  
+  69      =1  
+  70      =1  typedef struct //串口中断优先级
+  71      =1  {
+  72      =1          uint8_t Register_IP;
+  73      =1          uint8_t Register_IPH;
+  74      =1  }UART_NVIC_TypeDef;
+  75      =1  
+  76      =1  typedef struct
+  77      =1  {
+  78      =1          Uart_TypsDef Instance;
+  79      =1          uint8_t Register_SCON;
+  80      =1          uint8_t Uart_Mode;
+  81      =1          uint16_t Uart_Count;
+  82      =1          uint8_t RunUart_Enable:1;
+  83      =1          uint8_t Interrupt_Enable;
+  84      =1          uint8_t Register_AUXR;
+  85      =1          uint8_t Uartx_busy:1; //串口接收占用标志
+  86      =1          UART_NVIC_TypeDef Uart_NVIC;
+  87      =1  }Uart_HandleTypeDef;
+C51 COMPILER V9.60.0.0   LTE                                                               09/08/2021 15:19:43 PAGE 33  
+
+  88      =1  
+  89      =1  
+  90      =1  void Uart_Base_MspInit(Uart_HandleTypeDef *uart_baseHandle);
+  91      =1  extern void Uart1_Init(void);
+  92      =1  extern void Uart2_Init(void);
+  93      =1  extern void Uart3_Init(void);
+  94      =1  extern void Uart4_Init(void);
+  95      =1  
+  96      =1  
+  97      =1  void Uartx_SendStr(Uart_HandleTypeDef *const Uart,uint8_t *p,uint8_t length);
+  98      =1  void Busy_Await(Uart_HandleTypeDef *const Uart,uint16_t overtime);
+  99      =1  void Uartx_Printf(Uart_HandleTypeDef *const uart, const char *format, ...);
+ 100      =1  extern char putchar(char str);
+ 101      =1  
+ 102      =1  extern Uart_HandleTypeDef Uart1; //串口1句柄
+ 103      =1  extern Uart_HandleTypeDef Uart2; //串口2句柄
+ 104      =1  extern Uart_HandleTypeDef Uart3; //串口3句柄
+ 105      =1  extern Uart_HandleTypeDef Uart4; //串口4句柄
+ 106      =1  
+ 107      =1  #endif
+   4          #include <string.h>
+   1      =1  /*--------------------------------------------------------------------------
+   2      =1  STRING.H
+   3      =1  
+   4      =1  String functions.
+   5      =1  Copyright (c) 1988-2008 Keil Elektronik GmbH and Keil Software, Inc.
+   6      =1  Copyright (c) 2008-2016 ARM Germany GmbH
+   7      =1  All rights reserved.
+   8      =1  --------------------------------------------------------------------------*/
+   9      =1  
+  10      =1  #ifndef __STRING_H__
+           =1 #define __STRING_H__
+           =1 
+           =1 #ifndef _SIZE_T
+           =1  #define _SIZE_T
+           =1  typedef unsigned int size_t;
+           =1 #endif
+           =1 
+           =1 #ifndef NULL
+           =1  #define NULL ((void *)0)
+           =1 #endif
+           =1 
+           =1 #pragma SAVE
+           =1 #pragma REGPARMS
+           =1 extern char  *strcat  (char *s1, const char *s2);
+           =1 extern char  *strncat (char *s1, const char *s2, size_t n);
+           =1 
+           =1 extern char   strcmp  (const char *s1, const char *s2);
+           =1 extern char   strncmp (const char *s1, const char *s2, size_t n);
+           =1 
+           =1 extern char  *strcpy  (char *s1, const char *s2);
+           =1 extern char  *strncpy (char *s1, const char *s2, size_t n);
+           =1 
+           =1 extern size_t strlen  (const char *);
+           =1 
+           =1 extern char  *strchr  (const char *s, char c);
+           =1 extern int    strpos  (const char *s, char c);
+           =1 extern char  *strrchr (const char *s, char c);
+           =1 extern int    strrpos (const char *s, char c);
+           =1 
+           =1 extern size_t strspn  (const char *s, const char *set);
+           =1 extern size_t strcspn (const char *s, const char *set);
+C51 COMPILER V9.60.0.0   LTE                                                               09/08/2021 15:19:43 PAGE 34  
+
+           =1 extern char  *strpbrk (const char *s, const char *set);
+           =1 extern char  *strrpbrk(const char *s, const char *set);
+           =1 extern char  *strstr  (const char *s, const char *sub);
+           =1 extern char  *strtok  (char *str, const char *set);
+           =1 
+           =1 extern char   memcmp  (const void *s1, const void *s2, size_t n);
+           =1 extern void  *memcpy  (void *s1, const void *s2, size_t n);
+           =1 extern void  *memchr  (const void *s, char val, size_t n);
+           =1 extern void  *memccpy (void *s1, const void *s2, char val, size_t n);
+           =1 extern void  *memmove (void *s1, const void *s2, size_t n);
+           =1 extern void  *memset  (void *s, char val, size_t n);
+           =1 #pragma RESTORE
+           =1 
+           =1 #endif
+   5          
+   6          const AT_COMMAND atCmdLteInit[] =            //LTEģ��ATָ��
+   7          {
+   8              {"+++", "a", T_2S},
+   9              {"a", "+ok", T_2S},
+  10              {"AT+E=OFF\r\n", "OK", T_500MS},
+  11          
+  12              {"AT+HEARTDT=7777772E796E7061782E636F6D\r\n", "OK", T_500MS},
+  13          
+  14              {"AT+WKMOD=NET\r\n", "OK", T_500MS},
+  15              {"AT+SOCKAEN=ON\r\n", "OK", T_500MS},
+  16              {"AT+SOCKASL=LONG\r\n", "OK", T_500MS},
+  17              {"AT+SOCKA=TCP,clouddata.usr.cn,15000\r\n", "OK", T_500MS},
+  18          
+  19              {"AT+REGEN=ON\r\n", "OK", T_500MS},
+  20              {"AT+REGTP=CLOUD\r\n", "OK", T_500MS},
+  21              {"AT+CLOUD=00019639000000000034,SkdGAzyl\r\n", "OK", T_500MS},
+  22              {"AT+Z\r\n", "OK", T_500MS},
+  23          };
+  24          #define atCmdLteInitSize  sizeof(atCmdLteInit)/sizeof(AT_COMMAND)
+  25          
+  26          
+  27          void LTEconnect(void)                   //���ӷ�����
+  28          {
+  29   1          uint8_t i;
+  30   1      
+  31   1          for(i = 0; i < atCmdLteInitSize; i++)
+  32   1          {
+  33   2                      Uartx_SendStr(&Uart2,atCmdLteInit[i].Cmd,strlen(atCmdLteInit[i].Cmd));
+  34   2              Delay_ms(500);
+  35   2      
+  36   2          }
+  37   1      
+  38   1          Delay_ms(2000);
+  39   1      }
+  40          
+  41          //void LTEreset(void)
+  42          //{
+  43          
+  44          //}
+  45          
+  46          //bool LTEisLinkA(void)                 //�Ƿ������Ϸ�����A
+  47          //{
+  48          //    return LTE_LINKA;
+  49          //}
+  50          
+  51          void LTEenable(bool Enable)  //ģ����ͣ
+  52          {
+C51 COMPILER V9.60.0.0   LTE                                                               09/08/2021 15:19:43 PAGE 35  
+
+  53   1          if(Enable == TRUE)
+  54   1          {
+  55   2              LTE_POWER_KEY = 1;
+  56   2          }
+  57   1          else
+  58   1          {
+  59   2              LTE_POWER_KEY = 0;
+  60   2          }
+  61   1      }
+  62          
+  63          //void LTEreload(void)
+  64          //{
+  65          //    LTE_RELOAD = 0;
+  66          
+  67          //    Delay_ms(2000);
+  68          //    Delay_ms(2000);
+  69          //    Delay_ms(2000);
+  70          //    Delay_ms(2000);
+  71          
+  72          //    LTE_RELOAD = 1;
+  73          //}
+C51 COMPILER V9.60.0.0   LTE                                                               09/08/2021 15:19:43 PAGE 36  
+
+ASSEMBLY LISTING OF GENERATED OBJECT CODE
+
+
+             ; FUNCTION LTEconnect (BEGIN)
+                                           ; SOURCE LINE # 27
+                                           ; SOURCE LINE # 28
+                                           ; SOURCE LINE # 31
+0000 900000      R     MOV     DPTR,#i
+0003 E4                CLR     A
+0004 F0                MOVX    @DPTR,A
+0005         ?C0001:
+0005 900000      R     MOV     DPTR,#i
+0008 E0                MOVX    A,@DPTR
+0009 FF                MOV     R7,A
+000A 7E00              MOV     R6,#00H
+000C C3                CLR     C
+000D EF                MOV     A,R7
+000E 940C              SUBB    A,#0CH
+0010 EE                MOV     A,R6
+0011 6480              XRL     A,#080H
+0013 9480              SUBB    A,#080H
+0015 506D              JNC     ?C0002
+                                           ; SOURCE LINE # 32
+                                           ; SOURCE LINE # 33
+0017 900000      R     MOV     DPTR,#i
+001A E0                MOVX    A,@DPTR
+001B FF                MOV     R7,A
+001C EF                MOV     A,R7
+001D 75F007            MOV     B,#07H
+0020 A4                MUL     AB
+0021 2400        R     ADD     A,#LOW atCmdLteInit
+0023 F582              MOV     DPL,A
+0025 E4                CLR     A
+0026 3400        R     ADDC    A,#HIGH atCmdLteInit
+0028 F583              MOV     DPH,A
+002A E0                MOVX    A,@DPTR
+002B FB                MOV     R3,A
+002C A3                INC     DPTR
+002D E0                MOVX    A,@DPTR
+002E FA                MOV     R2,A
+002F A3                INC     DPTR
+0030 E0                MOVX    A,@DPTR
+0031 F9                MOV     R1,A
+0032 120000      E     LCALL   _strlen
+0035 900000      E     MOV     DPTR,#?_Uartx_SendStr?BYTE+06H
+0038 EF                MOV     A,R7
+0039 F0                MOVX    @DPTR,A
+003A 7B01              MOV     R3,#01H
+003C 7A00        E     MOV     R2,#HIGH Uart2
+003E 7900        E     MOV     R1,#LOW Uart2
+0040 C003              PUSH    AR3
+0042 C002              PUSH    AR2
+0044 C001              PUSH    AR1
+0046 900000      R     MOV     DPTR,#i
+0049 E0                MOVX    A,@DPTR
+004A FF                MOV     R7,A
+004B EF                MOV     A,R7
+004C 75F007            MOV     B,#07H
+004F A4                MUL     AB
+0050 2400        R     ADD     A,#LOW atCmdLteInit
+0052 F582              MOV     DPL,A
+0054 E4                CLR     A
+C51 COMPILER V9.60.0.0   LTE                                                               09/08/2021 15:19:43 PAGE 37  
+
+0055 3400        R     ADDC    A,#HIGH atCmdLteInit
+0057 F583              MOV     DPH,A
+0059 E0                MOVX    A,@DPTR
+005A FB                MOV     R3,A
+005B A3                INC     DPTR
+005C E0                MOVX    A,@DPTR
+005D FA                MOV     R2,A
+005E A3                INC     DPTR
+005F E0                MOVX    A,@DPTR
+0060 F9                MOV     R1,A
+0061 900000      E     MOV     DPTR,#?_Uartx_SendStr?BYTE+03H
+0064 EB                MOV     A,R3
+0065 F0                MOVX    @DPTR,A
+0066 A3                INC     DPTR
+0067 EA                MOV     A,R2
+0068 F0                MOVX    @DPTR,A
+0069 A3                INC     DPTR
+006A E9                MOV     A,R1
+006B F0                MOVX    @DPTR,A
+006C D001              POP     AR1
+006E D002              POP     AR2
+0070 D003              POP     AR3
+0072 120000      E     LCALL   _Uartx_SendStr
+                                           ; SOURCE LINE # 34
+0075 7FF4              MOV     R7,#0F4H
+0077 7E01              MOV     R6,#01H
+0079 120000      E     LCALL   _Delay_ms
+                                           ; SOURCE LINE # 36
+007C 900000      R     MOV     DPTR,#i
+007F E0                MOVX    A,@DPTR
+0080 04                INC     A
+0081 F0                MOVX    @DPTR,A
+0082 8081              SJMP    ?C0001
+0084         ?C0002:
+                                           ; SOURCE LINE # 38
+0084 7FD0              MOV     R7,#0D0H
+0086 7E07              MOV     R6,#07H
+0088 120000      E     LCALL   _Delay_ms
+                                           ; SOURCE LINE # 39
+008B 22                RET     
+             ; FUNCTION LTEconnect (END)
+
+             ; FUNCTION _LTEenable (BEGIN)
+                                           ; SOURCE LINE # 51
+0000 900000      R     MOV     DPTR,#Enable
+0003 EF                MOV     A,R7
+0004 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 52
+                                           ; SOURCE LINE # 53
+0005 900000      R     MOV     DPTR,#Enable
+0008 E0                MOVX    A,@DPTR
+0009 FF                MOV     R7,A
+000A 7E00              MOV     R6,#00H
+000C EF                MOV     A,R7
+000D 6401              XRL     A,#01H
+000F 4E                ORL     A,R6
+0010 7003              JNZ     ?C0005
+                                           ; SOURCE LINE # 54
+                                           ; SOURCE LINE # 55
+0012 D2A5              SETB    P25
+                                           ; SOURCE LINE # 56
+0014 22                RET     
+C51 COMPILER V9.60.0.0   LTE                                                               09/08/2021 15:19:43 PAGE 38  
+
+0015         ?C0005:
+                                           ; SOURCE LINE # 58
+                                           ; SOURCE LINE # 59
+0015 C2A5              CLR     P25
+                                           ; SOURCE LINE # 60
+                                           ; SOURCE LINE # 61
+0017         ?C0007:
+0017 22                RET     
+             ; FUNCTION _LTEenable (END)
+
+C51 COMPILER V9.60.0.0   LTE                                                               09/08/2021 15:19:43 PAGE 39  
+
+NAME                                    CLASS   MSPACE  TYPE    OFFSET  SIZE
+====                                    =====   ======  ====    ======  ====
+
+
+uint16_t . . . . . . . . . . . . . . .  TYPEDEF  -----  U_INT    -----  2
+P0 . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0080H  1
+P1 . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0090H  1
+P2 . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00A0H  1
+P3 . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00B0H  1
+P4 . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00C0H  1
+Uart_HandleTypeDef . . . . . . . . . .  TYPEDEF  -----  STRUCT   -----  11
+  Instance . . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0000H  1
+  Register_SCON. . . . . . . . . . . .  MEMBER   -----  U_CHAR   0001H  1
+  Uart_Mode. . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0002H  1
+  Uart_Count . . . . . . . . . . . . .  MEMBER   -----  U_INT    0003H  2
+  RunUart_Enable . . . . . . . . . . .  MEMBER   -----  FIELD    0005H  1.0
+  Interrupt_Enable . . . . . . . . . .  MEMBER   -----  U_CHAR   0006H  1
+  Register_AUXR. . . . . . . . . . . .  MEMBER   -----  U_CHAR   0007H  1
+  Uartx_busy . . . . . . . . . . . . .  MEMBER   -----  FIELD    0008H  1.0
+  Uart_NVIC. . . . . . . . . . . . . .  MEMBER   -----  STRUCT   0009H  2
+P5 . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00C8H  1
+P6 . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00E8H  1
+int32_t. . . . . . . . . . . . . . . .  TYPEDEF  -----  LONG     -----  4
+P7 . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00F8H  1
+PUBLIC_TIMER16 . . . . . . . . . . . .  TYPEDEF  -----  STRUCT   -----  8
+  Excample16 . . . . . . . . . . . . .  MEMBER   -----  STRUCT   0000H  4
+  MenuDly16. . . . . . . . . . . . . .  MEMBER   -----  STRUCT   0004H  4
+IE . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00A8H  1
+size_t . . . . . . . . . . . . . . . .  TYPEDEF  -----  U_INT    -----  2
+IP . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00B8H  1
+_strlen. . . . . . . . . . . . . . . .  EXTERN   CODE   PROC     -----  -----
+CCON . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00D8H  1
+atCmdLteInit . . . . . . . . . . . . .  PUBLIC   XDATA  ARRAY    0000H  84
+bool . . . . . . . . . . . . . . . . .  TYPEDEF  -----  U_CHAR   -----  1
+_Delay_ms. . . . . . . . . . . . . . .  EXTERN   CODE   PROC     -----  -----
+SCON . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0098H  1
+TCON . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0088H  1
+P25. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00A5H  1
+TIMER8 . . . . . . . . . . . . . . . .  TYPEDEF  -----  STRUCT   -----  2
+  Timer8Flag . . . . . . . . . . . . .  MEMBER   -----  FIELD    0000H  1.0
+  Timer8Count. . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0001H  1
+_Uartx_SendStr . . . . . . . . . . . .  EXTERN   CODE   PROC     -----  -----
+TRUE . . . . . . . . . . . . . . . . .  E_CONST  -----  U_CHAR   -----  1
+Uart_TypsDef . . . . . . . . . . . . .  TYPEDEF  -----  U_CHAR   -----  1
+uint8_t. . . . . . . . . . . . . . . .  TYPEDEF  -----  U_CHAR   -----  1
+Uart2. . . . . . . . . . . . . . . . .  EXTERN   XDATA  STRUCT   -----  11
+_LTEenable . . . . . . . . . . . . . .  PUBLIC   CODE   PROC     0000H  -----
+  Enable . . . . . . . . . . . . . . .  AUTO     XDATA  U_CHAR   0000H  1
+LTEconnect . . . . . . . . . . . . . .  PUBLIC   CODE   PROC     0000H  -----
+  i. . . . . . . . . . . . . . . . . .  AUTO     XDATA  U_CHAR   0000H  1
+__IO . . . . . . . . . . . . . . . . .  TYPEDEF  -----  INT      -----  2
+int8_t . . . . . . . . . . . . . . . .  TYPEDEF  -----  CHAR     -----  1
+PUBLIC_TIMER8. . . . . . . . . . . . .  TYPEDEF  -----  STRUCT   -----  10
+  Excample8. . . . . . . . . . . . . .  MEMBER   -----  STRUCT   0000H  2
+  refrMainDly. . . . . . . . . . . . .  MEMBER   -----  STRUCT   0002H  2
+  Usart4Dly. . . . . . . . . . . . . .  MEMBER   -----  STRUCT   0004H  2
+  Uasrt2_3Dly. . . . . . . . . . . . .  MEMBER   -----  STRUCT   0006H  2
+  Lte_reportDly. . . . . . . . . . . .  MEMBER   -----  STRUCT   0008H  2
+PASSWORDSTRUCT . . . . . . . . . . . .  TYPEDEF  -----  STRUCT   -----  5
+  PassWordbuff . . . . . . . . . . . .  MEMBER   -----  ARRAY    0000H  4
+  Index. . . . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0004H  1
+C51 COMPILER V9.60.0.0   LTE                                                               09/08/2021 15:19:43 PAGE 40  
+
+NAME                                    CLASS   MSPACE  TYPE    OFFSET  SIZE
+====                                    =====   ======  ====    ======  ====
+
+
+UART_NVIC_TypeDef. . . . . . . . . . .  TYPEDEF  -----  STRUCT   -----  2
+  Register_IP. . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0000H  1
+  Register_IPH . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0001H  1
+TIMER16. . . . . . . . . . . . . . . .  TYPEDEF  -----  STRUCT   -----  4
+  Timer16Flag. . . . . . . . . . . . .  MEMBER   -----  FIELD    0000H  1.0
+  Timer16Count . . . . . . . . . . . .  MEMBER   -----  U_INT    0002H  2
+wchar_t. . . . . . . . . . . . . . . .  TYPEDEF  -----  CHAR     -----  1
+FALSE. . . . . . . . . . . . . . . . .  E_CONST  -----  U_CHAR   -----  1
+SYSTEM_PARAMETER . . . . . . . . . . .  TYPEDEF  -----  STRUCT   -----  10
+  PSWNext. . . . . . . . . . . . . . .  MEMBER   -----  STRUCT   0000H  5
+  BaudIndex. . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0005H  1
+  PlcState . . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0006H  1
+  CommunicationType. . . . . . . . . .  MEMBER   -----  U_CHAR   0007H  1
+  CRC16. . . . . . . . . . . . . . . .  MEMBER   -----  U_INT    0008H  2
+UART1. . . . . . . . . . . . . . . . .  E_CONST  -----  U_CHAR   -----  1
+UART2. . . . . . . . . . . . . . . . .  E_CONST  -----  U_CHAR   -----  1
+UART3. . . . . . . . . . . . . . . . .  E_CONST  -----  U_CHAR   -----  1
+UART4. . . . . . . . . . . . . . . . .  E_CONST  -----  U_CHAR   -----  1
+va_list. . . . . . . . . . . . . . . .  TYPEDEF  -----  PTR      -----  3
+AT_COMMAND . . . . . . . . . . . . . .  TYPEDEF  -----  STRUCT   -----  7
+  Cmd. . . . . . . . . . . . . . . . .  MEMBER   -----  PTR      0000H  3
+  Ack. . . . . . . . . . . . . . . . .  MEMBER   -----  PTR      0003H  3
+  Timer. . . . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0006H  1
+PSW. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00D0H  1
+uint32_t . . . . . . . . . . . . . . .  TYPEDEF  -----  U_LONG   -----  4
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    164    ----
+   CONSTANT SIZE    =    230    ----
+   XDATA SIZE       =     86    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

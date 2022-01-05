@@ -1,0 +1,19 @@
+{
+    "C_Cpp.errorSquiggles": "Disabled",
+    "files.associations": {
+        "SC8913.C": "cpp",
+        "IIC.C": "cpp",
+        "timer.h": "c",
+        "charger.h": "c",
+        "gpio.h": "c",
+        "usart.h": "c",
+        "sc8913.h": "c",
+        "iic.h": "c",
+        "config.h": "c",
+        "dwin.h": "c",
+        "modbusslave.h": "c",
+        "modbusmaster.h": "c",
+        "stdarg.h": "c",
+        "STDARG.H": "cpp"
+    }
+}

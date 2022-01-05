@@ -1,0 +1,2110 @@
+C51 COMPILER V9.60.0.0   USART                                                             01/05/2022 14:26:36 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE USART
+OBJECT MODULE PLACED IN .\Objects\usart.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE Src\usart.c LARGE OPTIMIZE(9,SPEED) BROWSE FLOATFUZZY(4) INCDIR(.\Inc) D
+                    -EBUG OBJECTEXTEND CODE LISTINCLUDE SYMBOLS PRINT(.\Listings\usart.lst) OBJECT(.\Objects\usart.obj)
+
+line level    source
+
+   1          #include "usart.h"
+   1      =1  #ifndef __USART_H
+   2      =1  #define __USART_H
+   3      =1           
+   4      =1  #include "config.h"      
+   1      =2  #ifndef __CONFIG_H_
+   2      =2  #define __CONFIG_H_
+   3      =2  
+   4      =2  #include <STC8.H>
+   1      =3  #ifndef __STC8F_H_
+   2      =3  #define __STC8F_H_
+   3      =3  
+   4      =3  /////////////////////////////////////////////////
+   5      =3  
+   6      =3  //包含本头文件后,不用另外再包含"REG51.H"
+   7      =3  
+   8      =3  //内核特殊功能寄存器
+   9      =3  sfr ACC         =   0xe0;
+  10      =3  sfr B           =   0xf0;
+  11      =3  sfr PSW         =   0xd0;
+  12      =3  sbit CY         =   PSW^7;
+  13      =3  sbit AC         =   PSW^6;
+  14      =3  sbit F0         =   PSW^5;
+  15      =3  sbit RS1        =   PSW^4;
+  16      =3  sbit RS0        =   PSW^3;
+  17      =3  sbit OV         =   PSW^2;
+  18      =3  sbit P          =   PSW^0;
+  19      =3  sfr SP          =   0x81;
+  20      =3  sfr DPL         =   0x82;
+  21      =3  sfr DPH         =   0x83;
+  22      =3  sfr TA          =   0xae;
+  23      =3  sfr DPS         =   0xe3;
+  24      =3  sfr DPL1        =   0xe4;
+  25      =3  sfr DPH1        =   0xe5;
+  26      =3  
+  27      =3  
+  28      =3  //I/O 口特殊功能寄存器
+  29      =3  sfr P0          =   0x80;
+  30      =3  sfr P1          =   0x90;
+  31      =3  sfr P2          =   0xa0;
+  32      =3  sfr P3          =   0xb0;
+  33      =3  sfr P4          =   0xc0;
+  34      =3  sfr P5          =   0xc8;
+  35      =3  sfr P6          =   0xe8;
+  36      =3  sfr P7          =   0xf8;
+  37      =3  sfr P0M0        =   0x94;
+  38      =3  sfr P0M1        =   0x93;
+  39      =3  sfr P1M0        =   0x92;
+  40      =3  sfr P1M1        =   0x91;
+  41      =3  sfr P2M0        =   0x96;
+  42      =3  sfr P2M1        =   0x95;
+  43      =3  sfr P3M0        =   0xb2;
+  44      =3  sfr P3M1        =   0xb1;
+  45      =3  sfr P4M0        =   0xb4;
+C51 COMPILER V9.60.0.0   USART                                                             01/05/2022 14:26:36 PAGE 2   
+
+  46      =3  sfr P4M1        =   0xb3;
+  47      =3  sfr P5M0        =   0xca;
+  48      =3  sfr P5M1        =   0xc9;
+  49      =3  sfr P6M0        =   0xcc;
+  50      =3  sfr P6M1        =   0xcb;
+  51      =3  sfr P7M0        =   0xe2;
+  52      =3  sfr P7M1        =   0xe1;
+  53      =3  
+  54      =3  sbit P00        =   P0^0;
+  55      =3  sbit P01        =   P0^1;
+  56      =3  sbit P02        =   P0^2;
+  57      =3  sbit P03        =   P0^3;
+  58      =3  sbit P04        =   P0^4;
+  59      =3  sbit P05        =   P0^5;
+  60      =3  sbit P06        =   P0^6;
+  61      =3  sbit P07        =   P0^7;
+  62      =3  sbit P10        =   P1^0;
+  63      =3  sbit P11        =   P1^1;
+  64      =3  sbit P12        =   P1^2;
+  65      =3  sbit P13        =   P1^3;
+  66      =3  sbit P14        =   P1^4;
+  67      =3  sbit P15        =   P1^5;
+  68      =3  sbit P16        =   P1^6;
+  69      =3  sbit P17        =   P1^7;
+  70      =3  sbit P20        =   P2^0;
+  71      =3  sbit P21        =   P2^1;
+  72      =3  sbit P22        =   P2^2;
+  73      =3  sbit P23        =   P2^3;
+  74      =3  sbit P24        =   P2^4;
+  75      =3  sbit P25        =   P2^5;
+  76      =3  sbit P26        =   P2^6;
+  77      =3  sbit P27        =   P2^7;
+  78      =3  sbit P30        =   P3^0;
+  79      =3  sbit P31        =   P3^1;
+  80      =3  sbit P32        =   P3^2;
+  81      =3  sbit P33        =   P3^3;
+  82      =3  sbit P34        =   P3^4;
+  83      =3  sbit P35        =   P3^5;
+  84      =3  sbit P36        =   P3^6;
+  85      =3  sbit P37        =   P3^7;
+  86      =3  sbit P40        =   P4^0;
+  87      =3  sbit P41        =   P4^1;
+  88      =3  sbit P42        =   P4^2;
+  89      =3  sbit P43        =   P4^3;
+  90      =3  sbit P44        =   P4^4;
+  91      =3  sbit P45        =   P4^5;
+  92      =3  sbit P46        =   P4^6;
+  93      =3  sbit P47        =   P4^7;
+  94      =3  sbit P50        =   P5^0;
+  95      =3  sbit P51        =   P5^1;
+  96      =3  sbit P52        =   P5^2;
+  97      =3  sbit P53        =   P5^3;
+  98      =3  sbit P54        =   P5^4;
+  99      =3  sbit P55        =   P5^5;
+ 100      =3  sbit P56        =   P5^6;
+ 101      =3  sbit P57        =   P5^7;
+ 102      =3  sbit P60        =   P6^0;
+ 103      =3  sbit P61        =   P6^1;
+ 104      =3  sbit P62        =   P6^2;
+ 105      =3  sbit P63        =   P6^3;
+ 106      =3  sbit P64        =   P6^4;
+ 107      =3  sbit P65        =   P6^5;
+C51 COMPILER V9.60.0.0   USART                                                             01/05/2022 14:26:36 PAGE 3   
+
+ 108      =3  sbit P66        =   P6^6;
+ 109      =3  sbit P67        =   P6^7;
+ 110      =3  sbit P70        =   P7^0;
+ 111      =3  sbit P71        =   P7^1;
+ 112      =3  sbit P72        =   P7^2;
+ 113      =3  sbit P73        =   P7^3;
+ 114      =3  sbit P74        =   P7^4;
+ 115      =3  sbit P75        =   P7^5;
+ 116      =3  sbit P76        =   P7^6;
+ 117      =3  sbit P77        =   P7^7;
+ 118      =3  
+ 119      =3  //如下特殊功能寄存器位于扩展RAM区域
+ 120      =3  //访问这些寄存器,需先将P_SW2的BIT7设置为1,才可正常读写
+ 121      =3  #define P0PU        (*(unsigned char volatile xdata *)0xfe10)
+ 122      =3  #define P1PU        (*(unsigned char volatile xdata *)0xfe11)
+ 123      =3  #define P2PU        (*(unsigned char volatile xdata *)0xfe12)
+ 124      =3  #define P3PU        (*(unsigned char volatile xdata *)0xfe13)
+ 125      =3  #define P4PU        (*(unsigned char volatile xdata *)0xfe14)
+ 126      =3  #define P5PU        (*(unsigned char volatile xdata *)0xfe15)
+ 127      =3  #define P6PU        (*(unsigned char volatile xdata *)0xfe16)
+ 128      =3  #define P7PU        (*(unsigned char volatile xdata *)0xfe17)
+ 129      =3  #define P0NCS       (*(unsigned char volatile xdata *)0xfe18)
+ 130      =3  #define P1NCS       (*(unsigned char volatile xdata *)0xfe19)
+ 131      =3  #define P2NCS       (*(unsigned char volatile xdata *)0xfe1a)
+ 132      =3  #define P3NCS       (*(unsigned char volatile xdata *)0xfe1b)
+ 133      =3  #define P4NCS       (*(unsigned char volatile xdata *)0xfe1c)
+ 134      =3  #define P5NCS       (*(unsigned char volatile xdata *)0xfe1d)
+ 135      =3  #define P6NCS       (*(unsigned char volatile xdata *)0xfe1e)
+ 136      =3  #define P7NCS       (*(unsigned char volatile xdata *)0xfe1f)
+ 137      =3  
+ 138      =3  //系统管理特殊功能寄存器
+ 139      =3  sfr PCON        =   0x87;
+ 140      =3  #define SMOD        0x80
+ 141      =3  #define SMOD0       0x40
+ 142      =3  #define LVDF        0x20
+ 143      =3  #define POF         0x10
+ 144      =3  #define GF1         0x08
+ 145      =3  #define GF0         0x04
+ 146      =3  #define PD          0x02
+ 147      =3  #define IDL         0x01
+ 148      =3  sfr AUXR        =   0x8e;
+ 149      =3  #define T0x12       0x80
+ 150      =3  #define T1x12       0x40
+ 151      =3  #define UART_M0x6   0x20
+ 152      =3  #define T2R         0x10
+ 153      =3  #define T2_CT       0x08
+ 154      =3  #define T2x12       0x04
+ 155      =3  #define EXTRAM      0x02
+ 156      =3  #define S1ST2       0x01
+ 157      =3  sfr AUXR2       =   0x97;
+ 158      =3  #define TXLNRX      0x10
+ 159      =3  sfr BUS_SPEED   =   0xa1;
+ 160      =3  sfr P_SW1       =   0xa2;
+ 161      =3  sfr P_SW2       =   0xba;
+ 162      =3  #define EAXFR       0x80
+ 163      =3  sfr VOCTRL      =   0xbb;
+ 164      =3  sfr RSTCFG      =   0xff;
+ 165      =3  
+ 166      =3  //如下特殊功能寄存器位于扩展RAM区域
+ 167      =3  //访问这些寄存器,需先将P_SW2的BIT7设置为1,才可正常读写
+ 168      =3  #define CKSEL       (*(unsigned char volatile xdata *)0xfe00)
+ 169      =3  #define CLKDIV      (*(unsigned char volatile xdata *)0xfe01)
+C51 COMPILER V9.60.0.0   USART                                                             01/05/2022 14:26:36 PAGE 4   
+
+ 170      =3  #define IRC24MCR    (*(unsigned char volatile xdata *)0xfe02)
+ 171      =3  #define XOSCCR      (*(unsigned char volatile xdata *)0xfe03)
+ 172      =3  #define IRC32KCR    (*(unsigned char volatile xdata *)0xfe04)
+ 173      =3  
+ 174      =3  //中断特殊功能寄存器
+ 175      =3  sfr IE          =   0xa8;
+ 176      =3  sbit EA         =   IE^7;
+ 177      =3  sbit ELVD       =   IE^6;
+ 178      =3  sbit EADC       =   IE^5;
+ 179      =3  sbit ES         =   IE^4;
+ 180      =3  sbit ET1        =   IE^3;
+ 181      =3  sbit EX1        =   IE^2;
+ 182      =3  sbit ET0        =   IE^1;
+ 183      =3  sbit EX0        =   IE^0;
+ 184      =3  sfr IE2         =   0xaf;
+ 185      =3  #define ET4         0x40
+ 186      =3  #define ET3         0x20
+ 187      =3  #define ES4         0x10
+ 188      =3  #define ES3         0x08
+ 189      =3  #define ET2         0x04
+ 190      =3  #define ESPI        0x02
+ 191      =3  #define ES2         0x01
+ 192      =3  sfr IP          =   0xb8;
+ 193      =3  sbit PPCA       =   IP^7;
+ 194      =3  sbit PLVD       =   IP^6;
+ 195      =3  sbit PADC       =   IP^5;
+ 196      =3  sbit PS         =   IP^4;
+ 197      =3  sbit PT1        =   IP^3;
+ 198      =3  sbit PX1        =   IP^2;
+ 199      =3  sbit PT0        =   IP^1;
+ 200      =3  sbit PX0        =   IP^0;
+ 201      =3  sfr IP2         =   0xb5;
+ 202      =3  #define PI2C        0x40
+ 203      =3  #define PCMP        0x20
+ 204      =3  #define PX4         0x10
+ 205      =3  #define PPWMFD      0x08
+ 206      =3  #define PPWM        0x04
+ 207      =3  #define PSPI        0x02
+ 208      =3  #define PS2         0x01
+ 209      =3  sfr IPH         =   0xb7;
+ 210      =3  #define PPCAH       0x80
+ 211      =3  #define PLVDH       0x40
+ 212      =3  #define PADCH       0x20
+ 213      =3  #define PSH         0x10
+ 214      =3  #define PT1H        0x08
+ 215      =3  #define PX1H        0x04
+ 216      =3  #define PT0H        0x02
+ 217      =3  #define PX0H        0x01
+ 218      =3  sfr IP2H        =   0xb6;
+ 219      =3  #define PI2CH       0x40
+ 220      =3  #define PCMPH       0x20
+ 221      =3  #define PX4H        0x10
+ 222      =3  #define PPWMFDH     0x08
+ 223      =3  #define PPWMH       0x04
+ 224      =3  #define PSPIH       0x02
+ 225      =3  #define PS2H        0x01
+ 226      =3  sfr INTCLKO     =   0x8f;
+ 227      =3  #define EX4         0x40
+ 228      =3  #define EX3         0x20
+ 229      =3  #define EX2         0x10
+ 230      =3  #define T2CLKO      0x04
+ 231      =3  #define T1CLKO      0x02
+C51 COMPILER V9.60.0.0   USART                                                             01/05/2022 14:26:36 PAGE 5   
+
+ 232      =3  #define T0CLKO      0x01
+ 233      =3  sfr AUXINTIF    =   0xef;
+ 234      =3  #define INT4IF      0x40
+ 235      =3  #define INT3IF      0x20
+ 236      =3  #define INT2IF      0x10
+ 237      =3  #define T4IF        0x04
+ 238      =3  #define T3IF        0x02
+ 239      =3  #define T2IF        0x01
+ 240      =3  
+ 241      =3  //定时器特殊功能寄存器
+ 242      =3  sfr TCON        =   0x88;
+ 243      =3  sbit TF1        =   TCON^7;
+ 244      =3  sbit TR1        =   TCON^6;
+ 245      =3  sbit TF0        =   TCON^5;
+ 246      =3  sbit TR0        =   TCON^4;
+ 247      =3  sbit IE1        =   TCON^3;
+ 248      =3  sbit IT1        =   TCON^2;
+ 249      =3  sbit IE0        =   TCON^1;
+ 250      =3  sbit IT0        =   TCON^0;
+ 251      =3  sfr TMOD        =   0x89;
+ 252      =3  #define T1_GATE     0x80
+ 253      =3  #define T1_CT       0x40
+ 254      =3  #define T1_M1       0x20
+ 255      =3  #define T1_M0       0x10
+ 256      =3  #define T0_GATE     0x08
+ 257      =3  #define T0_CT       0x04
+ 258      =3  #define T0_M1       0x02
+ 259      =3  #define T0_M0       0x01
+ 260      =3  sfr TL0         =   0x8a;
+ 261      =3  sfr TL1         =   0x8b;
+ 262      =3  sfr TH0         =   0x8c;
+ 263      =3  sfr TH1         =   0x8d;
+ 264      =3  sfr T4T3M       =   0xd1;
+ 265      =3  #define T4R         0x80
+ 266      =3  #define T4_CT       0x40
+ 267      =3  #define T4x12       0x20
+ 268      =3  #define T4CLKO      0x10
+ 269      =3  #define T3R         0x08
+ 270      =3  #define T3_CT       0x04
+ 271      =3  #define T3x12       0x02
+ 272      =3  #define T3CLKO      0x01
+ 273      =3  sfr T4H         =   0xd2;
+ 274      =3  sfr T4L         =   0xd3;
+ 275      =3  sfr T3H         =   0xd4;
+ 276      =3  sfr T3L         =   0xd5;
+ 277      =3  sfr T2H         =   0xd6;
+ 278      =3  sfr T2L         =   0xd7;
+ 279      =3  sfr TH4         =   0xd2;
+ 280      =3  sfr TL4         =   0xd3;
+ 281      =3  sfr TH3         =   0xd4;
+ 282      =3  sfr TL3         =   0xd5;
+ 283      =3  sfr TH2         =   0xd6;
+ 284      =3  sfr TL2         =   0xd7;
+ 285      =3  sfr WKTCL       =   0xaa;
+ 286      =3  sfr WKTCH       =   0xab;
+ 287      =3  #define WKTEN       0x80
+ 288      =3  sfr WDT_CONTR   =   0xc1;
+ 289      =3  #define WDT_FLAG    0x80
+ 290      =3  #define EN_WDT      0x20
+ 291      =3  #define CLR_WDT     0x10
+ 292      =3  #define IDL_WDT     0x08
+ 293      =3  
+C51 COMPILER V9.60.0.0   USART                                                             01/05/2022 14:26:36 PAGE 6   
+
+ 294      =3  //串行口特殊功能寄存器
+ 295      =3  sfr SCON        =   0x98;
+ 296      =3  sbit SM0        =   SCON^7;
+ 297      =3  sbit SM1        =   SCON^6;
+ 298      =3  sbit SM2        =   SCON^5;
+ 299      =3  sbit REN        =   SCON^4;
+ 300      =3  sbit TB8        =   SCON^3;
+ 301      =3  sbit RB8        =   SCON^2;
+ 302      =3  sbit TI         =   SCON^1;
+ 303      =3  sbit RI         =   SCON^0;
+ 304      =3  sfr SBUF        =   0x99;
+ 305      =3  sfr S2CON       =   0x9a;
+ 306      =3  #define S2SM0       0x80
+ 307      =3  #define S2ST4       0x40
+ 308      =3  #define S2SM2       0x20
+ 309      =3  #define S2REN       0x10
+ 310      =3  #define S2TB8       0x08
+ 311      =3  #define S2RB8       0x04
+ 312      =3  #define S2TI        0x02
+ 313      =3  #define S2RI        0x01
+ 314      =3  sfr S2BUF       =   0x9b;
+ 315      =3  sfr S3CON       =   0xac;
+ 316      =3  #define S3SM0       0x80
+ 317      =3  #define S3ST4       0x40
+ 318      =3  #define S3SM2       0x20
+ 319      =3  #define S3REN       0x10
+ 320      =3  #define S3TB8       0x08
+ 321      =3  #define S3RB8       0x04
+ 322      =3  #define S3TI        0x02
+ 323      =3  #define S3RI        0x01
+ 324      =3  sfr S3BUF       =   0xad;
+ 325      =3  sfr S4CON       =   0x84;
+ 326      =3  #define S4SM0       0x80
+ 327      =3  #define S4ST4       0x40
+ 328      =3  #define S4SM2       0x20
+ 329      =3  #define S4REN       0x10
+ 330      =3  #define S4TB8       0x08
+ 331      =3  #define S4RB8       0x04
+ 332      =3  #define S4TI        0x02
+ 333      =3  #define S4RI        0x01
+ 334      =3  sfr S4BUF       =   0x85;
+ 335      =3  sfr SADDR       =   0xa9;
+ 336      =3  sfr SADEN       =   0xb9;
+ 337      =3  
+ 338      =3  //ADC 特殊功能寄存器
+ 339      =3  sfr ADC_CONTR   =   0xbc;
+ 340      =3  #define ADC_POWER   0x80
+ 341      =3  #define ADC_START   0x40
+ 342      =3  #define ADC_FLAG    0x20
+ 343      =3  sfr ADC_RES     =   0xbd;
+ 344      =3  sfr ADC_RESL    =   0xbe;
+ 345      =3  sfr ADCCFG      =   0xde;
+ 346      =3  #define ADC_RESFMT  0x20
+ 347      =3  
+ 348      =3  //SPI 特殊功能寄存器
+ 349      =3  sfr SPSTAT      =   0xcd;
+ 350      =3  #define SPIF        0x80
+ 351      =3  #define WCOL        0x40
+ 352      =3  sfr SPCTL       =   0xce;
+ 353      =3  #define SSIG        0x80
+ 354      =3  #define SPEN        0x40
+ 355      =3  #define DORD        0x20
+C51 COMPILER V9.60.0.0   USART                                                             01/05/2022 14:26:36 PAGE 7   
+
+ 356      =3  #define MSTR        0x10
+ 357      =3  #define CPOL        0x08
+ 358      =3  #define CPHA        0x04
+ 359      =3  sfr SPDAT       =   0xcf;
+ 360      =3  
+ 361      =3  //IAP/ISP 特殊功能寄存器
+ 362      =3  sfr IAP_DATA    =   0xc2;
+ 363      =3  sfr IAP_ADDRH   =   0xc3;
+ 364      =3  sfr IAP_ADDRL   =   0xc4;
+ 365      =3  sfr IAP_CMD     =   0xc5;
+ 366      =3  #define IAP_IDL     0x00
+ 367      =3  #define IAP_READ    0x01
+ 368      =3  #define IAP_WRITE   0x02
+ 369      =3  #define IAP_ERASE   0x03
+ 370      =3  sfr IAP_TRIG    =   0xc6;
+ 371      =3  sfr IAP_CONTR   =   0xc7;
+ 372      =3  #define IAPEN       0x80
+ 373      =3  #define SWBS        0x40
+ 374      =3  #define SWRST       0x20
+ 375      =3  #define CMD_FAIL    0x10
+ 376      =3  sfr ISP_DATA    =   0xc2;
+ 377      =3  sfr ISP_ADDRH   =   0xc3;
+ 378      =3  sfr ISP_ADDRL   =   0xc4;
+ 379      =3  sfr ISP_CMD     =   0xc5;
+ 380      =3  sfr ISP_TRIG    =   0xc6;
+ 381      =3  sfr ISP_CONTR   =   0xc7;
+ 382      =3  
+ 383      =3  //比较器特殊功能寄存器
+ 384      =3  sfr CMPCR1      =   0xe6;
+ 385      =3  #define CMPEN       0x80
+ 386      =3  #define CMPIF       0x40
+ 387      =3  #define PIE         0x20
+ 388      =3  #define NIE         0x10
+ 389      =3  #define PIS         0x08
+ 390      =3  #define NIS         0x04
+ 391      =3  #define CMPOE       0x02
+ 392      =3  #define CMPRES      0x01
+ 393      =3  sfr CMPCR2      =   0xe7;
+ 394      =3  #define INVCMPO     0x80
+ 395      =3  #define DISFLT      0x40
+ 396      =3  
+ 397      =3  //PCA/PWM 特殊功能寄存器
+ 398      =3  sfr CCON        =   0xd8;
+ 399      =3  sbit CF         =   CCON^7;
+ 400      =3  sbit CR         =   CCON^6;
+ 401      =3  sbit CCF3       =   CCON^3;
+ 402      =3  sbit CCF2       =   CCON^2;
+ 403      =3  sbit CCF1       =   CCON^1;
+ 404      =3  sbit CCF0       =   CCON^0;
+ 405      =3  sfr CMOD        =   0xd9;
+ 406      =3  #define CIDL        0x80
+ 407      =3  #define ECF         0x01
+ 408      =3  sfr CL          =   0xe9;
+ 409      =3  sfr CH          =   0xf9;
+ 410      =3  sfr CCAPM0      =   0xda;
+ 411      =3  #define ECOM0       0x40
+ 412      =3  #define CCAPP0      0x20
+ 413      =3  #define CCAPN0      0x10
+ 414      =3  #define MAT0        0x08
+ 415      =3  #define TOG0        0x04
+ 416      =3  #define PWM0        0x02
+ 417      =3  #define ECCF0       0x01
+C51 COMPILER V9.60.0.0   USART                                                             01/05/2022 14:26:36 PAGE 8   
+
+ 418      =3  sfr CCAPM1      =   0xdb;
+ 419      =3  #define ECOM1       0x40
+ 420      =3  #define CCAPP1      0x20
+ 421      =3  #define CCAPN1      0x10
+ 422      =3  #define MAT1        0x08
+ 423      =3  #define TOG1        0x04
+ 424      =3  #define PWM1        0x02
+ 425      =3  #define ECCF1       0x01
+ 426      =3  sfr CCAPM2      =   0xdc;
+ 427      =3  #define ECOM2       0x40
+ 428      =3  #define CCAPP2      0x20
+ 429      =3  #define CCAPN2      0x10
+ 430      =3  #define MAT2        0x08
+ 431      =3  #define TOG2        0x04
+ 432      =3  #define PWM2        0x02
+ 433      =3  #define ECCF2       0x01
+ 434      =3  sfr CCAPM3      =   0xdd;
+ 435      =3  #define ECOM3       0x40
+ 436      =3  #define CCAPP3      0x20
+ 437      =3  #define CCAPN3      0x10
+ 438      =3  #define MAT3        0x08
+ 439      =3  #define TOG3        0x04
+ 440      =3  #define PWM3        0x02
+ 441      =3  #define ECCF3       0x01
+ 442      =3  sfr CCAP0L      =   0xea;
+ 443      =3  sfr CCAP1L      =   0xeb;
+ 444      =3  sfr CCAP2L      =   0xec;
+ 445      =3  sfr CCAP3L      =   0xed;
+ 446      =3  sfr CCAP0H      =   0xfa;
+ 447      =3  sfr CCAP1H      =   0xfb;
+ 448      =3  sfr CCAP2H      =   0xfc;
+ 449      =3  sfr CCAP3H      =   0xfd;
+ 450      =3  sfr PCA_PWM0    =   0xf2;
+ 451      =3  sfr PCA_PWM1    =   0xf3;
+ 452      =3  sfr PCA_PWM2    =   0xf4;
+ 453      =3  sfr PCA_PWM3    =   0xf5;
+ 454      =3  
+ 455      =3  //增强型PWM波形发生器特殊功能寄存器
+ 456      =3  sfr PWMCFG      =   0xf1;
+ 457      =3  #define CBIF        0x80
+ 458      =3  #define ETADC       0x40
+ 459      =3  sfr PWMIF       =   0xf6;
+ 460      =3  #define C7IF        0x80
+ 461      =3  #define C6IF        0x40
+ 462      =3  #define C5IF        0x20
+ 463      =3  #define C4IF        0x10
+ 464      =3  #define C3IF        0x08
+ 465      =3  #define C2IF        0x04
+ 466      =3  #define C1IF        0x02
+ 467      =3  #define C0IF        0x01
+ 468      =3  sfr PWMFDCR     =   0xf7;
+ 469      =3  #define INVCMP      0x80
+ 470      =3  #define INVIO       0x40
+ 471      =3  #define ENFD        0x20
+ 472      =3  #define FLTFLIO     0x10
+ 473      =3  #define EFDI        0x08
+ 474      =3  #define FDCMP       0x04
+ 475      =3  #define FDIO        0x02
+ 476      =3  #define FDIF        0x01
+ 477      =3  sfr PWMCR       =   0xfe;
+ 478      =3  #define ENPWM       0x80
+ 479      =3  #define ECBI        0x40
+C51 COMPILER V9.60.0.0   USART                                                             01/05/2022 14:26:36 PAGE 9   
+
+ 480      =3  
+ 481      =3  //如下特殊功能寄存器位于扩展RAM区域
+ 482      =3  //访问这些寄存器,需先将P_SW2的BIT7设置为1,才可正常读写
+ 483      =3  #define PWMC        (*(unsigned int  volatile xdata *)0xfff0)
+ 484      =3  #define PWMCH       (*(unsigned char volatile xdata *)0xfff0)
+ 485      =3  #define PWMCL       (*(unsigned char volatile xdata *)0xfff1)
+ 486      =3  #define PWMCKS      (*(unsigned char volatile xdata *)0xfff2)
+ 487      =3  #define TADCP       (*(unsigned char volatile xdata *)0xfff3)
+ 488      =3  #define TADCPH      (*(unsigned char volatile xdata *)0xfff3)
+ 489      =3  #define TADCPL      (*(unsigned char volatile xdata *)0xfff4)
+ 490      =3  #define PWM0T1      (*(unsigned int  volatile xdata *)0xff00)
+ 491      =3  #define PWM0T1H     (*(unsigned char volatile xdata *)0xff00)
+ 492      =3  #define PWM0T1L     (*(unsigned char volatile xdata *)0xff01)
+ 493      =3  #define PWM0T2      (*(unsigned int  volatile xdata *)0xff02)
+ 494      =3  #define PWM0T2H     (*(unsigned char volatile xdata *)0xff02)
+ 495      =3  #define PWM0T2L     (*(unsigned char volatile xdata *)0xff03)
+ 496      =3  #define PWM0CR      (*(unsigned char volatile xdata *)0xff04)
+ 497      =3  #define PWM0HLD     (*(unsigned char volatile xdata *)0xff05)
+ 498      =3  #define PWM1T1      (*(unsigned int  volatile xdata *)0xff10)
+ 499      =3  #define PWM1T1H     (*(unsigned char volatile xdata *)0xff10)
+ 500      =3  #define PWM1T1L     (*(unsigned char volatile xdata *)0xff11)
+ 501      =3  #define PWM1T2      (*(unsigned int  volatile xdata *)0xff12)
+ 502      =3  #define PWM1T2H     (*(unsigned char volatile xdata *)0xff12)
+ 503      =3  #define PWM1T2L     (*(unsigned char volatile xdata *)0xff13)
+ 504      =3  #define PWM1CR      (*(unsigned char volatile xdata *)0xff14)
+ 505      =3  #define PWM1HLD     (*(unsigned char volatile xdata *)0xff15)
+ 506      =3  #define PWM2T1      (*(unsigned int  volatile xdata *)0xff20)
+ 507      =3  #define PWM2T1H     (*(unsigned char volatile xdata *)0xff20)
+ 508      =3  #define PWM2T1L     (*(unsigned char volatile xdata *)0xff21)
+ 509      =3  #define PWM2T2      (*(unsigned int  volatile xdata *)0xff22)
+ 510      =3  #define PWM2T2H     (*(unsigned char volatile xdata *)0xff22)
+ 511      =3  #define PWM2T2L     (*(unsigned char volatile xdata *)0xff23)
+ 512      =3  #define PWM2CR      (*(unsigned char volatile xdata *)0xff24)
+ 513      =3  #define PWM2HLD     (*(unsigned char volatile xdata *)0xff25)
+ 514      =3  #define PWM3T1      (*(unsigned int  volatile xdata *)0xff30)
+ 515      =3  #define PWM3T1H     (*(unsigned char volatile xdata *)0xff30)
+ 516      =3  #define PWM3T1L     (*(unsigned char volatile xdata *)0xff31)
+ 517      =3  #define PWM3T2      (*(unsigned int  volatile xdata *)0xff32)
+ 518      =3  #define PWM3T2H     (*(unsigned char volatile xdata *)0xff32)
+ 519      =3  #define PWM3T2L     (*(unsigned char volatile xdata *)0xff33)
+ 520      =3  #define PWM3CR      (*(unsigned char volatile xdata *)0xff34)
+ 521      =3  #define PWM3HLD     (*(unsigned char volatile xdata *)0xff35)
+ 522      =3  #define PWM4T1      (*(unsigned int  volatile xdata *)0xff40)
+ 523      =3  #define PWM4T1H     (*(unsigned char volatile xdata *)0xff40)
+ 524      =3  #define PWM4T1L     (*(unsigned char volatile xdata *)0xff41)
+ 525      =3  #define PWM4T2      (*(unsigned int  volatile xdata *)0xff42)
+ 526      =3  #define PWM4T2H     (*(unsigned char volatile xdata *)0xff42)
+ 527      =3  #define PWM4T2L     (*(unsigned char volatile xdata *)0xff43)
+ 528      =3  #define PWM4CR      (*(unsigned char volatile xdata *)0xff44)
+ 529      =3  #define PWM4HLD     (*(unsigned char volatile xdata *)0xff45)
+ 530      =3  #define PWM5T1      (*(unsigned int  volatile xdata *)0xff50)
+ 531      =3  #define PWM5T1H     (*(unsigned char volatile xdata *)0xff50)
+ 532      =3  #define PWM5T1L     (*(unsigned char volatile xdata *)0xff51)
+ 533      =3  #define PWM5T2      (*(unsigned int  volatile xdata *)0xff52)
+ 534      =3  #define PWM5T2H     (*(unsigned char volatile xdata *)0xff52)
+ 535      =3  #define PWM5T2L     (*(unsigned char volatile xdata *)0xff53)
+ 536      =3  #define PWM5CR      (*(unsigned char volatile xdata *)0xff54)
+ 537      =3  #define PWM5HLD     (*(unsigned char volatile xdata *)0xff55)
+ 538      =3  #define PWM6T1      (*(unsigned int  volatile xdata *)0xff60)
+ 539      =3  #define PWM6T1H     (*(unsigned char volatile xdata *)0xff60)
+ 540      =3  #define PWM6T1L     (*(unsigned char volatile xdata *)0xff61)
+ 541      =3  #define PWM6T2      (*(unsigned int  volatile xdata *)0xff62)
+C51 COMPILER V9.60.0.0   USART                                                             01/05/2022 14:26:36 PAGE 10  
+
+ 542      =3  #define PWM6T2H     (*(unsigned char volatile xdata *)0xff62)
+ 543      =3  #define PWM6T2L     (*(unsigned char volatile xdata *)0xff63)
+ 544      =3  #define PWM6CR      (*(unsigned char volatile xdata *)0xff64)
+ 545      =3  #define PWM6HLD     (*(unsigned char volatile xdata *)0xff65)
+ 546      =3  #define PWM7T1      (*(unsigned int  volatile xdata *)0xff70)
+ 547      =3  #define PWM7T1H     (*(unsigned char volatile xdata *)0xff70)
+ 548      =3  #define PWM7T1L     (*(unsigned char volatile xdata *)0xff71)
+ 549      =3  #define PWM7T2      (*(unsigned int  volatile xdata *)0xff72)
+ 550      =3  #define PWM7T2H     (*(unsigned char volatile xdata *)0xff72)
+ 551      =3  #define PWM7T2L     (*(unsigned char volatile xdata *)0xff73)
+ 552      =3  #define PWM7CR      (*(unsigned char volatile xdata *)0xff74)
+ 553      =3  #define PWM7HLD     (*(unsigned char volatile xdata *)0xff75)
+ 554      =3  
+ 555      =3  //I2C特殊功能寄存器
+ 556      =3  //如下特殊功能寄存器位于扩展RAM区域
+ 557      =3  //访问这些寄存器,需先将P_SW2的BIT7设置为1,才可正常读写
+ 558      =3  #define I2CCFG      (*(unsigned char volatile xdata *)0xfe80)
+ 559      =3  #define ENI2C       0x80
+ 560      =3  #define MSSL        0x40
+ 561      =3  #define I2CMSCR     (*(unsigned char volatile xdata *)0xfe81)
+ 562      =3  #define EMSI        0x80
+ 563      =3  #define I2CMSST     (*(unsigned char volatile xdata *)0xfe82)
+ 564      =3  #define MSBUSY      0x80
+ 565      =3  #define MSIF        0x40
+ 566      =3  #define MSACKI      0x02
+ 567      =3  #define MSACKO      0x01
+ 568      =3  #define I2CSLCR     (*(unsigned char volatile xdata *)0xfe83)
+ 569      =3  #define ESTAI       0x40
+ 570      =3  #define ERXI        0x20
+ 571      =3  #define ETXI        0x10
+ 572      =3  #define ESTOI       0x08
+ 573      =3  #define SLRST       0x01
+ 574      =3  #define I2CSLST     (*(unsigned char volatile xdata *)0xfe84)
+ 575      =3  #define SLBUSY      0x80
+ 576      =3  #define STAIF       0x40
+ 577      =3  #define RXIF        0x20
+ 578      =3  #define TXIF        0x10
+ 579      =3  #define STOIF       0x08
+ 580      =3  #define TXING       0x04
+ 581      =3  #define SLACKI      0x02
+ 582      =3  #define SLACKO      0x01
+ 583      =3  #define I2CSLADR    (*(unsigned char volatile xdata *)0xfe85)
+ 584      =3  #define I2CTXD      (*(unsigned char volatile xdata *)0xfe86)
+ 585      =3  #define I2CRXD      (*(unsigned char volatile xdata *)0xfe87)
+ 586      =3  
+ 587      =3  /////////////////////////////////////////////////
+ 588      =3  
+ 589      =3  #endif
+ 590      =3  
+   5      =2  #include <stdio.h>
+   1      =3  /*--------------------------------------------------------------------------
+   2      =3  STDIO.H
+   3      =3  
+   4      =3  Prototypes for standard I/O functions.
+   5      =3  Copyright (c) 1988-2002 Keil Elektronik GmbH and Keil Software, Inc.
+   6      =3  All rights reserved.
+   7      =3  --------------------------------------------------------------------------*/
+   8      =3  
+   9      =3  #ifndef __STDIO_H__
+  10      =3  #define __STDIO_H__
+  11      =3  
+  12      =3  #ifndef EOF
+C51 COMPILER V9.60.0.0   USART                                                             01/05/2022 14:26:36 PAGE 11  
+
+  13      =3   #define EOF -1
+  14      =3  #endif
+  15      =3  
+  16      =3  #ifndef NULL
+  17      =3   #define NULL ((void *) 0)
+  18      =3  #endif
+  19      =3  
+  20      =3  #ifndef _SIZE_T
+  21      =3   #define _SIZE_T
+  22      =3   typedef unsigned int size_t;
+  23      =3  #endif
+  24      =3  
+  25      =3  #pragma SAVE
+  26      =3  #pragma REGPARMS
+  27      =3  extern char _getkey (void);
+  28      =3  extern char getchar (void);
+  29      =3  extern char ungetchar (char);
+  30      =3  extern char putchar (char);
+  31      =3  extern int printf   (const char *, ...);
+  32      =3  extern int sprintf  (char *, const char *, ...);
+  33      =3  extern int vprintf  (const char *, char *);
+  34      =3  extern int vsprintf (char *, const char *, char *);
+  35      =3  extern char *gets (char *, int n);
+  36      =3  extern int scanf (const char *, ...);
+  37      =3  extern int sscanf (char *, const char *, ...);
+  38      =3  extern int puts (const char *);
+  39      =3  
+  40      =3  #pragma RESTORE
+  41      =3  
+  42      =3  #endif
+  43      =3  
+   6      =2  #include <intrins.h>
+   1      =3  /*--------------------------------------------------------------------------
+   2      =3  INTRINS.H
+   3      =3  
+   4      =3  Intrinsic functions for C51.
+   5      =3  Copyright (c) 1988-2010 Keil Elektronik GmbH and ARM Germany GmbH
+   6      =3  All rights reserved.
+   7      =3  --------------------------------------------------------------------------*/
+   8      =3  
+   9      =3  #ifndef __INTRINS_H__
+  10      =3  #define __INTRINS_H__
+  11      =3  
+  12      =3  #pragma SAVE
+  13      =3  
+  14      =3  #if defined (__CX2__)
+           =3 #pragma FUNCTIONS(STATIC)
+           =3 /* intrinsic functions are reentrant, but need static attribute */
+           =3 #endif
+  18      =3  
+  19      =3  extern void          _nop_     (void);
+  20      =3  extern bit           _testbit_ (bit);
+  21      =3  extern unsigned char _cror_    (unsigned char, unsigned char);
+  22      =3  extern unsigned int  _iror_    (unsigned int,  unsigned char);
+  23      =3  extern unsigned long _lror_    (unsigned long, unsigned char);
+  24      =3  extern unsigned char _crol_    (unsigned char, unsigned char);
+  25      =3  extern unsigned int  _irol_    (unsigned int,  unsigned char);
+  26      =3  extern unsigned long _lrol_    (unsigned long, unsigned char);
+  27      =3  extern unsigned char _chkfloat_(float);
+  28      =3  #if defined (__CX2__)
+           =3 extern int           abs       (int);
+           =3 extern void          _illop_   (void);
+C51 COMPILER V9.60.0.0   USART                                                             01/05/2022 14:26:36 PAGE 12  
+
+           =3 #endif
+  32      =3  #if !defined (__CX2__)
+  33      =3  extern void          _push_    (unsigned char _sfr);
+  34      =3  extern void          _pop_     (unsigned char _sfr);
+  35      =3  #endif
+  36      =3  
+  37      =3  #pragma RESTORE
+  38      =3  
+  39      =3  #endif
+  40      =3  
+   7      =2  #include <string.h>
+   1      =3  /*--------------------------------------------------------------------------
+   2      =3  STRING.H
+   3      =3  
+   4      =3  String functions.
+   5      =3  Copyright (c) 1988-2008 Keil Elektronik GmbH and Keil Software, Inc.
+   6      =3  Copyright (c) 2008-2016 ARM Germany GmbH
+   7      =3  All rights reserved.
+   8      =3  --------------------------------------------------------------------------*/
+   9      =3  
+  10      =3  #ifndef __STRING_H__
+  11      =3  #define __STRING_H__
+  12      =3  
+  13      =3  #ifndef _SIZE_T
+           =3  #define _SIZE_T
+           =3  typedef unsigned int size_t;
+           =3 #endif
+  17      =3  
+  18      =3  #ifndef NULL
+           =3  #define NULL ((void *)0)
+           =3 #endif
+  21      =3  
+  22      =3  #pragma SAVE
+  23      =3  #pragma REGPARMS
+  24      =3  extern char  *strcat  (char *s1, const char *s2);
+  25      =3  extern char  *strncat (char *s1, const char *s2, size_t n);
+  26      =3  
+  27      =3  extern char   strcmp  (const char *s1, const char *s2);
+  28      =3  extern char   strncmp (const char *s1, const char *s2, size_t n);
+  29      =3  
+  30      =3  extern char  *strcpy  (char *s1, const char *s2);
+  31      =3  extern char  *strncpy (char *s1, const char *s2, size_t n);
+  32      =3  
+  33      =3  extern size_t strlen  (const char *);
+  34      =3  
+  35      =3  extern char  *strchr  (const char *s, char c);
+  36      =3  extern int    strpos  (const char *s, char c);
+  37      =3  extern char  *strrchr (const char *s, char c);
+  38      =3  extern int    strrpos (const char *s, char c);
+  39      =3  
+  40      =3  extern size_t strspn  (const char *s, const char *set);
+  41      =3  extern size_t strcspn (const char *s, const char *set);
+  42      =3  extern char  *strpbrk (const char *s, const char *set);
+  43      =3  extern char  *strrpbrk(const char *s, const char *set);
+  44      =3  extern char  *strstr  (const char *s, const char *sub);
+  45      =3  extern char  *strtok  (char *str, const char *set);
+  46      =3  
+  47      =3  extern char   memcmp  (const void *s1, const void *s2, size_t n);
+  48      =3  extern void  *memcpy  (void *s1, const void *s2, size_t n);
+  49      =3  extern void  *memchr  (const void *s, char val, size_t n);
+  50      =3  extern void  *memccpy (void *s1, const void *s2, char val, size_t n);
+  51      =3  extern void  *memmove (void *s1, const void *s2, size_t n);
+C51 COMPILER V9.60.0.0   USART                                                             01/05/2022 14:26:36 PAGE 13  
+
+  52      =3  extern void  *memset  (void *s, char val, size_t n);
+  53      =3  #pragma RESTORE
+  54      =3  
+  55      =3  #endif
+   8      =2  #include <stdlib.h>
+   1      =3  /*--------------------------------------------------------------------------
+   2      =3  STDLIB.H
+   3      =3  
+   4      =3  Standard functions.
+   5      =3  Copyright (c) 1988-2008 Keil Elektronik GmbH and Keil Software, Inc.
+   6      =3  Copyright (c) 2008-2016 ARM Germany GmbH
+   7      =3  All rights reserved.
+   8      =3  --------------------------------------------------------------------------*/
+   9      =3  
+  10      =3  #ifndef __STDLIB_H__
+  11      =3  #define __STDLIB_H__
+  12      =3  
+  13      =3  #ifndef _SIZE_T
+           =3  #define _SIZE_T
+           =3  typedef unsigned int size_t;
+           =3 #endif
+  17      =3  
+  18      =3  #ifndef NULL
+           =3  #define NULL ((void *)0)
+           =3 #endif
+  21      =3  
+  22      =3  #ifndef _WCHAR_T_DEFINED_
+  23      =3  #define _WCHAR_T_DEFINED_
+  24      =3  typedef char wchar_t;
+  25      =3  #endif
+  26      =3  
+  27      =3  #if defined (__CX2__)
+           =3 #ifndef _DIV_T_DEFINED
+           =3 typedef struct _div_t {
+           =3         int quot;
+           =3         int rem;
+           =3 } div_t;
+           =3 typedef struct _ldiv_t {
+           =3         long quot;
+           =3         long rem;
+           =3 } ldiv_t;
+           =3 #define _DIV_T_DEFINED
+           =3 #endif // _DIV_T_DEFINED
+           =3 #endif // __CX2__
+  40      =3  
+  41      =3  #ifndef RAND_MAX
+  42      =3   #define RAND_MAX  32767u
+  43      =3  #endif
+  44      =3  
+  45      =3  #if defined (__CX2__)
+           =3 #pragma SAVE
+           =3 #pragma FUNCTIONS(STATIC)
+           =3 /* intrinsic functions are reentrant, but need static attribute */
+           =3 extern int    abs  (int   val);
+           =3 #pragma RESTORE
+           =3 #endif // __CX2__
+  52      =3  
+  53      =3  #pragma SAVE
+  54      =3  #pragma REGPARMS
+  55      =3  
+  56      =3  extern char   cabs (char  val);
+  57      =3  #if !defined (__CX2__)
+C51 COMPILER V9.60.0.0   USART                                                             01/05/2022 14:26:36 PAGE 14  
+
+  58      =3  extern int    abs  (int   val);
+  59      =3  #endif // __CX2__
+  60      =3  extern long   labs (long  val);
+  61      =3  
+  62      =3  extern float  atof (const char *s1);
+  63      =3  extern long   atol (const char *s1);
+  64      =3  extern int    atoi (const char *s1);
+  65      =3  extern int    rand (void);
+  66      =3  extern void   srand (unsigned int seed);
+  67      =3  
+  68      =3  #ifdef _DIV_T_DEFINED
+           =3 extern div_t  __div (int numer, int denom);
+           =3 #define div(numer,denom)  __div((numer),(denom));
+           =3 extern ldiv_t ldiv (long numer, long denom);
+           =3 #endif // _DIV_T_DEFINED
+  73      =3  
+  74      =3  extern float         strtod  (const char *nptr, char **endptr);
+  75      =3  extern long          strtol  (const char *nptr, char **endptr, unsigned char base);
+  76      =3  extern unsigned long strtoul (const char *nptr, char **endptr, unsigned char base);
+  77      =3  
+  78      =3  #define _MALLOC_MEM_    xdata
+  79      =3  
+  80      =3  extern void init_mempool          (void _MALLOC_MEM_ *p, size_t size);
+  81      =3  extern void _MALLOC_MEM_ *malloc  (size_t size);
+  82      =3  extern void free                  (void _MALLOC_MEM_ *p);
+  83      =3  extern void _MALLOC_MEM_ *realloc (void _MALLOC_MEM_ *p, size_t size);
+  84      =3  extern void _MALLOC_MEM_ *calloc  (size_t nmemb, size_t size);
+  85      =3  
+  86      =3  #if defined (__CX2__)
+           =3 extern void abort(void);
+           =3 #endif // __CX2__
+  89      =3  
+  90      =3  #pragma RESTORE
+  91      =3  
+  92      =3  #endif // __STDLIB_H__
+   9      =2  #include <string.h>
+   1      =3  /*--------------------------------------------------------------------------
+   2      =3  STRING.H
+   3      =3  
+   4      =3  String functions.
+   5      =3  Copyright (c) 1988-2008 Keil Elektronik GmbH and Keil Software, Inc.
+   6      =3  Copyright (c) 2008-2016 ARM Germany GmbH
+   7      =3  All rights reserved.
+   8      =3  --------------------------------------------------------------------------*/
+   9      =3  
+  10      =3  #ifndef __STRING_H__
+           =3 #define __STRING_H__
+           =3 
+           =3 #ifndef _SIZE_T
+           =3  #define _SIZE_T
+           =3  typedef unsigned int size_t;
+           =3 #endif
+           =3 
+           =3 #ifndef NULL
+           =3  #define NULL ((void *)0)
+           =3 #endif
+           =3 
+           =3 #pragma SAVE
+           =3 #pragma REGPARMS
+           =3 extern char  *strcat  (char *s1, const char *s2);
+           =3 extern char  *strncat (char *s1, const char *s2, size_t n);
+           =3 
+C51 COMPILER V9.60.0.0   USART                                                             01/05/2022 14:26:36 PAGE 15  
+
+           =3 extern char   strcmp  (const char *s1, const char *s2);
+           =3 extern char   strncmp (const char *s1, const char *s2, size_t n);
+           =3 
+           =3 extern char  *strcpy  (char *s1, const char *s2);
+           =3 extern char  *strncpy (char *s1, const char *s2, size_t n);
+           =3 
+           =3 extern size_t strlen  (const char *);
+           =3 
+           =3 extern char  *strchr  (const char *s, char c);
+           =3 extern int    strpos  (const char *s, char c);
+           =3 extern char  *strrchr (const char *s, char c);
+           =3 extern int    strrpos (const char *s, char c);
+           =3 
+           =3 extern size_t strspn  (const char *s, const char *set);
+           =3 extern size_t strcspn (const char *s, const char *set);
+           =3 extern char  *strpbrk (const char *s, const char *set);
+           =3 extern char  *strrpbrk(const char *s, const char *set);
+           =3 extern char  *strstr  (const char *s, const char *sub);
+           =3 extern char  *strtok  (char *str, const char *set);
+           =3 
+           =3 extern char   memcmp  (const void *s1, const void *s2, size_t n);
+           =3 extern void  *memcpy  (void *s1, const void *s2, size_t n);
+           =3 extern void  *memchr  (const void *s, char val, size_t n);
+           =3 extern void  *memccpy (void *s1, const void *s2, char val, size_t n);
+           =3 extern void  *memmove (void *s1, const void *s2, size_t n);
+           =3 extern void  *memset  (void *s, char val, size_t n);
+           =3 #pragma RESTORE
+           =3 
+           =3 #endif
+  10      =2  #include <absacc.h> //可直接操作内存地址
+   1      =3  /*--------------------------------------------------------------------------
+   2      =3  ABSACC.H
+   3      =3  
+   4      =3  Direct access to 8051, extended 8051 and NXP 8051MX memory areas.
+   5      =3  Copyright (c) 1988-2010 Keil Elektronik GmbH and ARM Germany GmbH
+   6      =3  All rights reserved.
+   7      =3  --------------------------------------------------------------------------*/
+   8      =3  
+   9      =3  #ifndef __ABSACC_H__
+  10      =3  #define __ABSACC_H__
+  11      =3  
+  12      =3  #define CBYTE ((unsigned char volatile code  *) 0)
+  13      =3  #define DBYTE ((unsigned char volatile data  *) 0)
+  14      =3  #if !defined (__CX2__)
+  15      =3  #define PBYTE ((unsigned char volatile pdata *) 0)
+  16      =3  #endif
+  17      =3  #define XBYTE ((unsigned char volatile xdata *) 0)
+  18      =3  
+  19      =3  #define CWORD ((unsigned int volatile code  *) 0)
+  20      =3  #define DWORD ((unsigned int volatile data  *) 0)
+  21      =3  #if !defined (__CX2__)
+  22      =3  #define PWORD ((unsigned int volatile pdata *) 0)
+  23      =3  #endif
+  24      =3  #define XWORD ((unsigned int volatile xdata *) 0)
+  25      =3  
+  26      =3  
+  27      =3  #if defined (__CX51__) || defined (__CX2__)
+           =3 #define FVAR(object, addr)   (*((object volatile far *) (addr)))
+           =3 #define FARRAY(object, base) ((object volatile far *) (base))
+           =3 #define FCVAR(object, addr)   (*((object const far *) (addr)))
+           =3 #define FCARRAY(object, base) ((object const far *) (base))
+           =3 #else
+C51 COMPILER V9.60.0.0   USART                                                             01/05/2022 14:26:36 PAGE 16  
+
+  33      =3  #define FVAR(object, addr)    (*((object volatile far *) ((addr)+0x10000L)))
+  34      =3  #define FCVAR(object, addr)   (*((object const far *) ((addr)+0x810000L)))
+  35      =3  #define FARRAY(object, base)  ((object volatile far *) ((base)+0x10000L))
+  36      =3  #define FCARRAY(object, base) ((object const far *) ((base)+0x810000L))
+  37      =3  #endif
+  38      =3  
+  39      =3  #if defined (__CX2__)
+           =3 #define HBYTE ((unsigned char volatile huge *)  0)
+           =3 #define HWORD ((unsigned int volatile huge *)  0)
+           =3 #define HVAR(object, addr)   (*((object volatile huge *) (addr)))
+           =3 #define HARRAY(object, base) ((object volatile huge *) (base))
+           =3 #endif
+  45      =3  
+  46      =3  #define CVAR(object, addr)   (*((object volatile code *) (addr)))
+  47      =3  #define CARRAY(object, base) ((object volatile code *) (base))
+  48      =3  #define DVAR(object, addr)   (*((object volatile data *) (addr)))
+  49      =3  #define DARRAY(object, base) ((object volatile data *) (base))
+  50      =3  #define XVAR(object, addr)   (*((object volatile xdata *) (addr)))
+  51      =3  #define XARRAY(object, base) ((object volatile xdata *) (base))
+  52      =3  
+  53      =3  #endif
+  11      =2  #include <stdarg.h>
+   1      =3  /*--------------------------------------------------------------------------
+   2      =3  STDARG.H
+   3      =3  
+   4      =3  Prototypes for variable argument lists.
+   5      =3  Copyright (c) 1988-2008 Keil Elektronik GmbH and Keil Software, Inc.
+   6      =3  Copyright (c) 2008-2016 ARM Germany GmbH
+   7      =3  All rights reserved.
+   8      =3  --------------------------------------------------------------------------*/
+   9      =3  
+  10      =3  #ifndef __STDARG_H__
+  11      =3  #define __STDARG_H__
+  12      =3  
+  13      =3  #ifndef __CX2__
+  14      =3  #ifndef NULL
+           =3  #define NULL ((void *)0)
+           =3 #endif
+  17      =3  #endif
+  18      =3  
+  19      =3  #ifndef _VA_LIST_DEFINED
+  20      =3  typedef char *va_list;
+  21      =3  #define _VA_LIST_DEFINED
+  22      =3  #endif
+  23      =3  
+  24      =3  #if defined __CX2__ && __CX2__ >= 558
+           =3   #define va_start(ap,v) ap = _va_start_ (&v, sizeof(v))
+           =3   extern void *_va_start_ (void *ap, int sz);   // intrinsic
+           =3 #else
+  28      =3    #define va_start(ap,v) ap = (va_list)&v + sizeof(v)
+  29      =3  #endif
+  30      =3  
+  31      =3  #define va_arg(ap,t) (((t *)ap)++[0])
+  32      =3  #define va_end(ap)   (ap = (va_list)0)
+  33      =3  
+  34      =3  #endif
+  12      =2  
+  13      =2  
+  14      =2  /**********************布尔变量定义**********************/
+  15      =2  #define true  1
+  16      =2  #define false 0
+  17      =2  /**********************布尔变量定义**********************/
+C51 COMPILER V9.60.0.0   USART                                                             01/05/2022 14:26:36 PAGE 17  
+
+  18      =2  
+  19      =2  /***********************************API配置接口***********************************/
+  20      =2  /*使用外部晶振*/
+  21      =2  #define EXTERNAL_CRYSTAL 0 
+  22      =2  /*调试是否启用串口*/
+  23      =2  #define USE_PRINTF_DEBUG 0 
+  24      =2  /*调试选项*/
+  25      =2  #define DEBUGGING    0
+  26      =2  /*迪文屏幕使用CRC校验*/
+  27      =2  #define USING_CRC 1
+  28      =2  /*定义WIFI模块相关引脚*/
+  29      =2  #define WIFI_RESET              P23
+  30      =2  #define WIFI_RELOAD             P20
+  31      =2  
+  32      =2  #define COUNTMAX     65536U
+  33      =2  
+  34      =2  /*消除编译器未使用变量警告*/
+  35      =2  #define UNUSED_VARIABLE(x)      ((void)(x))
+  36      =2  #define UNUSED_PARAMETER(x) UNUSED_VARIABLE(x)
+  37      =2  
+  38      =2  //(1/FOSC)*count =times(us)->count = time*FOSC/1000(ms)
+  39      =2  #define FOSC         27000000UL//11059200UL
+  40      =2  /*1ms(时钟频率越高，所能产生的时间越小)*/  
+  41      =2  #define TIMES        10U  
+  42      =2  /*定时器模式选择*/
+  43      =2  #define TIMER_MODE   12U
+  44      =2  /*定时器分频系数，默认为一分频*/  
+  45      =2  #define TIME_DIV     1U  
+  46      =2  #define T12_MODE (TIMES * FOSC / 1000 / 12 / TIME_DIV) 
+  47      =2  #define T1_MODE  (TIMES * FOSC/ 1000 / TIME_DIV)
+  48      =2  #define TIMERS_OVERFLOW (COUNTMAX * 1000 * TIMER_MODE * TIME_DIV) / FOSC
+  49      =2  
+  50      =2  #define OPEN_GLOBAL_OUTAGE()  (EA = 1 << 0)
+  51      =2  #define CLOSE_GLOBAL_OUTAGE() (EA = 0 << 0)
+  52      =2  /*判断延时数是否超出硬件允许范围*/
+  53      =2  #if(TIMES > TIMERS_OVERFLOW)
+           =2 #error The timer cannot generate the current duration!
+           =2 #endif
+  56      =2  /***********************************API配置接口***********************************/
+  57      =2  
+  58      =2  /***********************************常用的数据类型***********************************/
+  59      =2  typedef unsigned char  uint8_t;
+  60      =2  typedef signed char    int8_t;
+  61      =2  typedef unsigned short int  uint16_t;
+  62      =2  typedef unsigned long  uint32_t;
+  63      =2  typedef signed long    int32_t;
+  64      =2  typedef volatile       __IO;   
+  65      =2  
+  66      =2  /***********************************常用的数据类型***********************************/
+  67      =2  
+  68      =2  /***********************************系统上电参数***********************************/
+  69      =2  #define DEFAULT_SYSTEM_PARAMETER  "\xFF\xFF\xFF\xFF\x02\x01\x00\x84\x50"
+  70      =2  
+  71      =2  /***********************************系统上电参数***********************************/
+  72      =2  
+  73      =2  /***********************************结构体的妙用 ***********************************/
+  74      =2  /*获得结构体(TYPE)的变量成员(MEMBER)在此结构体中的偏移量*/ 
+  75      =2  #define offsetof(TYPE, MEMBER) ((size_t) &((TYPE *)0)->MEMBER)
+  76      =2  /*根据"结构体(type)变量"中的"域成员变量(member)的指针(ptr)"来获取指向整个结构体
+             -变量的指针*/ 
+  77      =2  #define container_of(ptr, type, member) ({ \
+  78      =2          const typeof( ((type *)0)->member ) *__mptr = (ptr); \
+C51 COMPILER V9.60.0.0   USART                                                             01/05/2022 14:26:36 PAGE 18  
+
+  79      =2          (type *)( (char *)__mptr - offsetof(type,member) );}) 
+  80      =2  /***********************************结构体的妙用 ***********************************/
+  81      =2  
+  82      =2  
+  83      =2  extern const uint8_t g_TimerNumbers;
+  84      =2  /***********************************函数声明***********************************/
+  85      =2  void  Gpio_Init(void);
+  86      =2  /***********************************函数声明***********************************/
+  87      =2  #endif
+   5      =1           
+   6      =1  
+   7      =1  //以下宏定义用于改变串口的输出引脚
+   8      =1  //串口1默认是p30 p31  以下定义的是串口1的切换
+   9      =1  // P_SW1 = 0xa2   P_SW2 = 0xba
+  10      =1  
+  11      =1  
+  12      =1  #define USART1_USE_P30_P31         P_SW1 = 0x00
+  13      =1  #define USART1_USE_P36_P37         P_SW1 = 0x40
+  14      =1  #define USART1_USE_P16_P17         P_SW1 = 0x80
+  15      =1  #define USART1_USE_P43_P44         P_SW1 = 0xC0
+  16      =1  
+  17      =1  //串口2的默认输出引脚为       P10 P11
+  18      =1  
+  19      =1  #define USART2_USE_P10_P11         P_SW2 = 0x00
+  20      =1  #define USART2_USE_P40_P42         P_SW2 = 0x01
+  21      =1  
+  22      =1  //串口3的默认输出引脚是 P00 P01
+  23      =1  
+  24      =1  #define USART3_USE_P00_P01         P_SW2 = 0x00
+  25      =1  #define USART3_USE_P50_P51         P_SW2 = 0x02
+  26      =1  
+  27      =1  //串口4的默认输出引脚为 P02 P03
+  28      =1  #define USART3_USE_P02_P03         P_SW1 = 0x00
+  29      =1  #define USART3_USE_P52_P53         P_SW1 = 0x04
+  30      =1  
+  31      =1  
+  32      =1  //*******************外加485芯片的定义*******************//
+  33      =1  #define USART3_EN                       P36
+  34      =1  //******************************************************//
+  35      =1  
+  36      =1  
+  37      =1  
+  38      =1  #define USEING_PRINTF 0
+  39      =1  
+  40      =1  /***********************************常用通讯波特率***********************************/
+  41      =1  #define BAUD_921600  921600UL
+  42      =1  #define BAUD_115200  115200UL
+  43      =1  #define BAUD_57600       57600UL
+  44      =1  #define BAUD_56000       56000UL
+  45      =1  #define BAUD_38400       38400UL
+  46      =1  #define BAUD_19200   19200UL
+  47      =1  #define BAUD_14400   14400UL
+  48      =1  #define BAUD_9600    9600UL
+  49      =1  #define BAUD_4800    4800UL
+  50      =1  #define BAUD_2400    2400UL
+  51      =1  #define BAUD_1200    1200UL
+  52      =1  /***********************************常用通讯波特率***********************************/
+  53      =1  
+  54      =1  #define UART_DIV 4
+  55      =1  #define UART_BYTE_SENDOVERTIME (uint16_t)5000U
+  56      =1  
+  57      =1  #define BRT_1T(BAUD)  (COUNTMAX-FOSC/BAUD/UART_DIV) //1T
+C51 COMPILER V9.60.0.0   USART                                                             01/05/2022 14:26:36 PAGE 19  
+
+  58      =1  #define BRT_12T(BAUD) (COUNTMAX-FOSC/BAUD/UART_DIV/12) //12T
+  59      =1  
+  60      =1  
+  61      =1  typedef enum
+  62      =1  {
+  63      =1          UART1 = 0x01,
+  64      =1          UART2,
+  65      =1          UART3,
+  66      =1          UART4
+  67      =1  }Uart_TypsDef;
+  68      =1  
+  69      =1  
+  70      =1  typedef struct //串口中断优先级
+  71      =1  {
+  72      =1          uint8_t Register_IP;
+  73      =1          uint8_t Register_IPH;
+  74      =1  }UART_NVIC_TypeDef;
+  75      =1  
+  76      =1  typedef struct
+  77      =1  {
+  78      =1          Uart_TypsDef Instance;
+  79      =1          uint8_t Register_SCON;
+  80      =1          uint8_t Uart_Mode;
+  81      =1          uint16_t Uart_Count;
+  82      =1          uint8_t RunUart_Enable:1;
+  83      =1          uint8_t Interrupt_Enable;
+  84      =1          uint8_t Register_AUXR;
+  85      =1          uint8_t Uartx_busy:1; //串口接收占用标志
+  86      =1          UART_NVIC_TypeDef Uart_NVIC;
+  87      =1  }Uart_HandleTypeDef;
+  88      =1  
+  89      =1  
+  90      =1  void Uart_Base_MspInit(Uart_HandleTypeDef *uart_baseHandle);
+  91      =1  extern void Uart1_Init(void);
+  92      =1  extern void Uart2_Init(void);
+  93      =1  extern void Uart3_Init(void);
+  94      =1  extern void Uart4_Init(void);
+  95      =1  
+  96      =1  
+  97      =1  void Uartx_SendStr(Uart_HandleTypeDef *const Uart, uint8_t *p, uint8_t length, uint16_t time_out);
+  98      =1  void Busy_Await(Uart_HandleTypeDef *const Uart, uint16_t overtime);
+  99      =1  void Uartx_Printf(Uart_HandleTypeDef *const uart, const char *format, ...);
+ 100      =1  
+ 101      =1  extern Uart_HandleTypeDef Uart1; //串口1句柄
+ 102      =1  extern Uart_HandleTypeDef Uart2; //串口2句柄
+ 103      =1  extern Uart_HandleTypeDef Uart3; //串口3句柄
+ 104      =1  extern Uart_HandleTypeDef Uart4; //串口4句柄
+ 105      =1  
+ 106      =1  #endif
+   2          
+   3          
+   4          /*********************************************************
+   5          * 函数名：
+   6          * 功能：
+   7          * 参数：
+   8          * 作者：
+   9          * note：
+  10                          同时使用多个串口的时候会出现数据传输错误的情况 建议在使用该板子与其他
+  11                          通讯模块建立通讯的时候使用1对1的建立连接的模式
+  12          
+  13                          解决了多串口同时数据传输错误问题 //2021/5/31
+  14          
+C51 COMPILER V9.60.0.0   USART                                                             01/05/2022 14:26:36 PAGE 20  
+
+  15                          在切换串口的引脚输入时，建议将RX端初始化的时候给个0值 TX引脚手动给个1值
+  16                          （基于STC单片机的特性）
+  17          
+  18          **********************************************************/
+  19          Uart_HandleTypeDef Uart1; //串口1句柄
+  20          Uart_HandleTypeDef Uart2; //串口2句柄
+  21          Uart_HandleTypeDef Uart3; //串口3句柄
+  22          Uart_HandleTypeDef Uart4; //串口4句柄
+  23          
+  24          /*********************************************************
+  25          * 函数名：void Uart_1Init(void)
+  26          * 功能：  串口1的初始化
+  27          * 参数：
+  28          * 作者：  LHC
+  29          * note：
+  30          *               使用的是定时器1作为波特率发生器,LAN口用
+  31          **********************************************************/
+  32          void Uart1_Init(void) //串口1选择定时器1作为波特率发生器
+  33          {
+  34   1          Uart1.Instance = UART1;
+  35   1          Uart1.Register_SCON = 0x50; //模式1，8位数据，可变波特率
+  36   1          Uart1.Uart_Mode = 0x00; //定时器模式0，16bit自动重载
+  37   1          Uart1.Uart_Count = BRT_1T(BAUD_115200);
+  38   1          Uart1.RunUart_Enable = true;
+  39   1          Uart1.Interrupt_Enable = true;
+  40   1          Uart1.Register_AUXR = 0x40; //定时器1，1T模式
+  41   1          Uart1.Register_AUXR &= 0xFE; //波特率发生器选用定时器1，最好按照要求来
+  42   1      
+  43   1          Uart1.Uart_NVIC.Register_IP = 0xEF; //PS=0,PSH=0,串口1中断优先级为第0级，最低级
+  44   1          Uart1.Uart_NVIC.Register_IPH = 0xEF;
+  45   1      
+  46   1          Uart_Base_MspInit(&Uart1);
+  47   1      }
+  48          
+  49          
+  50          /*********************************************************
+  51          * 函数名：void Uart1_ISR() interrupt 4 using 2
+  52          * 功能：  串口1的定时中断服务函数
+  53          * 参数：
+  54          * 作者：  LHC
+  55          * note：
+  56          *               使用的是定时器2作为波特率发生器,485口用
+  57          **********************************************************/
+  58          void Uart1_ISR() interrupt 4 using 2    //串口1的定时中断服务函数
+  59          {       
+  60   1          if(TI) //发送中断标志
+  61   1              {               
+  62   2                      TI = 0;
+  63   2                      Uart1.Uartx_busy =false; //发送完成，清除占用
+  64   2          }
+  65   1              
+  66   1              if(RI) //接收中断标志
+  67   1              {               
+  68   2              RI = 0;
+  69   2          }
+  70   1      }
+  71          
+  72          /*********************************************************
+  73          * 函数名：void Uart_2Init(void)
+  74          * 功能：  串口2的初始化
+  75          * 参数：
+  76          * 作者：  LHC
+C51 COMPILER V9.60.0.0   USART                                                             01/05/2022 14:26:36 PAGE 21  
+
+  77          * note：
+  78          *               使用的是定时器2作为波特率发生器,485口用
+  79          **********************************************************/
+  80          void Uart2_Init(void) //串口2选择定时器2作为波特率发生器
+  81          {
+  82   1          Uart2.Instance = UART2;
+  83   1          Uart2.Register_SCON = 0x10; //模式1，8位数据，可变波特率，开启串口2接收
+  84   1          Uart2.Uart_Mode = 0x00; //定时器模式0，16bit自动重载
+  85   1          Uart2.Uart_Count = BRT_1T(BAUD_115200);
+  86   1          Uart2.RunUart_Enable = true;
+  87   1          Uart2.Interrupt_Enable = 0x01;
+  88   1          Uart2.Register_AUXR = 0x14; //开启定时器2，1T模式
+  89   1          Uart2.Uart_NVIC.Register_IP = 0x01; //PS2=1,PS2H=0,串口2中断优先级为第1级
+  90   1          Uart2.Uart_NVIC.Register_IPH = 0xFE;
+  91   1      
+  92   1          Uart_Base_MspInit(&Uart2);
+  93   1      }
+  94          
+  95          
+  96          /*********************************************************
+  97          * 函数名：void Uart2_ISR() interrupt 8 using 2
+  98          * 功能：  串口2中断函数
+  99          * 参数：
+ 100          * 作者：  LHC
+ 101          * note：
+ 102          *               使用的是定时器2作为波特率发生器,4G口用
+ 103          **********************************************************/
+ 104          void Uart2_ISR() interrupt 8 using 2
+ 105          {
+ 106   1          if (S2CON & S2TI) //发送中断
+ 107   1              {  
+ 108   2              S2CON &= ~S2TI;
+ 109   2                      Uart2.Uartx_busy = false; //发送完成，清除占用
+ 110   2                      
+ 111   2          }
+ 112   1              
+ 113   1          if (S2CON & S2RI) //接收中断
+ 114   1              {  
+ 115   2              S2CON &= ~S2RI;
+ 116   2                      
+ 117   2              }
+ 118   1      }
+ 119          
+ 120          /**********************************公用函数************************/
+ 121          
+ 122          /*********************************************************
+ 123          * 函数名：Uart_Base_MspInit(Uart_HandleTypeDef *uart_baseHandle)
+ 124          * 功能：  所有串口底层初始化函数
+ 125          * 参数：  Uart_HandleTypeDef *uart_baseHandle串口句柄
+ 126          * 作者：  LHC
+ 127          * note：
+ 128          *               注意正确给出串口句柄
+ 129          **********************************************************/
+ 130          void Uart_Base_MspInit(Uart_HandleTypeDef *const uart_baseHandle)
+ 131          {
+ 132   1          if(uart_baseHandle->Instance == UART1)
+ 133   1          {
+ 134   2              SCON = uart_baseHandle->Register_SCON;
+ 135   2              TMOD |= uart_baseHandle->Uart_Mode;
+ 136   2              TL1 =  uart_baseHandle->Uart_Count;
+ 137   2              TH1 =  uart_baseHandle->Uart_Count >> 8;
+ 138   2              TR1 =  uart_baseHandle->RunUart_Enable;
+C51 COMPILER V9.60.0.0   USART                                                             01/05/2022 14:26:36 PAGE 22  
+
+ 139   2              AUXR |= uart_baseHandle->Register_AUXR;
+ 140   2              IP &= uart_baseHandle->Uart_NVIC.Register_IP;
+ 141   2              IPH &= uart_baseHandle->Uart_NVIC.Register_IPH;
+ 142   2              #if USEING_PRINTF //如果使用printf
+                      TI = 1; //放到printf重定向
+                      #else
+ 145   2              ES = uart_baseHandle->Interrupt_Enable; //串口1中断允许位
+ 146   2              #endif
+ 147   2          }
+ 148   1          else if(uart_baseHandle->Instance == UART2)
+ 149   1          {
+ 150   2              S2CON = uart_baseHandle->Register_SCON;
+ 151   2              TL2 =  uart_baseHandle->Uart_Count;
+ 152   2              TH2 =  uart_baseHandle->Uart_Count >> 8;
+ 153   2              AUXR |= uart_baseHandle->Register_AUXR;
+ 154   2              IE2 |= uart_baseHandle->Interrupt_Enable;       //串口2中断允许位
+ 155   2              IP2 &= uart_baseHandle->Uart_NVIC.Register_IP;
+ 156   2              IP2H &= uart_baseHandle->Uart_NVIC.Register_IPH;
+ 157   2          }
+ 158   1          else if(uart_baseHandle->Instance == UART3)
+ 159   1          {
+ 160   2              S3CON = uart_baseHandle->Register_SCON;
+ 161   2              T4T3M = uart_baseHandle->Uart_Mode;
+ 162   2              T3L =  uart_baseHandle->Uart_Count;
+ 163   2              T3H =  uart_baseHandle->Uart_Count >> 8;
+ 164   2              IE2 |= uart_baseHandle->Interrupt_Enable;       //串口3中断允许位
+ 165   2          }
+ 166   1          else if(uart_baseHandle->Instance == UART4)
+ 167   1          {
+ 168   2              S4CON = uart_baseHandle->Register_SCON;
+ 169   2              T4T3M |= uart_baseHandle->Uart_Mode; //此处串口3和串口4共用
+ 170   2              T4L =  uart_baseHandle->Uart_Count;
+ 171   2              T4H =  uart_baseHandle->Uart_Count >> 8;
+ 172   2              IE2 |= uart_baseHandle->Interrupt_Enable;       //串口4中断允许位
+ 173   2          }
+ 174   1      }
+ 175          
+ 176          /*********************************************************
+ 177          * 函数名：static void Busy_Await(Uart_HandleTypeDef * const Uart, uint16_t overtime)
+ 178          * 功能：  字节发送超时等待机制
+ 179          * 参数：  Uart_HandleTypeDef * const Uart;uint16_t overtime
+ 180          * 作者：  LHC
+ 181          * note：
+ 182          *               
+ 183          **********************************************************/
+ 184           void Busy_Await(Uart_HandleTypeDef * const Uart, uint16_t overtime)
+ 185           {
+ 186   1      
+ 187   1           while(Uart->Uartx_busy)  //等待发送完成：Uart->Uartx_busy清零
+ 188   1           {
+ 189   2               if(!(overtime--))
+ 190   2                   break;
+ 191   2           }
+ 192   1              
+ 193   1              Uart->Uartx_busy = true; //发送数据，把相应串口置忙
+ 194   1       }
+ 195          
+ 196          /*********************************************************
+ 197          * 函数名：Uartx_SendStr(Uart_HandleTypeDef *const Uart,uint8_t *p,uint8_t length)
+ 198          * 功能：  所有串口字符串发送函数
+ 199          * 参数：  Uart_HandleTypeDef *const Uart,uint8_t *p;uint8_t length
+ 200          * 作者：  LHC
+C51 COMPILER V9.60.0.0   USART                                                             01/05/2022 14:26:36 PAGE 23  
+
+ 201          * note：
+ 202          *               
+ 203          **********************************************************/
+ 204           void Uartx_SendStr(Uart_HandleTypeDef *const Uart, uint8_t *p, uint8_t length, uint16_t time_out){ 
+ 205   1              
+ 206   1              while(length--){
+ 207   2                      Busy_Await(&(*Uart), time_out); //等待当前字节发送完成
+ 208   2                      switch(Uart->Instance){
+ 209   3                              case UART1: SBUF  = *p++; break;
+ 210   3                              case UART2:     S2BUF = *p++; break;
+ 211   3                              case UART3: S3BUF = *p++; break; 
+ 212   3                              case UART4: S4BUF = *p++; break;
+ 213   3                              default   : break;
+ 214   3                      }
+ 215   2              }
+ 216   1       }
+ 217          
+ 218          /*********************************************************
+ 219          * 函数名：char putchar(char str)
+ 220          * 功能：  putchar重定向,被printf调用
+ 221          * 参数：  char str，发送的字符串
+ 222          * 作者：  LHC
+ 223          * note：
+ 224          *                 使用printf函数将会占用1K 左右FLASH
+ 225          **********************************************************/
+ 226          void Uartx_Printf(Uart_HandleTypeDef *const uart, const char *format, ...)
+ 227          {
+ 228   1                uint16_t length = 0;
+ 229   1            char UARTx_Buffer[256] = { 0 };
+ 230   1                va_list ap;
+ 231   1      
+ 232   1                va_start(ap, format);
+ 233   1            /*使用可变参数的字符串打印,类似sprintf*/
+ 234   1                length = vsprintf(UARTx_Buffer, format, ap); 
+ 235   1                va_end(ap);
+ 236   1      
+ 237   1            Uartx_SendStr(uart, (uint8_t *)&UARTx_Buffer[0], length, UART_BYTE_SENDOVERTIME);
+ 238   1      }
+ 239          
+ 240          /**********************************公用函数************************/
+C51 COMPILER V9.60.0.0   USART                                                             01/05/2022 14:26:36 PAGE 24  
+
+ASSEMBLY LISTING OF GENERATED OBJECT CODE
+
+
+             ; FUNCTION Com0021 (BEGIN)
+0000         L?0034:
+0000         L?0035:
+0000 900000      R     MOV     DPTR,#p
+0003 E0                MOVX    A,@DPTR
+0004 FB                MOV     R3,A
+0005 A3                INC     DPTR
+0006 E4                CLR     A
+0007 75F001            MOV     B,#01H
+000A 120000      E     LCALL   ?C?ILDIX
+000D A9F0              MOV     R1,B
+000F FA                MOV     R2,A
+0010 020000      E     LJMP    ?C?CLDPTR
+0013         L?0036:
+0013 A3                INC     DPTR
+0014 F0                MOVX    @DPTR,A
+0015 E4                CLR     A
+0016 A3                INC     DPTR
+0017 F0                MOVX    @DPTR,A
+0018 A3                INC     DPTR
+0019 74FF              MOV     A,#0FFH
+001B F0                MOVX    @DPTR,A
+001C A3                INC     DPTR
+001D 74C6              MOV     A,#0C6H
+001F F0                MOVX    @DPTR,A
+0020 A3                INC     DPTR
+0021 E0                MOVX    A,@DPTR
+0022 4401              ORL     A,#01H
+0024 F0                MOVX    @DPTR,A
+0025 A3                INC     DPTR
+0026 7401              MOV     A,#01H
+0028 F0                MOVX    @DPTR,A
+0029 A3                INC     DPTR
+002A 22                RET     
+002B         L?0037:
+002B         L?0038:
+002B 900003            MOV     DPTR,#03H
+002E 120000      E     LCALL   ?C?ILDOPTR
+0031 AEF0              MOV     R6,B
+0033 22                RET     
+0034         L?0039:
+0034 EB                MOV     A,R3
+0035         L?0040:
+0035 F0                MOVX    @DPTR,A
+0036 A3                INC     DPTR
+0037 EA                MOV     A,R2
+0038 F0                MOVX    @DPTR,A
+0039 A3                INC     DPTR
+003A E9                MOV     A,R1
+003B F0                MOVX    @DPTR,A
+003C 22                RET     
+003D         L?0041:
+003D 900000      R     MOV     DPTR,#Uart
+0040         L?0042:
+0040 E0                MOVX    A,@DPTR
+0041 FB                MOV     R3,A
+0042 A3                INC     DPTR
+0043 E0                MOVX    A,@DPTR
+0044 FA                MOV     R2,A
+C51 COMPILER V9.60.0.0   USART                                                             01/05/2022 14:26:36 PAGE 25  
+
+0045 A3                INC     DPTR
+0046 E0                MOVX    A,@DPTR
+0047 F9                MOV     R1,A
+0048 22                RET     
+0049         L?0043:
+0049         L?0044:
+0049 900001            MOV     DPTR,#01H
+004C 020000      E     LJMP    ?C?CLDOPTR
+004F         L?0045:
+004F         L?0046:
+004F 900002            MOV     DPTR,#02H
+0052 020000      E     LJMP    ?C?CLDOPTR
+0055         L?0047:
+0055         L?0048:
+0055 900006            MOV     DPTR,#06H
+0058 020000      E     LJMP    ?C?CLDOPTR
+             ; FUNCTION Com0021 (END)
+
+             ; FUNCTION Uart1_Init (BEGIN)
+                                           ; SOURCE LINE # 32
+                                           ; SOURCE LINE # 33
+                                           ; SOURCE LINE # 34
+0000 900000      R     MOV     DPTR,#Uart1
+0003 7401              MOV     A,#01H
+0005 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 35
+0006 7450              MOV     A,#050H
+                                           ; SOURCE LINE # 36
+                                           ; SOURCE LINE # 37
+                                           ; SOURCE LINE # 38
+                                           ; SOURCE LINE # 39
+                                           ; SOURCE LINE # 40
+0008 120000      R     LCALL   L?0036
+000B 7440              MOV     A,#040H
+000D F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 41
+000E 54FE              ANL     A,#0FEH
+0010 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 43
+0011 900000      R     MOV     DPTR,#Uart1+09H
+0014 74EF              MOV     A,#0EFH
+0016 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 44
+0017 A3                INC     DPTR
+0018 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 46
+0019 7B01              MOV     R3,#01H
+001B 7A00        R     MOV     R2,#HIGH Uart1
+001D 7900        R     MOV     R1,#LOW Uart1
+001F 020000      R     LJMP    _Uart_Base_MspInit
+             ; FUNCTION Uart1_Init (END)
+
+             ; FUNCTION Uart1_ISR (BEGIN)
+0000 C0E0              PUSH    ACC
+0002 C083              PUSH    DPH
+0004 C082              PUSH    DPL
+                                           ; SOURCE LINE # 58
+                                           ; SOURCE LINE # 60
+0006 309909            JNB     TI,?C0002
+                                           ; SOURCE LINE # 61
+                                           ; SOURCE LINE # 62
+0009 C299              CLR     TI
+C51 COMPILER V9.60.0.0   USART                                                             01/05/2022 14:26:36 PAGE 26  
+
+                                           ; SOURCE LINE # 63
+000B 900000      R     MOV     DPTR,#Uart1+08H
+000E E0                MOVX    A,@DPTR
+000F 54FE              ANL     A,#0FEH
+0011 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 64
+0012         ?C0002:
+                                           ; SOURCE LINE # 66
+0012 309802            JNB     RI,?C0004
+                                           ; SOURCE LINE # 67
+                                           ; SOURCE LINE # 68
+0015 C298              CLR     RI
+                                           ; SOURCE LINE # 69
+                                           ; SOURCE LINE # 70
+0017         ?C0004:
+0017 D082              POP     DPL
+0019 D083              POP     DPH
+001B D0E0              POP     ACC
+001D 32                RETI    
+             ; FUNCTION Uart1_ISR (END)
+
+             ; FUNCTION Uart2_Init (BEGIN)
+                                           ; SOURCE LINE # 80
+                                           ; SOURCE LINE # 81
+                                           ; SOURCE LINE # 82
+0000 900000      R     MOV     DPTR,#Uart2
+0003 7402              MOV     A,#02H
+0005 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 83
+0006 7410              MOV     A,#010H
+                                           ; SOURCE LINE # 84
+                                           ; SOURCE LINE # 85
+                                           ; SOURCE LINE # 86
+                                           ; SOURCE LINE # 87
+                                           ; SOURCE LINE # 88
+0008 120000      R     LCALL   L?0036
+000B 7414              MOV     A,#014H
+000D F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 89
+000E 900000      R     MOV     DPTR,#Uart2+09H
+0011 7401              MOV     A,#01H
+0013 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 90
+0014 A3                INC     DPTR
+0015 74FE              MOV     A,#0FEH
+0017 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 92
+0018 7B01              MOV     R3,#01H
+001A 7A00        R     MOV     R2,#HIGH Uart2
+001C 7900        R     MOV     R1,#LOW Uart2
+001E 020000      R     LJMP    _Uart_Base_MspInit
+             ; FUNCTION Uart2_Init (END)
+
+             ; FUNCTION Uart2_ISR (BEGIN)
+0000 C0E0              PUSH    ACC
+0002 C083              PUSH    DPH
+0004 C082              PUSH    DPL
+                                           ; SOURCE LINE # 104
+                                           ; SOURCE LINE # 106
+0006 E59A              MOV     A,S2CON
+0008 30E10A            JNB     ACC.1,?C0006
+                                           ; SOURCE LINE # 107
+C51 COMPILER V9.60.0.0   USART                                                             01/05/2022 14:26:36 PAGE 27  
+
+                                           ; SOURCE LINE # 108
+000B 539AFD            ANL     S2CON,#0FDH
+                                           ; SOURCE LINE # 109
+000E 900000      R     MOV     DPTR,#Uart2+08H
+0011 E0                MOVX    A,@DPTR
+0012 54FE              ANL     A,#0FEH
+0014 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 111
+0015         ?C0006:
+                                           ; SOURCE LINE # 113
+0015 E59A              MOV     A,S2CON
+0017 30E003            JNB     ACC.0,?C0008
+                                           ; SOURCE LINE # 114
+                                           ; SOURCE LINE # 115
+001A 539AFE            ANL     S2CON,#0FEH
+                                           ; SOURCE LINE # 117
+                                           ; SOURCE LINE # 118
+001D         ?C0008:
+001D D082              POP     DPL
+001F D083              POP     DPH
+0021 D0E0              POP     ACC
+0023 32                RETI    
+             ; FUNCTION Uart2_ISR (END)
+
+             ; FUNCTION _Uart_Base_MspInit (BEGIN)
+                                           ; SOURCE LINE # 130
+;---- Variable 'uart_baseHandle' assigned to Register 'R1/R2/R3' ----
+                                           ; SOURCE LINE # 131
+                                           ; SOURCE LINE # 132
+0000 120000      E     LCALL   ?C?CLDPTR
+0003 FD                MOV     R5,A
+0004 6401              XRL     A,#01H
+0006 703B              JNZ     ?C0009
+                                           ; SOURCE LINE # 133
+                                           ; SOURCE LINE # 134
+0008 120000      R     LCALL   L?0043
+000B F598              MOV     SCON,A
+                                           ; SOURCE LINE # 135
+000D 120000      R     LCALL   L?0045
+0010 4289              ORL     TMOD,A
+                                           ; SOURCE LINE # 136
+0012 120000      R     LCALL   L?0037
+0015 F58B              MOV     TL1,A
+                                           ; SOURCE LINE # 137
+0017 EE                MOV     A,R6
+0018 F58D              MOV     TH1,A
+                                           ; SOURCE LINE # 138
+001A 900005            MOV     DPTR,#05H
+001D 120000      E     LCALL   ?C?CLDOPTR
+0020 13                RRC     A
+0021 928E              MOV     TR1,C
+                                           ; SOURCE LINE # 139
+0023 900007            MOV     DPTR,#07H
+0026 120000      E     LCALL   ?C?CLDOPTR
+0029 428E              ORL     AUXR,A
+                                           ; SOURCE LINE # 140
+002B 900009            MOV     DPTR,#09H
+002E 120000      E     LCALL   ?C?CLDOPTR
+0031 52B8              ANL     IP,A
+                                           ; SOURCE LINE # 141
+0033 90000A            MOV     DPTR,#0AH
+0036 120000      E     LCALL   ?C?CLDOPTR
+C51 COMPILER V9.60.0.0   USART                                                             01/05/2022 14:26:36 PAGE 28  
+
+0039 52B7              ANL     IPH,A
+                                           ; SOURCE LINE # 145
+003B 120000      R     LCALL   L?0047
+003E 24FF              ADD     A,#0FFH
+0040 92AC              MOV     ES,C
+                                           ; SOURCE LINE # 147
+0042 22                RET     
+0043         ?C0009:
+                                           ; SOURCE LINE # 148
+0043 7C00              MOV     R4,#00H
+0045 ED                MOV     A,R5
+0046 6402              XRL     A,#02H
+0048 702B              JNZ     ?C0011
+                                           ; SOURCE LINE # 149
+                                           ; SOURCE LINE # 150
+004A 120000      R     LCALL   L?0043
+004D F59A              MOV     S2CON,A
+                                           ; SOURCE LINE # 151
+004F 120000      R     LCALL   L?0037
+0052 F5D7              MOV     TL2,A
+                                           ; SOURCE LINE # 152
+0054 EE                MOV     A,R6
+0055 F5D6              MOV     TH2,A
+                                           ; SOURCE LINE # 153
+0057 900007            MOV     DPTR,#07H
+005A 120000      E     LCALL   ?C?CLDOPTR
+005D 428E              ORL     AUXR,A
+                                           ; SOURCE LINE # 154
+005F 120000      R     LCALL   L?0047
+0062 42AF              ORL     IE2,A
+                                           ; SOURCE LINE # 155
+0064 900009            MOV     DPTR,#09H
+0067 120000      E     LCALL   ?C?CLDOPTR
+006A 52B5              ANL     IP2,A
+                                           ; SOURCE LINE # 156
+006C 90000A            MOV     DPTR,#0AH
+006F 120000      E     LCALL   ?C?CLDOPTR
+0072 52B6              ANL     IP2H,A
+                                           ; SOURCE LINE # 157
+0074 22                RET     
+0075         ?C0011:
+                                           ; SOURCE LINE # 158
+0075 ED                MOV     A,R5
+0076 6403              XRL     A,#03H
+0078 4C                ORL     A,R4
+0079 7014              JNZ     ?C0013
+                                           ; SOURCE LINE # 159
+                                           ; SOURCE LINE # 160
+007B 120000      R     LCALL   L?0044
+007E F5AC              MOV     S3CON,A
+                                           ; SOURCE LINE # 161
+0080 120000      R     LCALL   L?0045
+0083 F5D1              MOV     T4T3M,A
+                                           ; SOURCE LINE # 162
+0085 120000      R     LCALL   L?0038
+0088 F5D5              MOV     T3L,A
+                                           ; SOURCE LINE # 163
+008A EE                MOV     A,R6
+008B F5D4              MOV     T3H,A
+                                           ; SOURCE LINE # 164
+                                           ; SOURCE LINE # 165
+008D 8019              SJMP    ?C0032
+C51 COMPILER V9.60.0.0   USART                                                             01/05/2022 14:26:36 PAGE 29  
+
+008F         ?C0013:
+                                           ; SOURCE LINE # 166
+008F 120000      E     LCALL   ?C?CLDPTR
+0092 6404              XRL     A,#04H
+0094 7017              JNZ     ?C0016
+                                           ; SOURCE LINE # 167
+                                           ; SOURCE LINE # 168
+0096 120000      R     LCALL   L?0044
+0099 F584              MOV     S4CON,A
+                                           ; SOURCE LINE # 169
+009B 120000      R     LCALL   L?0046
+009E 42D1              ORL     T4T3M,A
+                                           ; SOURCE LINE # 170
+00A0 120000      R     LCALL   L?0038
+00A3 F5D3              MOV     T4L,A
+                                           ; SOURCE LINE # 171
+00A5 EE                MOV     A,R6
+00A6 F5D2              MOV     T4H,A
+                                           ; SOURCE LINE # 172
+00A8         ?C0032:
+00A8 120000      R     LCALL   L?0048
+00AB 42AF              ORL     IE2,A
+                                           ; SOURCE LINE # 173
+                                           ; SOURCE LINE # 174
+00AD         ?C0016:
+00AD 22                RET     
+             ; FUNCTION _Uart_Base_MspInit (END)
+
+             ; FUNCTION _Busy_Await (BEGIN)
+                                           ; SOURCE LINE # 184
+;---- Variable 'Uart' assigned to Register 'R1/R2/R3' ----
+;---- Variable 'overtime' assigned to Register 'R4/R5' ----
+                                           ; SOURCE LINE # 185
+0000         ?C0017:
+                                           ; SOURCE LINE # 187
+0000 900008            MOV     DPTR,#08H
+0003 120000      E     LCALL   ?C?CLDOPTR
+0006 30E00A            JNB     ACC.0,?C0018
+                                           ; SOURCE LINE # 188
+                                           ; SOURCE LINE # 189
+0009 ED                MOV     A,R5
+000A 1D                DEC     R5
+000B AE04              MOV     R6,AR4
+000D 7001              JNZ     ?C0031
+000F 1C                DEC     R4
+0010         ?C0031:
+0010 4E                ORL     A,R6
+0011 70ED              JNZ     ?C0017
+                                           ; SOURCE LINE # 190
+                                           ; SOURCE LINE # 191
+0013         ?C0018:
+                                           ; SOURCE LINE # 193
+0013 E9                MOV     A,R1
+0014 2408              ADD     A,#08H
+0016 F9                MOV     R1,A
+0017 E4                CLR     A
+0018 3A                ADDC    A,R2
+0019 FA                MOV     R2,A
+001A 120000      E     LCALL   ?C?CLDPTR
+001D 4401              ORL     A,#01H
+001F 020000      E     LJMP    ?C?CSTPTR
+             ; FUNCTION _Busy_Await (END)
+C51 COMPILER V9.60.0.0   USART                                                             01/05/2022 14:26:36 PAGE 30  
+
+
+             ; FUNCTION _Uartx_SendStr (BEGIN)
+                                           ; SOURCE LINE # 204
+0000 900000      R     MOV     DPTR,#Uart
+0003 120000      R     LCALL   L?0039
+0006         ?C0021:
+                                           ; SOURCE LINE # 206
+0006 900000      R     MOV     DPTR,#length
+0009 E0                MOVX    A,@DPTR
+000A FF                MOV     R7,A
+000B 14                DEC     A
+000C F0                MOVX    @DPTR,A
+000D EF                MOV     A,R7
+000E 6040              JZ      ?C0029
+                                           ; SOURCE LINE # 207
+0010 120000      R     LCALL   L?0041
+0013 900000      R     MOV     DPTR,#time_out
+0016 E0                MOVX    A,@DPTR
+0017 FC                MOV     R4,A
+0018 A3                INC     DPTR
+0019 E0                MOVX    A,@DPTR
+001A FD                MOV     R5,A
+001B 120000      R     LCALL   _Busy_Await
+                                           ; SOURCE LINE # 208
+001E 120000      R     LCALL   L?0041
+0021 120000      E     LCALL   ?C?CLDPTR
+0024 24FE              ADD     A,#0FEH
+0026 6011              JZ      ?C0025
+0028 14                DEC     A
+0029 6015              JZ      ?C0026
+002B 14                DEC     A
+002C 601A              JZ      ?C0027
+002E 2403              ADD     A,#03H
+0030 70D4              JNZ     ?C0021
+                                           ; SOURCE LINE # 209
+0032         ?C0024:
+0032 120000      R     LCALL   L?0034
+0035 F599              MOV     SBUF,A
+0037 80CD              SJMP    ?C0021
+                                           ; SOURCE LINE # 210
+0039         ?C0025:
+0039 120000      R     LCALL   L?0034
+003C F59B              MOV     S2BUF,A
+003E 80C6              SJMP    ?C0021
+                                           ; SOURCE LINE # 211
+0040         ?C0026:
+0040 120000      R     LCALL   L?0035
+0043 F5AD              MOV     S3BUF,A
+0045 020000      R     LJMP    ?C0021
+                                           ; SOURCE LINE # 212
+0048         ?C0027:
+0048 120000      R     LCALL   L?0035
+004B F585              MOV     S4BUF,A
+004D 020000      R     LJMP    ?C0021
+                                           ; SOURCE LINE # 213
+                                           ; SOURCE LINE # 214
+                                           ; SOURCE LINE # 215
+                                           ; SOURCE LINE # 216
+0050         ?C0029:
+0050 22                RET     
+             ; FUNCTION _Uartx_SendStr (END)
+
+C51 COMPILER V9.60.0.0   USART                                                             01/05/2022 14:26:36 PAGE 31  
+
+             ; FUNCTION _Uartx_Printf (BEGIN)
+                                           ; SOURCE LINE # 226
+0000 900000      R     MOV     DPTR,#uart
+0003 120000      R     LCALL   L?0039
+                                           ; SOURCE LINE # 227
+                                           ; SOURCE LINE # 228
+;---- Variable 'length' assigned to Register 'R6/R7' ----
+0006 E4                CLR     A
+0007 FF                MOV     R7,A
+0008 FE                MOV     R6,A
+                                           ; SOURCE LINE # 229
+0009 7800        R     MOV     R0,#LOW UARTx_Buffer
+000B 7C00        R     MOV     R4,#HIGH UARTx_Buffer
+000D 7D01              MOV     R5,#01H
+000F 7BFF              MOV     R3,#0FFH
+0011 7A00        R     MOV     R2,#HIGH _?ix1000
+0013 7900        R     MOV     R1,#LOW _?ix1000
+0015 0E                INC     R6
+0016 120000      E     LCALL   ?C?COPY
+                                           ; SOURCE LINE # 232
+0019 900000      R     MOV     DPTR,#ap
+001C 7401              MOV     A,#01H
+001E F0                MOVX    @DPTR,A
+001F A3                INC     DPTR
+0020 7400        R     MOV     A,#HIGH format+03H
+0022 F0                MOVX    @DPTR,A
+0023 A3                INC     DPTR
+0024 7400        R     MOV     A,#LOW format+03H
+0026 F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 234
+0027 900000      R     MOV     DPTR,#format
+002A E0                MOVX    A,@DPTR
+002B F9                MOV     R1,A
+002C A3                INC     DPTR
+002D E0                MOVX    A,@DPTR
+002E FA                MOV     R2,A
+002F A3                INC     DPTR
+0030 E0                MOVX    A,@DPTR
+0031 900000      E     MOV     DPTR,#?_vsprintf?BYTE+03H
+0034 C9                XCH     A,R1
+0035 120000      R     LCALL   L?0040
+0038 900000      R     MOV     DPTR,#ap
+003B E0                MOVX    A,@DPTR
+003C F9                MOV     R1,A
+003D A3                INC     DPTR
+003E E0                MOVX    A,@DPTR
+003F FA                MOV     R2,A
+0040 A3                INC     DPTR
+0041 E0                MOVX    A,@DPTR
+0042 900000      E     MOV     DPTR,#?_vsprintf?BYTE+06H
+0045 C9                XCH     A,R1
+0046 120000      R     LCALL   L?0040
+0049 7B01              MOV     R3,#01H
+004B 7A00        R     MOV     R2,#HIGH UARTx_Buffer
+004D 7900        R     MOV     R1,#LOW UARTx_Buffer
+004F 120000      E     LCALL   _vsprintf
+                                           ; SOURCE LINE # 235
+0052 900000      R     MOV     DPTR,#ap
+0055 E4                CLR     A
+0056 F0                MOVX    @DPTR,A
+0057 A3                INC     DPTR
+0058 F0                MOVX    @DPTR,A
+C51 COMPILER V9.60.0.0   USART                                                             01/05/2022 14:26:36 PAGE 32  
+
+0059 A3                INC     DPTR
+005A F0                MOVX    @DPTR,A
+                                           ; SOURCE LINE # 237
+005B 900000      R     MOV     DPTR,#?_Uartx_SendStr?BYTE+03H
+005E 04                INC     A
+005F F0                MOVX    @DPTR,A
+0060 A3                INC     DPTR
+0061 7400        R     MOV     A,#HIGH UARTx_Buffer
+0063 F0                MOVX    @DPTR,A
+0064 A3                INC     DPTR
+0065 7400        R     MOV     A,#LOW UARTx_Buffer
+0067 F0                MOVX    @DPTR,A
+0068 A3                INC     DPTR
+0069 EF                MOV     A,R7
+006A F0                MOVX    @DPTR,A
+006B A3                INC     DPTR
+006C 7413              MOV     A,#013H
+006E F0                MOVX    @DPTR,A
+006F A3                INC     DPTR
+0070 7488              MOV     A,#088H
+0072 F0                MOVX    @DPTR,A
+0073 900000      R     MOV     DPTR,#uart
+0076 120000      R     LCALL   L?0042
+0079 020000      R     LJMP    _Uartx_SendStr
+             ; FUNCTION _Uartx_Printf (END)
+
+C51 COMPILER V9.60.0.0   USART                                                             01/05/2022 14:26:36 PAGE 33  
+
+NAME                                    CLASS   MSPACE  TYPE    OFFSET  SIZE
+====                                    =====   ======  ====    ======  ====
+
+
+_Busy_Await. . . . . . . . . . . . . .  PUBLIC   CODE   PROC     0000H  -----
+  Uart . . . . . . . . . . . . . . . .  * REG *  DATA   PTR      0001H  3
+  overtime . . . . . . . . . . . . . .  * REG *  DATA   U_INT    0004H  2
+uint16_t . . . . . . . . . . . . . . .  TYPEDEF  -----  U_INT    -----  2
+P0 . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0080H  1
+P1 . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0090H  1
+_vsprintf. . . . . . . . . . . . . . .  EXTERN   CODE   PROC     -----  -----
+P2 . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00A0H  1
+P3 . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00B0H  1
+P4 . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00C0H  1
+Uart_HandleTypeDef . . . . . . . . . .  TYPEDEF  -----  STRUCT   -----  11
+  Instance . . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0000H  1
+  Register_SCON. . . . . . . . . . . .  MEMBER   -----  U_CHAR   0001H  1
+  Uart_Mode. . . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0002H  1
+  Uart_Count . . . . . . . . . . . . .  MEMBER   -----  U_INT    0003H  2
+  RunUart_Enable . . . . . . . . . . .  MEMBER   -----  FIELD    0005H  1.0
+  Interrupt_Enable . . . . . . . . . .  MEMBER   -----  U_CHAR   0006H  1
+  Register_AUXR. . . . . . . . . . . .  MEMBER   -----  U_CHAR   0007H  1
+  Uartx_busy . . . . . . . . . . . . .  MEMBER   -----  FIELD    0008H  1.0
+  Uart_NVIC. . . . . . . . . . . . . .  MEMBER   -----  STRUCT   0009H  2
+P5 . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00C8H  1
+P6 . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00E8H  1
+int32_t. . . . . . . . . . . . . . . .  TYPEDEF  -----  LONG     -----  4
+P7 . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00F8H  1
+IE . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00A8H  1
+size_t . . . . . . . . . . . . . . . .  TYPEDEF  -----  U_INT    -----  2
+IP2H . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00B6H  1
+ES . . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      00ACH  1
+IP . . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00B8H  1
+RI . . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      0098H  1
+TI . . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      0099H  1
+Uart1_ISR. . . . . . . . . . . . . . .  PUBLIC   CODE   PROC     0000H  -----
+Uart2_ISR. . . . . . . . . . . . . . .  PUBLIC   CODE   PROC     0000H  -----
+CCON . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00D8H  1
+_Uart_Base_MspInit . . . . . . . . . .  PUBLIC   CODE   PROC     0000H  -----
+  uart_baseHandle. . . . . . . . . . .  * REG *  DATA   PTR      0001H  3
+SBUF . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0099H  1
+SCON . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0098H  1
+TMOD . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0089H  1
+TCON . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0088H  1
+_Uartx_SendStr . . . . . . . . . . . .  PUBLIC   CODE   PROC     0000H  -----
+  Uart . . . . . . . . . . . . . . . .  AUTO     XDATA  PTR      0000H  3
+  p. . . . . . . . . . . . . . . . . .  AUTO     XDATA  PTR      0003H  3
+  length . . . . . . . . . . . . . . .  AUTO     XDATA  U_CHAR   0006H  1
+  time_out . . . . . . . . . . . . . .  AUTO     XDATA  U_INT    0007H  2
+IE2. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00AFH  1
+AUXR . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   008EH  1
+Uart_TypsDef . . . . . . . . . . . . .  TYPEDEF  -----  U_CHAR   -----  1
+_?ix1000 . . . . . . . . . . . . . . .  STATIC   CODE   ARRAY    0000H  256
+Uart1_Init . . . . . . . . . . . . . .  PUBLIC   CODE   PROC     0000H  -----
+Uart2_Init . . . . . . . . . . . . . .  PUBLIC   CODE   PROC     0000H  -----
+IP2. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00B5H  1
+TH1. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   008DH  1
+TH2. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00D6H  1
+Uart1. . . . . . . . . . . . . . . . .  PUBLIC   XDATA  STRUCT   0000H  11
+uint8_t. . . . . . . . . . . . . . . .  TYPEDEF  -----  U_CHAR   -----  1
+T3H. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00D4H  1
+C51 COMPILER V9.60.0.0   USART                                                             01/05/2022 14:26:36 PAGE 34  
+
+NAME                                    CLASS   MSPACE  TYPE    OFFSET  SIZE
+====                                    =====   ======  ====    ======  ====
+
+
+Uart2. . . . . . . . . . . . . . . . .  PUBLIC   XDATA  STRUCT   000BH  11
+T4H. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00D2H  1
+Uart3. . . . . . . . . . . . . . . . .  PUBLIC   XDATA  STRUCT   0016H  11
+TL1. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   008BH  1
+Uart4. . . . . . . . . . . . . . . . .  PUBLIC   XDATA  STRUCT   0021H  11
+TL2. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00D7H  1
+T3L. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00D5H  1
+T4L. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00D3H  1
+__IO . . . . . . . . . . . . . . . . .  TYPEDEF  -----  INT      -----  2
+TR1. . . . . . . . . . . . . . . . . .  ABSBIT   -----  BIT      008EH  1
+int8_t . . . . . . . . . . . . . . . .  TYPEDEF  -----  CHAR     -----  1
+T4T3M. . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00D1H  1
+IPH. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00B7H  1
+S2BUF. . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   009BH  1
+S3BUF. . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00ADH  1
+UART_NVIC_TypeDef. . . . . . . . . . .  TYPEDEF  -----  STRUCT   -----  2
+  Register_IP. . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0000H  1
+  Register_IPH . . . . . . . . . . . .  MEMBER   -----  U_CHAR   0001H  1
+S4BUF. . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0085H  1
+S2CON. . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   009AH  1
+S3CON. . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00ACH  1
+S4CON. . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   0084H  1
+wchar_t. . . . . . . . . . . . . . . .  TYPEDEF  -----  CHAR     -----  1
+_Uartx_Printf. . . . . . . . . . . . .  PUBLIC   CODE   PROC     0000H  -----
+  uart . . . . . . . . . . . . . . . .  AUTO     XDATA  PTR      0000H  3
+  format . . . . . . . . . . . . . . .  AUTO     XDATA  PTR      0003H  3
+  ellipsis_40. . . . . . . . . . . . .  AUTO     XDATA  ARRAY    0006H  40
+  length . . . . . . . . . . . . . . .  * REG *  DATA   U_INT    0006H  2
+  UARTx_Buffer . . . . . . . . . . . .  AUTO     XDATA  ARRAY    002EH  256
+  ap . . . . . . . . . . . . . . . . .  AUTO     XDATA  PTR      012EH  3
+UART1. . . . . . . . . . . . . . . . .  E_CONST  -----  U_CHAR   -----  1
+UART2. . . . . . . . . . . . . . . . .  E_CONST  -----  U_CHAR   -----  1
+UART3. . . . . . . . . . . . . . . . .  E_CONST  -----  U_CHAR   -----  1
+UART4. . . . . . . . . . . . . . . . .  E_CONST  -----  U_CHAR   -----  1
+va_list. . . . . . . . . . . . . . . .  TYPEDEF  -----  PTR      -----  3
+PSW. . . . . . . . . . . . . . . . . .  SFR      DATA   U_CHAR   00D0H  1
+uint32_t . . . . . . . . . . . . . . .  TYPEDEF  -----  U_LONG   -----  4
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    637    ----
+   CONSTANT SIZE    =    256    ----
+   XDATA SIZE       =     44     314
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

@@ -1,0 +1,29 @@
+{
+	"folders": [
+		{
+			"path": ".."
+		},
+		{
+			"name": "test",
+			"path": "C:\\Users\\Administrator\\Documents\\PlatformIO\\Projects\\test"
+		}
+	],
+	"settings": {
+		"files.associations": {
+			"config.h": "c",
+			"stc8.h": "c",
+			"STC8.H": "cpp",
+			"gpio.h": "c",
+			"IIC.C": "cpp",
+			"SC8913.C": "cpp",
+			"timer.h": "c",
+			"usart.h": "c",
+			"sc8913.h": "c",
+			"stdio.h": "c",
+			"absacc.h": "c",
+			"ABSACC.H": "cpp",
+			"intrins.h": "c",
+			"stc_nvic.h": "c"
+		}
+	}
+}
