@@ -1,0 +1,15 @@
+chargerplus\queue.o: ../Middlewares/Third_Party/FreeRTOS/Source/queue.c
+chargerplus\queue.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
+chargerplus\queue.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
+chargerplus\queue.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/FreeRTOS.h
+chargerplus\queue.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+chargerplus\queue.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+chargerplus\queue.o: ../Core/Inc/FreeRTOSConfig.h
+chargerplus\queue.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/projdefs.h
+chargerplus\queue.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/portable.h
+chargerplus\queue.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/deprecated_definitions.h
+chargerplus\queue.o: ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM3/portmacro.h
+chargerplus\queue.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/mpu_wrappers.h
+chargerplus\queue.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/task.h
+chargerplus\queue.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/list.h
+chargerplus\queue.o: ../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h

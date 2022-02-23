@@ -1,0 +1,916 @@
+
+ _         _   _                  _          _ _
+| |    ___| |_| |_ ___ _ __   ___| |__   ___| | |
+| |   / _ \ __| __/ _ \ '__| / __| '_ \ / _ \ | |
+| |__|  __/ |_| ||  __/ |    \__ \ | | |  __/ | |
+|_____\___|\__|\__\___|_|    |___/_| |_|\___|_|_|
+
+Build:       Feb 14 2022 18:10:19
+Version:     3.1.1
+Copyright:   (c) 2020 Letter
+
+LHC:/$
+Note: ADC not calibrated !
+Note: Dac not calibrated !
+
+User List:
+LHC                   USER  --------  default user
+
+Command List:
+adc_clibration        CMD   --------  clibration
+dac_clibration        CMD   --------  clibration
+see_adc               CMD   --------  see
+see_dac               CMD   --------  see
+check_adc             CMD   --------  check
+setVar                CMD   --------  set var
+help                  CMD   --------  show command info
+users                 CMD   --------  list all user
+cmds                  CMD   --------  list all cmd
+vars                  CMD   --------  list all var
+keys                  CMD   --------  list all key
+clear                 CMD   --------  clear console
+exec                  CMD   --------  execute function undefined
+
+LHC:/$ adc_clibration
+
+ADC_CH[0]S[0]P[0]:657,Dac:0
+0.580
+pFloat:0.580000
+Success: Parsing succeeded !
+
+ADC_CH[0]S[0]P[1]:1096,Dac:511
+0.914
+pFloat:1.494000
+Success: Parsing succeeded !
+Px[0][0][0]:0.002082, Qx[0][0][0]:-0.787877
+
+ADC_CH[0]S[0]P[2]:1493,Dac:1023
+1.245
+pFloat:2.739000
+Success: Parsing succeeded !
+Px[0][0][1]:0.003136, Qx[0][0][1]:-1.943078
+
+ADC_CH[0]S[0]P[3]:1910,Dac:1535
+
+ _         _   _                  _          _ _
+| |    ___| |_| |_ ___ _ __   ___| |__   ___| | |
+| |   / _ \ __| __/ _ \ '__| / __| '_ \ / _ \ | |
+| |__|  __/ |_| ||  __/ |    \__ \ | | |  __/ | |
+|_____\___|\__|\__\___|_|    |___/_| |_|\___|_|_|
+
+Build:       Feb 14 2022 18:10:19
+Version:     3.1.1
+Copyright:   (c) 2020 Letter
+
+LHC:/$
+Note: ADC not calibrated !
+Note: Dac not calibrated !
+
+User List:
+LHC                   USER  --------  default user
+
+Command List:
+adc_clibration        CMD   --------  clibration
+dac_clibration        CMD   --------  clibration
+see_adc               CMD   --------  see
+see_dac               CMD   --------  see
+check_adc             CMD   --------  check
+setVar                CMD   --------  set var
+help                  CMD   --------  show command info
+users                 CMD   --------  list all user
+cmds                  CMD   --------  list all cmd
+vars                  CMD   --------  list all var
+keys                  CMD   --------  list all key
+clear                 CMD   --------  clear console
+exec                  CMD   --------  execute function undefined
+
+LHC:/$
+
+ _         _   _                  _          _ _
+| |    ___| |_| |_ ___ _ __   ___| |__   ___| | |
+| |   / _ \ __| __/ _ \ '__| / __| '_ \ / _ \ | |
+| |__|  __/ |_| ||  __/ |    \__ \ | | |  __/ | |
+|_____\___|\__|\__\___|_|    |___/_| |_|\___|_|_|
+
+Build:       Feb 14 2022 18:10:19
+Version:     3.1.1
+Copyright:   (c) 2020 Letter
+
+LHC:/$
+Note: ADC not calibrated !
+Note: Dac not calibrated !
+
+LHC:/$ adc_clibration
+
+ADC_CH[0]S[0]P[0]:656,Dac:0
+0.580
+pFloat:0.580000
+Success: Parsing succeeded !
+
+ADC_CH[0]S[0]P[1]:1070,Dac:511
+0.913
+pFloat:0.913000
+Success: Parsing succeeded !
+Px[0][0][0]:0.000804, Qx[0][0][0]:0.052348
+
+ADC_CH[0]S[0]P[2]:1487,Dac:1023
+1.246
+pFloat:1.246000
+Success: Parsing succeeded !
+Px[0][0][1]:0.000799, Qx[0][0][1]:0.058540
+
+ADC_CH[0]S[0]P[3]:1908,Dac:1535
+1.580
+pFloat:1.580000
+Success: Parsing succeeded !
+Px[0][0][2]:0.000793, Qx[0][0][2]:0.066290
+
+ADC_CH[0]S[0]P[4]:2288,Dac:2047
+1.911
+pFloat:1.911000
+Success: Parsing succeeded !
+Px[0][0][3]:0.000871, Qx[0][0][3]:-0.081969
+
+ADC_CH[0]S[0]P[5]:2732,Dac:2559
+2.244
+pFloat:2.244000
+Success: Parsing succeeded !
+Px[0][0][4]:0.000750, Qx[0][0][4]:0.195001
+
+ADC_CH[0]S[0]P[6]:3190,Dac:3071
+2.583
+pFloat:2.583000
+Success: Parsing succeeded !
+Px[0][0][5]:0.000740, Qx[0][0][5]:0.221843
+
+ADC_CH[0]S[0]P[7]:3572,Dac:3583
+2.915
+pFloat:2.915000
+Success: Parsing succeeded !
+Px[0][0][6]:0.000869, Qx[0][0][6]:-0.189463
+
+ADC_CH[0]S[0]P[8]:3973,Dac:4095
+3.243
+pFloat:3.243000
+Success: Parsing succeeded !
+Px[0][0][7]:0.000818, Qx[0][0][7]:-0.006734
+SPx[0][0]:0.000806,SQx[0][0]:0.039482
+
+ADC_CH[0]S[1]P[0]:601,Dac:0
+2.847
+pFloat:2.847000
+Success: Parsing succeeded !
+
+ADC_CH[0]S[1]P[1]:996,Dac:511
+4.67
+pFloat:4.670000
+Success: Parsing succeeded !
+Px[0][1][0]:0.004615, Qx[0][1][0]:0.073270
+
+ADC_CH[0]S[1]P[2]:1394,Dac:1023
+6.50
+pFloat:6.500000
+Success: Parsing succeeded !
+Px[0][1][1]:0.004598, Qx[0][1][1]:0.090402
+
+ADC_CH[0]S[1]P[3]:1805,Dac:1535
+8.32
+pFloat:8.320001
+Success: Parsing succeeded !
+Px[0][1][2]:0.004428, Qx[0][1][2]:0.327054
+
+ADC_CH[0]S[1]P[4]:2213,Dac:2047
+10.14
+pFloat:10.140000
+Success: Parsing succeeded !
+Px[0][1][3]:0.004461, Qx[0][1][3]:0.268286
+
+ADC_CH[0]S[1]P[5]:2621,Dac:2559
+11.98
+pFloat:11.980000
+Success: Parsing succeeded !
+Px[0][1][4]:0.004510, Qx[0][1][4]:0.159808
+
+ADC_CH[0]S[1]P[6]:3031,Dac:3071
+13.84
+pFloat:13.840000
+Success: Parsing succeeded !
+Px[0][1][5]:0.004537, Qx[0][1][5]:0.089605
+
+ADC_CH[0]S[1]P[7]:3446,Dac:3583
+15.68
+pFloat:15.680000
+Success: Parsing succeeded !
+Px[0][1][6]:0.004434, Qx[0][1][6]:0.401348
+
+ADC_CH[0]S[1]P[8]:3850,Dac:4095
+17.49
+pFloat:17.490000
+Success: Parsing succeeded !
+Px[0][1][7]:0.004480, Qx[0][1][7]:0.241242
+SPx[0][1]:0.004508,SQx[0][1]:0.206377
+
+ADC_CH[0]S[2]P[0]:389,Dac:0
+0.31
+pFloat:0.310000
+Success: Parsing succeeded !
+
+ADC_CH[0]S[2]P[1]:668,Dac:511
+0.52
+pFloat:0.520000
+Success: Parsing succeeded !
+Px[0][2][0]:0.000753, Qx[0][2][0]:0.017204
+
+ADC_CH[0]S[2]P[2]:968,Dac:1023
+0.72
+pFloat:0.720000
+Success: Parsing succeeded !
+Px[0][2][1]:0.000667, Qx[0][2][1]:0.074667
+
+ADC_CH[0]S[2]P[3]:1245,Dac:1535
+0.94
+pFloat:0.940000
+Success: Parsing succeeded !
+Px[0][2][2]:0.000794, Qx[0][2][2]:-0.048809
+
+ADC_CH[0]S[2]P[4]:1536,Dac:2047
+1.13
+pFloat:1.130000
+Success: Parsing succeeded !
+Px[0][2][3]:0.000653, Qx[0][2][3]:0.127114
+
+ADC_CH[0]S[2]P[5]:1852,Dac:2559
+1.34
+pFloat:1.340000
+Success: Parsing succeeded !
+Px[0][2][4]:0.000665, Qx[0][2][4]:0.109241
+
+ADC_CH[0]S[2]P[6]:2136,Dac:3071
+1.55
+pFloat:1.550000
+Success: Parsing succeeded !
+Px[0][2][5]:0.000739, Qx[0][2][5]:-0.029437
+
+ADC_CH[0]S[2]P[7]:2436,Dac:3583
+1.75
+pFloat:1.750000
+Success: Parsing succeeded !
+Px[0][2][6]:0.000667, Qx[0][2][6]:0.126000
+
+ADC_CH[0]S[2]P[8]:2708,Dac:4095
+1.96
+pFloat:1.960000
+Success: Parsing succeeded !
+Px[0][2][7]:0.000772, Qx[0][2][7]:-0.130736
+SPx[0][2]:0.000714,SQx[0][2]:0.030655
+
+ADC_CH[1]S[0]P[0]:667,Dac:0
+0.578
+pFloat:0.578000
+Success: Parsing succeeded !
+
+ADC_CH[1]S[0]P[1]:647,Dac:511
+0.914
+pFloat:0.914000
+Success: Parsing succeeded !
+Px[1][0][0]:0.000000, Qx[1][0][0]:0.578000
+
+ADC_CH[1]S[0]P[2]:652,Dac:1023
+1.250
+pFloat:1.250000
+Success: Parsing succeeded !
+Px[1][0][1]:0.067200, Qx[1][0][1]:-42.564392
+
+ADC_CH[1]S[0]P[3]:652,Dac:1535
+1.584
+pFloat:1.584000
+Success: Parsing succeeded !
+Px[1][0][2]:0.000000, Qx[1][0][2]:1.250000
+
+ADC_CH[1]S[0]P[4]:655,Dac:2047
+1.932
+pFloat:1.932000
+Success: Parsing succeeded !
+Px[1][0][3]:0.116000, Qx[1][0][3]:-74.048012
+
+ADC_CH[1]S[0]P[5]:627,Dac:2559
+2.259
+pFloat:2.259000
+Success: Parsing succeeded !
+Px[1][0][4]:0.000000, Qx[1][0][4]:1.932000
+
+ADC_CH[1]S[0]P[6]:655,Dac:3071
+2.601
+pFloat:2.601000
+Success: Parsing succeeded !
+Px[1][0][5]:0.012214, Qx[1][0][5]:-5.399352
+
+ADC_CH[1]S[0]P[7]:634,Dac:3583
+2.936
+pFloat:2.936000
+Success: Parsing succeeded !
+Px[1][0][6]:0.000000, Qx[1][0][6]:2.601000
+
+ADC_CH[1]S[0]P[8]:646,Dac:4095
+
+ _         _   _                  _          _ _
+| |    ___| |_| |_ ___ _ __   ___| |__   ___| | |
+| |   / _ \ __| __/ _ \ '__| / __| '_ \ / _ \ | |
+| |__|  __/ |_| ||  __/ |    \__ \ | | |  __/ | |
+|_____\___|\__|\__\___|_|    |___/_| |_|\___|_|_|
+
+Build:       Feb 14 2022 18:10:19
+Version:     3.1.1
+Copyright:   (c) 2020 Letter
+
+LHC:/$
+Note: ADC not calibrated !
+Note: Dac not calibrated !
+
+ _         _   _                  _          _ _
+| |    ___| |_| |_ ___ _ __   ___| |__   ___| | |
+| |   / _ \ __| __/ _ \ '__| / __| '_ \ / _ \ | |
+| |__|  __/ |_| ||  __/ |    \__ \ | | |  __/ | |
+|_____\___|\__|\__\___|_|    |___/_| |_|\___|_|_|
+
+Build:       Feb 14 2022 18:10:19
+Version:     3.1.1
+Copyright:   (c) 2020 Letter
+
+LHC:/$
+Note: ADC not calibrated !
+Note: Dac not calibrated !
+
+ _         _   _                  _          _ _
+| |    ___| |_| |_ ___ _ __   ___| |__   ___| | |
+| |   / _ \ __| __/ _ \ '__| / __| '_ \ / _ \ | |
+| |__|  __/ |_| ||  __/ |    \__ \ | | |  __/ | |
+|_____\___|\__|\__\___|_|    |___/_| |_|\___|_|_|
+
+Build:       Feb 14 2022 18:10:19
+Version:     3.1.1
+Copyright:   (c) 2020 Letter
+
+LHC:/$
+Note: ADC not calibrated !
+Note: Dac not calibrated !
+
+User List:
+LHC                   USER  --------  default user
+
+Command List:
+adc_clibration        CMD   --------  clibration
+dac_clibration        CMD   --------  clibration
+see_adc               CMD   --------  see
+see_dac               CMD   --------  see
+check_adc             CMD   --------  check
+setVar                CMD   --------  set var
+help                  CMD   --------  show command info
+users                 CMD   --------  list all user
+cmds                  CMD   --------  list all cmd
+vars                  CMD   --------  list all var
+keys                  CMD   --------  list all key
+clear                 CMD   --------  clear console
+exec                  CMD   --------  execute function undefined
+
+LHC:/$ adc_clibration
+
+ADC_CH[0]S[0]P[0]:659,Dac:0
+0.545
+pFloat:0.545000
+Success: Parsing succeeded !
+
+ADC_CH[0]S[0]P[1]:1076,Dac:511
+0.858
+pFloat:0.858000
+Success: Parsing succeeded !
+Px[0][0][0]:0.000751, Qx[0][0][0]:0.050355
+
+ADC_CH[0]S[0]P[2]:1507,Dac:1023
+1.167
+pFloat:1.167000
+Success: Parsing succeeded !
+Px[0][0][1]:0.000717, Qx[0][0][1]:0.086576
+
+ADC_CH[0]S[0]P[3]:1905,Dac:1535
+1.478
+pFloat:1.478000
+Success: Parsing succeeded !
+Px[0][0][2]:0.000781, Qx[0][0][2]:-0.010581
+
+ADC_CH[0]S[0]P[4]:2307,Dac:2047
+1.791
+pFloat:1.791000
+Success: Parsing succeeded !
+Px[0][0][3]:0.000779, Qx[0][0][3]:-0.005247
+
+ADC_CH[0]S[0]P[5]:2744,Dac:2559
+2.101
+pFloat:2.101000
+Success: Parsing succeeded !
+Px[0][0][4]:0.000709, Qx[0][0][4]:0.154457
+
+ADC_CH[0]S[0]P[6]:3149,Dac:3071
+2.418
+pFloat:2.418000
+Success: Parsing succeeded !
+Px[0][0][5]:0.000783, Qx[0][0][5]:-0.046774
+
+ADC_CH[0]S[0]P[7]:3586,Dac:3583
+2.727
+pFloat:2.727000
+Success: Parsing succeeded !
+Px[0][0][6]:0.000707, Qx[0][0][6]:0.191361
+
+ADC_CH[0]S[0]P[8]:3982,Dac:4095
+3.032
+pFloat:3.032000
+Success: Parsing succeeded !
+Px[0][0][7]:0.000770, Qx[0][0][7]:-0.034945
+SPx[0][0]:0.000750,SQx[0][0]:0.048150
+
+ADC_CH[0]S[1]P[0]:586,Dac:0
+2.818
+pFloat:2.818000
+Success: Parsing succeeded !
+
+ADC_CH[0]S[1]P[1]:986,Dac:511
+4.602
+pFloat:4.602000
+Success: Parsing succeeded !
+Px[0][1][0]:0.004460, Qx[0][1][0]:0.204440
+
+ADC_CH[0]S[1]P[2]:1391,Dac:1023
+6.42
+pFloat:6.420000
+Success: Parsing succeeded !
+Px[0][1][1]:0.004489, Qx[0][1][1]:0.175955
+
+ADC_CH[0]S[1]P[3]:1798,Dac:1535
+8.22
+pFloat:8.220000
+Success: Parsing succeeded !
+Px[0][1][2]:0.004423, Qx[0][1][2]:0.268157
+
+ADC_CH[0]S[1]P[4]:2209,Dac:2047
+10.02
+pFloat:10.020000
+Success: Parsing succeeded !
+Px[0][1][3]:0.004380, Qx[0][1][3]:0.345547
+
+ADC_CH[0]S[1]P[5]:2627,Dac:2559
+11.83
+pFloat:11.830000
+Success: Parsing succeeded !
+Px[0][1][4]:0.004330, Qx[0][1][4]:0.454716
+
+ADC_CH[0]S[1]P[6]:3037,Dac:3071
+13.67
+pFloat:13.670000
+Success: Parsing succeeded !
+Px[0][1][5]:0.004488, Qx[0][1][5]:0.040536
+
+ADC_CH[0]S[1]P[7]:3449,Dac:3583
+15.48
+pFloat:15.480000
+Success: Parsing succeeded !
+Px[0][1][6]:0.004393, Qx[0][1][6]:0.327844
+
+ADC_CH[0]S[1]P[8]:3857,Dac:4095
+17.29
+pFloat:17.290001
+Success: Parsing succeeded !
+Px[0][1][7]:0.004436, Qx[0][1][7]:0.179277
+SPx[0][1]:0.004425,SQx[0][1]:0.249559
+
+ADC_CH[0]S[2]P[0]:389,Dac:0
+0.31
+pFloat:0.310000
+Success: Parsing succeeded !
+
+ADC_CH[0]S[2]P[1]:683,Dac:511
+0.53
+pFloat:0.530000
+Success: Parsing succeeded !
+Px[0][2][0]:0.000748, Qx[0][2][0]:0.018912
+
+ADC_CH[0]S[2]P[2]:948,Dac:1023
+0.73
+pFloat:0.730000
+Success: Parsing succeeded !
+Px[0][2][1]:0.000755, Qx[0][2][1]:0.014528
+
+ADC_CH[0]S[2]P[3]:1266,Dac:1535
+0.94
+pFloat:0.940000
+Success: Parsing succeeded !
+Px[0][2][2]:0.000660, Qx[0][2][2]:0.103962
+
+ADC_CH[0]S[2]P[4]:1568,Dac:2047
+1.15
+pFloat:1.150000
+Success: Parsing succeeded !
+Px[0][2][3]:0.000695, Qx[0][2][3]:0.059669
+
+ADC_CH[0]S[2]P[5]:1886,Dac:2559
+1.36
+pFloat:1.360000
+Success: Parsing succeeded !
+Px[0][2][4]:0.000660, Qx[0][2][4]:0.114529
+
+ADC_CH[0]S[2]P[6]:2176,Dac:3071
+1.57
+pFloat:1.570000
+Success: Parsing succeeded !
+Px[0][2][5]:0.000724, Qx[0][2][5]:-0.005725
+
+ADC_CH[0]S[2]P[7]:2455,Dac:3583
+1.78
+pFloat:1.780000
+Success: Parsing succeeded !
+Px[0][2][6]:0.000753, Qx[0][2][6]:-0.067850
+
+ADC_CH[0]S[2]P[8]:2768,Dac:4095
+1.99
+pFloat:1.990000
+Success: Parsing succeeded !
+Px[0][2][7]:0.000671, Qx[0][2][7]:0.132875
+SPx[0][2]:0.000708,SQx[0][2]:0.046362
+
+ADC_CH[1]S[0]P[0]:650,Dac:0
+0.578
+pFloat:0.578000
+Success: Parsing succeeded !
+
+ADC_CH[1]S[0]P[1]:1075,Dac:511
+0.914
+pFloat:0.914000
+Success: Parsing succeeded !
+Px[1][0][0]:0.000791, Qx[1][0][0]:0.064118
+
+ADC_CH[1]S[0]P[2]:1465,Dac:1023
+1.250
+pFloat:1.250000
+Success: Parsing succeeded !
+Px[1][0][1]:0.000862, Qx[1][0][1]:-0.012154
+
+ADC_CH[1]S[0]P[3]:1903,Dac:1535
+1.584
+pFloat:1.584000
+Success: Parsing succeeded !
+Px[1][0][2]:0.000763, Qx[1][0][2]:0.132854
+
+ADC_CH[1]S[0]P[4]:2320,Dac:2047
+1.924
+pFloat:1.924000
+Success: Parsing succeeded !
+Px[1][0][3]:0.000815, Qx[1][0][3]:0.032393
+
+ADC_CH[1]S[0]P[5]:2749,Dac:2559
+2.26
+pFloat:2.260000
+Success: Parsing succeeded !
+Px[1][0][4]:0.000783, Qx[1][0][4]:0.106937
+
+ADC_CH[1]S[0]P[6]:3171,Dac:3071
+2.602
+pFloat:2.602000
+Success: Parsing succeeded !
+Px[1][0][5]:0.000810, Qx[1][0][5]:0.032137
+
+ADC_CH[1]S[0]P[7]:3612,Dac:3583
+2.936
+pFloat:2.936000
+Success: Parsing succeeded !
+Px[1][0][6]:0.000757, Qx[1][0][6]:0.200380
+
+ADC_CH[1]S[0]P[8]:4004,Dac:4095
+3.265
+pFloat:3.265000
+Success: Parsing succeeded !
+Px[1][0][7]:0.000839, Qx[1][0][7]:-0.095500
+SPx[1][0]:0.000803,SQx[1][0]:0.057646
+
+ADC_CH[1]S[1]P[0]:546,Dac:0
+2.847
+pFloat:2.847000
+Success: Parsing succeeded !
+
+ADC_CH[1]S[1]P[1]:985,Dac:511
+4.68
+pFloat:4.680000
+Success: Parsing succeeded !
+Px[1][1][0]:0.004175, Qx[1][1][0]:0.567232
+
+ADC_CH[1]S[1]P[2]:1388,Dac:1023
+6.52
+pFloat:6.520000
+Success: Parsing succeeded !
+Px[1][1][1]:0.004566, Qx[1][1][1]:0.182729
+
+ADC_CH[1]S[1]P[3]:1815,Dac:1535
+8.36
+pFloat:8.360001
+Success: Parsing succeeded !
+Px[1][1][2]:0.004309, Qx[1][1][2]:0.538920
+
+ADC_CH[1]S[1]P[4]:2228,Dac:2047
+10.22
+pFloat:10.220000
+Success: Parsing succeeded !
+Px[1][1][3]:0.004504, Qx[1][1][3]:0.185910
+
+ADC_CH[1]S[1]P[5]:2656,Dac:2559
+12.07
+pFloat:12.070000
+Success: Parsing succeeded !
+Px[1][1][4]:0.004322, Qx[1][1][4]:0.589629
+
+ADC_CH[1]S[1]P[6]:3081,Dac:3071
+13.94
+pFloat:13.940000
+Success: Parsing succeeded !
+Px[1][1][5]:0.004400, Qx[1][1][5]:0.383601
+
+ADC_CH[1]S[1]P[7]:3463,Dac:3583
+15.79
+pFloat:15.790000
+Success: Parsing succeeded !
+Px[1][1][6]:0.004843, Qx[1][1][6]:-0.981076
+
+ADC_CH[1]S[1]P[8]:3844,Dac:4095
+17.61
+pFloat:17.610001
+Success: Parsing succeeded !
+Px[1][1][7]:0.004777, Qx[1][1][7]:-0.752419
+SPx[1][1]:0.004487,SQx[1][1]:0.089316
+
+ADC_CH[1]S[2]P[0]:367,Dac:0
+0.31
+pFloat:0.310000
+Success: Parsing succeeded !
+
+ADC_CH[1]S[2]P[1]:659,Dac:511
+0.53
+pFloat:0.530000
+Success: Parsing succeeded !
+Px[1][2][0]:0.000753, Qx[1][2][0]:0.033493
+
+ADC_CH[1]S[2]P[2]:942,Dac:1023
+0.73
+pFloat:0.730000
+Success: Parsing succeeded !
+Px[1][2][1]:0.000707, Qx[1][2][1]:0.064276
+
+ADC_CH[1]S[2]P[3]:1236,Dac:1535
+0.95
+pFloat:0.950000
+Success: Parsing succeeded !
+Px[1][2][2]:0.000748, Qx[1][2][2]:0.025102
+
+ADC_CH[1]S[2]P[4]:1532,Dac:2047
+1.15
+pFloat:1.150000
+Success: Parsing succeeded !
+Px[1][2][3]:0.000676, Qx[1][2][3]:0.114865
+
+ADC_CH[1]S[2]P[5]:1773,Dac:2559
+1.37
+pFloat:1.370000
+Success: Parsing succeeded !
+Px[1][2][4]:0.000913, Qx[1][2][4]:-0.248506
+
+ADC_CH[1]S[2]P[6]:2115,Dac:3071
+1.57
+pFloat:1.570000
+Success: Parsing succeeded !
+Px[1][2][5]:0.000585, Qx[1][2][5]:0.333158
+
+ADC_CH[1]S[2]P[7]:2398,Dac:3583
+1.79
+pFloat:1.790000
+Success: Parsing succeeded !
+Px[1][2][6]:0.000777, Qx[1][2][6]:-0.074170
+
+ADC_CH[1]S[2]P[8]:2727,Dac:4095
+1.99
+pFloat:1.990000
+Success: Parsing succeeded !
+Px[1][2][7]:0.000608, Qx[1][2][7]:0.332249
+SPx[1][2]:0.000721,SQx[1][2]:0.072558
+
+ADC_CH[2]S[0]P[0]:653,Dac:0
+0.584
+pFloat:0.584000
+Success: Parsing succeeded !
+
+ADC_CH[2]S[0]P[1]:1077,Dac:511
+0.916
+pFloat:0.916000
+Success: Parsing succeeded !
+Px[2][0][0]:0.000783, Qx[2][0][0]:0.072689
+
+ADC_CH[2]S[0]P[2]:1521,Dac:1023
+1.274
+pFloat:1.274000
+Success: Parsing succeeded !
+Px[2][0][1]:0.000806, Qx[2][0][1]:0.047608
+
+ADC_CH[2]S[0]P[3]:1890,Dac:1535
+1.578
+pFloat:1.578000
+Success: Parsing succeeded !
+Px[2][0][2]:0.000824, Qx[2][0][2]:0.020927
+
+ADC_CH[2]S[0]P[4]:2311,Dac:2047
+1.914
+pFloat:1.914000
+Success: Parsing succeeded !
+Px[2][0][3]:0.000798, Qx[2][0][3]:0.069592
+
+ADC_CH[2]S[0]P[5]:2756,Dac:2559
+2.245
+pFloat:2.245000
+Success: Parsing succeeded !
+Px[2][0][4]:0.000744, Qx[2][0][4]:0.195031
+
+ADC_CH[2]S[0]P[6]:3169,Dac:3071
+2.581
+pFloat:2.581000
+Success: Parsing succeeded !
+Px[2][0][5]:0.000814, Qx[2][0][5]:0.002832
+
+ADC_CH[2]S[0]P[7]:3559,Dac:3583
+2.918
+pFloat:2.918000
+Success: Parsing succeeded !
+Px[2][0][6]:0.000864, Qx[2][0][6]:-0.157342
+
+ADC_CH[2]S[0]P[8]:3991,Dac:4095
+3.248
+pFloat:3.248000
+Success: Parsing succeeded !
+Px[2][0][7]:0.000764, Qx[2][0][7]:0.199320
+SPx[2][0]:0.000800,SQx[2][0]:0.056332
+
+ADC_CH[2]S[1]P[0]:597,Dac:0
+2.873
+pFloat:2.873000
+Success: Parsing succeeded !
+
+ADC_CH[2]S[1]P[1]:986,Dac:511
+4.68
+pFloat:4.680000
+Success: Parsing succeeded !
+Px[2][1][0]:0.004645, Qx[2][1][0]:0.099789
+
+ADC_CH[2]S[1]P[2]:1390,Dac:1023
+6.49
+pFloat:6.490000
+Success: Parsing succeeded !
+Px[2][1][1]:0.004480, Qx[2][1][1]:0.262524
+
+ADC_CH[2]S[1]P[3]:1799,Dac:1535
+8.31
+pFloat:8.310000
+Success: Parsing succeeded !
+Px[2][1][2]:0.004450, Qx[2][1][2]:0.304669
+
+ADC_CH[2]S[1]P[4]:2202,Dac:2047
+10.13
+pFloat:10.130000
+Success: Parsing succeeded !
+Px[2][1][3]:0.004516, Qx[2][1][3]:0.185485
+
+ADC_CH[2]S[1]P[5]:2660,Dac:2559
+11.96
+pFloat:11.960000
+Success: Parsing succeeded !
+Px[2][1][4]:0.003996, Qx[2][1][4]:1.331615
+
+ADC_CH[2]S[1]P[6]:3025,Dac:3071
+13.80
+pFloat:13.800000
+Success: Parsing succeeded !
+Px[2][1][5]:0.005041, Qx[2][1][5]:-1.449316
+
+ADC_CH[2]S[1]P[7]:3439,Dac:3583
+15.63
+pFloat:15.630000
+Success: Parsing succeeded !
+Px[2][1][6]:0.004420, Qx[2][1][6]:0.428623
+
+ADC_CH[2]S[1]P[8]:3855,Dac:4095
+17.45
+pFloat:17.449999
+Success: Parsing succeeded !
+Px[2][1][7]:0.004375, Qx[2][1][7]:0.584386
+SPx[2][1]:0.004490,SQx[2][1]:0.218472
+
+ADC_CH[2]S[2]P[0]:392,Dac:0
+0.32
+pFloat:0.320000
+Success: Parsing succeeded !
+
+ADC_CH[2]S[2]P[1]:659,Dac:511
+0.53
+pFloat:0.530000
+Success: Parsing succeeded !
+Px[2][2][0]:0.000787, Qx[2][2][0]:0.011685
+
+ADC_CH[2]S[2]P[2]:965,Dac:1023
+0.73
+pFloat:0.730000
+Success: Parsing succeeded !
+Px[2][2][1]:0.000654, Qx[2][2][1]:0.099281
+
+ADC_CH[2]S[2]P[3]:1273,Dac:1535
+0.94
+pFloat:0.940000
+Success: Parsing succeeded !
+Px[2][2][2]:0.000682, Qx[2][2][2]:0.072045
+
+ADC_CH[2]S[2]P[4]:1564,Dac:2047
+1.14
+pFloat:1.140000
+Success: Parsing succeeded !
+Px[2][2][3]:0.000687, Qx[2][2][3]:0.065086
+
+ADC_CH[2]S[2]P[5]:1859,Dac:2559
+1.36
+pFloat:1.360000
+Success: Parsing succeeded !
+Px[2][2][4]:0.000746, Qx[2][2][4]:-0.026372
+
+ADC_CH[2]S[2]P[6]:2136,Dac:3071
+1.56
+pFloat:1.560000
+Success: Parsing succeeded !
+Px[2][2][5]:0.000722, Qx[2][2][5]:0.017761
+
+ADC_CH[2]S[2]P[7]:2470,Dac:3583
+1.76
+pFloat:1.760000
+Success: Parsing succeeded !
+Px[2][2][6]:0.000599, Qx[2][2][6]:0.280958
+
+ADC_CH[2]S[2]P[8]:2802,Dac:4095
+1.98
+pFloat:1.980000
+Success: Parsing succeeded !
+Px[2][2][7]:0.000663, Qx[2][2][7]:0.123252
+SPx[2][2]:0.000692,SQx[2][2]:0.080462
+Return: 1, 0x00000001
+
+LHC:/$
+
+
+
+LHC:/$ dac_clibration
+Px[0][0]:286.434998, Qx[0][0]:-807.173767
+Px[0][1]:281.628113, Qx[0][1]:-785.052490
+Px[0][2]:284.444427, Qx[0][2]:-803.133301
+Px[0][3]:284.444427, Qx[0][3]:-803.133301
+Px[0][4]:282.873016, Qx[0][4]:-787.387695
+Px[0][5]:278.260834, Qx[0][5]:-732.825684
+Px[0][6]:282.873016, Qx[0][6]:-795.874268
+Px[0][7]:282.872711, Qx[0][7]:-795.869629
+SKx[0]:282.978973,SGx[0]:-788.806213
+Px[1][0]:278.777954, Qx[1][0]:-793.680786
+Px[1][1]:278.260834, Qx[1][1]:-791.260620
+Px[1][2]:278.260773, Qx[1][2]:-791.260254
+Px[1][3]:275.268860, Qx[1][3]:-766.247803
+Px[1][4]:276.756836, Qx[1][4]:-781.454834
+Px[1][5]:273.796814, Qx[1][5]:-745.727539
+Px[1][6]:276.756714, Qx[1][6]:-786.988525
+Px[1][7]:281.318573, Qx[1][7]:-859.020020
+SKx[1]:277.399658,SGx[1]:-789.455017
+Px[2][0]:282.789154, Qx[2][0]:-812.453186
+Px[2][1]:282.872864, Qx[2][1]:-812.844971
+Px[2][2]:281.318665, Qx[2][2]:-802.758179
+Px[2][3]:281.318726, Qx[2][3]:-802.758789
+Px[2][4]:279.781433, Qx[2][4]:-787.186035
+Px[2][5]:278.260834, Qx[2][5]:-768.999512
+Px[2][6]:279.781433, Qx[2][6]:-789.983887
+Px[2][7]:281.318878, Qx[2][7]:-814.014160
+SKx[2]:280.930237,SGx[2]:-798.874817
+Return: 1, 0x00000001
+
+
+        SPx             SQx
+CH[0][0]:0.000750               0.048150
+CH[0][1]:0.004425               0.249559
+CH[0][2]:0.000708               0.046362
+CH[1][0]:0.000803               0.057646
+CH[1][1]:0.004487               0.089316
+CH[1][2]:0.000721               0.072558
+CH[2][0]:0.000800               0.056332
+CH[2][1]:0.004490               0.218472
+CH[2][2]:0.000692               0.080462
+Return: 536870912, 0x20000000
+
+LHC:/$ see_dac
+        SKx             SGx
+CH[0]:282.978973                -788.806213
+CH[1]:277.399658                -789.455017
+CH[2]:280.930237                -798.874817
