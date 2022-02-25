@@ -42,6 +42,8 @@ static void ChargingStage_Monitor(Charging_Typedef *const p_ch);
 static void Set_Charging_Amimation(uint8_t state, uint32_t addr);
 static void Set_Charging_State(Charging_State state, uint32_t addr);
 
+#define Get_Start_Pin(ch) \
+	((ch == Channel0) ? START0_Pin : ((ch == Channel1) ? START1_Pin : START2_Pin))
 /**
  * @brief   使能充电输出开关
  * @details
@@ -50,7 +52,9 @@ static void Set_Charging_State(Charging_State state, uint32_t addr);
  */
 __inline void Open_StartSignal(Charging_Typedef *const p_ch)
 {
-	__HAL_TIM_SET_COMPARE(&htim4, p_ch->Channel_Id.Spi_Id * 4U, START_OUT_LOW);
+	uint16_t GPIO_Pinx = Get_Start_Pin(p_ch->Channel_Id.Spi_Id);
+
+	HAL_GPIO_WritePin(GPIOB, GPIO_Pinx, GPIO_PIN_RESET);
 }
 
 /**
@@ -61,7 +65,9 @@ __inline void Open_StartSignal(Charging_Typedef *const p_ch)
  */
 void Close_StartSignal(Charging_Typedef *const p_ch)
 {
-	__HAL_TIM_SET_COMPARE(&htim4, p_ch->Channel_Id.Spi_Id * 4U, START_OUT_HIGH);
+	uint16_t GPIO_Pinx = Get_Start_Pin(p_ch->Channel_Id.Spi_Id);
+
+	HAL_GPIO_WritePin(GPIOB, GPIO_Pinx, GPIO_PIN_SET);
 	/*关闭输出开关的同时设置充电电压最低*/
 	p_ch->Charging_Voltage = 0;
 	Set_Voltage(p_ch);
@@ -200,10 +206,10 @@ uint32_t Get_Battery_Range(float persent_voltage)
 	return INTERVAL_ERROR_CODE;
 }
 
-#define Get_GPIO_Port(ch) \
+#define Get_Check_Port(ch) \
 	((ch == Channel0) ? CHECK0_EN_GPIO_Port : ((ch == Channel1) ? CHECK1_EN_GPIO_Port : CHECK2_EN_GPIO_Port))
 
-#define Get_GPIO_Pin(ch) \
+#define Get_Check_Pin(ch) \
 	((ch == Channel0) ? CHECK0_EN_Pin : ((ch == Channel1) ? CHECK1_EN_Pin : CHECK2_EN_Pin))
 
 typedef osStatus (*Func_t)(uint32_t);
@@ -215,8 +221,8 @@ typedef osStatus (*Func_t)(uint32_t);
  */
 void Start_Check(Charging_Typedef *const p_ch, Func_t Delay_ms)
 {
-	GPIO_TypeDef *pGPIOx = Get_GPIO_Port(p_ch->Channel_Id.Spi_Id);
-	uint16_t GPIO_Pinx = Get_GPIO_Pin(p_ch->Channel_Id.Spi_Id);
+	GPIO_TypeDef *pGPIOx = Get_Check_Port(p_ch->Channel_Id.Spi_Id);
+	uint16_t GPIO_Pinx = Get_Check_Pin(p_ch->Channel_Id.Spi_Id);
 
 	HAL_GPIO_WritePin(pGPIOx, GPIO_Pinx, GPIO_PIN_RESET);
 	// osDelay(2);
@@ -232,8 +238,8 @@ void Start_Check(Charging_Typedef *const p_ch, Func_t Delay_ms)
  */
 void Set_Check(Charging_Typedef *const p_ch, GPIO_PinState PinState)
 {
-	GPIO_TypeDef *pGPIOx = Get_GPIO_Port(p_ch->Channel_Id.Spi_Id);
-	uint16_t GPIO_Pinx = Get_GPIO_Pin(p_ch->Channel_Id.Spi_Id);
+	GPIO_TypeDef *pGPIOx = Get_Check_Port(p_ch->Channel_Id.Spi_Id);
+	uint16_t GPIO_Pinx = Get_Check_Pin(p_ch->Channel_Id.Spi_Id);
 
 	HAL_GPIO_WritePin(pGPIOx, GPIO_Pinx, PinState);
 }
@@ -502,7 +508,8 @@ bool Check_Connect(Charging_Typedef *const p_ch)
 		{
 			mutex[p_ch->Channel_Id.Spi_Id] = true;
 			/*建立检测条件：start信号失效*/
-			Start_Check(p_ch, &osDelay);
+			// Start_Check(p_ch, &osDelay);
+			Set_Check(p_ch, GPIO_PIN_SET);
 		}
 
 		if (++counter1[p_ch->Channel_Id.Spi_Id] >= 5U)

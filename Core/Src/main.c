@@ -74,7 +74,7 @@ int main(void)
 {
   /* USER CODE BEGIN 1 */
   /* USER CODE END 1 */
-
+  uint16_t Crc = 0x0000;
   /* MCU Configuration--------------------------------------------------------*/
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
@@ -99,29 +99,12 @@ int main(void)
   MX_SPI1_Init();
   MX_SPI2_Init();
   MX_TIM3_Init();
-  MX_TIM4_Init();
   MX_USART1_UART_Init();
   /* USER CODE BEGIN 2 */
-  /*Set channel B of SPI2 to output a 1.5V voltage*/
-	// HAL_GPIO_WritePin(CS2_GPIO_Port, CS2_Pin, GPIO_PIN_RESET);
-	// HAL_SPI_Transmit(&hspi2, (uint8_t *)&data, sizeof(data), SPI_TIMEOUT);
-	// HAL_GPIO_WritePin(CS2_GPIO_Port, CS2_Pin, GPIO_PIN_SET);
-  // HAL_Delay(10);
-  /*Turn on detection enable*/
-  // HAL_GPIO_WritePin(GPIOB, CHECK0_EN_Pin|CHECK1_EN_Pin, GPIO_PIN_SET);
-  // HAL_GPIO_WritePin(GPIOA, CHECK2_EN_Pin, GPIO_PIN_SET);
   /*Start ADC DMA conversion*/
   HAL_ADC_Start_DMA(&hadc1, Adc_DmaBuffer, ADC_DMA_SIZE);
   /*Feed the dog using the timer channel 3 to watch the dog*/
   HAL_TIM_PWM_Start(&htim3, TIM_CHANNEL_4);
-  /*Turn on start signal PWM output*/
-  HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_1);
-  HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_2);
-  HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_3);
-  /*Turn off start signal*/
-  __HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_1, START_OUT_HIGH);
-  __HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_2, START_OUT_HIGH);
-  __HAL_TIM_SET_COMPARE(&htim4, TIM_CHANNEL_3, START_OUT_HIGH);
   /*output REF*/
   Output_Ref();
 #if (DEBUGGING == 1U)
@@ -133,11 +116,21 @@ int main(void)
   FLASH_Read(ADC_CLIBRATION_SAVE_ADDR, (uint16_t *)&Adc.DAC_Out, sizeof(Adc) - sizeof(Adc.Yx) * 4U);
   FLASH_Read(DAC_CLIBRATION_SAVE_ADDR, (uint16_t *)&Dac, sizeof(Dac));
 #if (DEBUGGING == 1U)
+#if (USING_CRC)
+  Crc = Get_Crc16((uint8_t *)&Adc.DAC_Out, sizeof(Adc) - sizeof(Adc.Yx) * 4U - sizeof(float), 0xFFFF);
+  if (Crc == Adc.Crc16)
+#else
   if (Adc.Finish_Flag != SURE_CODE)
+#endif
   {
     shellPrint(&shell, "\r\nNote: ADC not calibrated !\r\n");
   }
+#if (USING_CRC)
+  Crc = Get_Crc16((uint8_t *)&Dac, sizeof(Dac) - sizeof(float), 0xFFFF);
+  if (Crc == Dac.Crc16)
+#else
   if (Dac.Finish_Flag != SURE_CODE)
+#endif
   {
     shellPrint(&shell, "Note: Dac not calibrated !\r\n");
   }
@@ -152,16 +145,6 @@ int main(void)
   /* We should never get here as control is now taken by the scheduler */
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  // HAL_GPIO_WritePin(GPIOB, CHECK0_EN_Pin|CHECK1_EN_Pin, GPIO_PIN_RESET);
-  // HAL_GPIO_WritePin(GPIOA, CHECK2_EN_Pin, GPIO_PIN_RESET);
-  // HAL_Delay(10);
-  // HAL_GPIO_WritePin(GPIOB, CHECK0_EN_Pin|CHECK1_EN_Pin, GPIO_PIN_SET);
-  // HAL_GPIO_WritePin(GPIOA, CHECK2_EN_Pin, GPIO_PIN_SET);
-  // for(uint16_t i = 0; i < 3U; i++)
-  // {
-  //   g_Charger[i].Charging_Voltage = 4.0F;
-	// 	Set_Voltage(&g_Charger[i]);
-  // }
   while (1)
   {
     /* USER CODE END WHILE */

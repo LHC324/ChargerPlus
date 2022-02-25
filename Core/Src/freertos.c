@@ -160,6 +160,7 @@ void MX_FREERTOS_Init(void) {
   SamplingHandle = osThreadCreate(osThread(Sampling), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
+  osTimerStart(ReportHandle, 1000);
   /* add threads, ... */
   /* USER CODE END RTOS_THREADS */
 
@@ -175,12 +176,6 @@ void MX_FREERTOS_Init(void) {
 void Run_Task(void const * argument)
 {
   /* USER CODE BEGIN Run_Task */
-  osTimerStart(ReportHandle, 1000);
-  // HAL_GPIO_WritePin(GPIOB, CHECK0_EN_Pin|CHECK1_EN_Pin, GPIO_PIN_RESET);
-  // HAL_GPIO_WritePin(GPIOA, CHECK2_EN_Pin, GPIO_PIN_RESET);
-  // osDelay(2);
-  // HAL_GPIO_WritePin(GPIOB, CHECK0_EN_Pin|CHECK1_EN_Pin, GPIO_PIN_SET);
-  // HAL_GPIO_WritePin(GPIOA, CHECK2_EN_Pin, GPIO_PIN_SET);
 
   /* Infinite loop */
   for(;;)

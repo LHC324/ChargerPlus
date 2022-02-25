@@ -10,6 +10,7 @@ extern "C"
 #include "adc.h"
 #include "charger.h"
 #include "Flash.h"
+#include "Dwin.h"
 
 /*ADC校准参数保存地址*/
 #define ADC_CLIBRATION_SAVE_ADDR (STM32FLASH_BASE + 64U * FLASH_PAGE_SIZE)
@@ -54,7 +55,11 @@ typedef struct
 	uint32_t DAC_Out[ADC_POINTS];
 	float SPx[CHANNEL_MAX][ADC_DMA_CHANNEL / 3U];
 	float SQx[CHANNEL_MAX][ADC_DMA_CHANNEL / 3U];
+#if (USING_CRC)
+	uint16_t Crc16;
+#else
 	uint32_t Finish_Flag;
+#endif
 }ADC_Calibration_HandleTypeDef __attribute__((aligned(4)));
 
 typedef struct
@@ -68,7 +73,11 @@ typedef struct
 	float Gx[CHANNEL_MAX][ADC_POINTS];
 	float SKx[CHANNEL_MAX];
 	float SGx[CHANNEL_MAX];
+#if (USING_CRC)
+	uint16_t Crc16;
+#else
 	uint32_t Finish_Flag;
+#endif
 } DAC_Calibration_HandleTypeDef __attribute__((aligned(4)));
 
 extern ADC_Calibration_HandleTypeDef Adc;

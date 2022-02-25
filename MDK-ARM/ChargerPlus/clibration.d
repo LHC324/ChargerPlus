@@ -40,6 +40,7 @@ chargerplus\clibration.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdarg.h
 chargerplus\clibration.o: ../Core/Inc/adc.h
 chargerplus\clibration.o: ../Core/Inc/charger.h
 chargerplus\clibration.o: ../Core/Inc/Flash.h
+chargerplus\clibration.o: ../Core/Inc/Dwin.h
 chargerplus\clibration.o: ../Core/Inc/usart.h
 chargerplus\clibration.o: ../Core/Inc/Mcp4822.h
 chargerplus\clibration.o: ..\Letter_Shell\Inc\shell.h

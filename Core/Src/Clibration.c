@@ -8,12 +8,6 @@
 #include "FreeRTOS.h"
 #include "cmsis_os.h"
 
-extern osThreadId LedHandle;
-extern osThreadId ChargingHandle;
-extern osThreadId SamplingHandle;
-extern osTimerId ReportHandle;
-
-// #define RECEIVE_TARET_UART huart1
 
 ADC_Calibration_HandleTypeDef Adc = {0};
 DAC_Calibration_HandleTypeDef Dac = {0};
@@ -147,11 +141,12 @@ bool Adc_Clibration(void)
 	float float_value = 0;
 
 	/*校准前挂起所有无关任务,只保留运行指示灯*/
-	osThreadSuspend(LedHandle);
-	osThreadSuspend(ChargingHandle);
-	osThreadSuspend(SamplingHandle);
-	/*停止上报定时器*/
-	osTimerStop(ReportHandle);
+	// osThreadSuspend(LedHandle);
+	// osThreadSuspend(ChargingHandle);
+	// osThreadSuspend(SamplingHandle);
+	// /*停止上报定时器*/
+	// osTimerStop(ReportHandle);
+	osThreadSuspendAll();
 
 	for (uint16_t i = 0; i < CHANNEL_MAX; i++)
 	{
@@ -221,15 +216,20 @@ bool Adc_Clibration(void)
 		/*校准完成后关闭充电开关*/
 		Close_StartSignal(&g_Charger[i]);
 	}
+#if (USING_CRC)
+	Adc.Crc16 = Get_Crc16((uint8_t *)&Adc.DAC_Out, sizeof(Adc) - sizeof(Adc.Yx) * 4U - sizeof(float), 0xFFFF);
+#else
 	/*flash确认标志*/
 	Adc.Finish_Flag = SURE_CODE;
+#endif
 	/*校准完成后写入校准参数到flah*/
 	FLASH_Write(ADC_CLIBRATION_SAVE_ADDR, (uint16_t *)&Adc.DAC_Out, sizeof(Adc) - sizeof(Adc.Yx) * 4U);
 	/*校准完成后恢复任务和定时器*/
-	osThreadResume(LedHandle);
-	osThreadResume(ChargingHandle);
-	osThreadResume(SamplingHandle);
-	osTimerStart(ReportHandle, 1000);
+	// osThreadResume(LedHandle);
+	// osThreadResume(ChargingHandle);
+	// osThreadResume(SamplingHandle);
+	// osTimerStart(ReportHandle, 1000);
+	osThreadResumeAll();
 
 	return true;
 }
@@ -249,11 +249,12 @@ bool Dac_Clibration(void)
 	float g_sum = 0;
 
 	/*校准前挂起所有无关任务,只保留运行指示灯*/
-	osThreadSuspend(LedHandle);
-	osThreadSuspend(ChargingHandle);
-	osThreadSuspend(SamplingHandle);
-	/*停止上报定时器*/
-	osTimerStop(ReportHandle);
+	// osThreadSuspend(LedHandle);
+	// osThreadSuspend(ChargingHandle);
+	// osThreadSuspend(SamplingHandle);
+	// /*停止上报定时器*/
+	// osTimerStop(ReportHandle);
+	osThreadSuspendAll();
 
 	if (!Adc.DAC_Out[1U])
 	{	
@@ -280,15 +281,20 @@ bool Dac_Clibration(void)
 		// Usart1_Printf("SKx[%d]:%f,SGx[%d]:%f\r\n", i, Dac.SKx[i], i, Dac.SGx[i]);
 		shellPrint(&shell, "SKx[%d]:%f,SGx[%d]:%f\r\n", i, Dac.SKx[i], i, Dac.SGx[i]);
 	}
+#if (USING_CRC)
+	Dac.Crc16 = Get_Crc16((uint8_t *)&Dac, sizeof(Dac) - sizeof(float), 0xFFFF);
+#else
 	/*flash确认标志*/
 	Dac.Finish_Flag = SURE_CODE;
+#endif
 	/*校准完成后写入校准参数到flah*/
 	FLASH_Write(DAC_CLIBRATION_SAVE_ADDR, (uint16_t *)&Dac, sizeof(Dac));
 	/*校准完成后恢复任务和定时器*/
-	osThreadResume(LedHandle);
-	osThreadResume(ChargingHandle);
-	osThreadResume(SamplingHandle);
-	osTimerStart(ReportHandle, 1000);
+	// osThreadResume(LedHandle);
+	// osThreadResume(ChargingHandle);
+	// osThreadResume(SamplingHandle);
+	// osTimerStart(ReportHandle, 1000);
+	osThreadResumeAll();
 
 	return true;
 }
@@ -353,7 +359,8 @@ void Check_ADC(uint8_t ch, uint8_t id)
 	float temp_current = 0;
 
 	/*挂起充电调节任务*/
-	osThreadSuspend(ChargingHandle);
+	// osThreadSuspend(ChargingHandle);
+	osThreadSuspendAll();
 	shellPrint(pShell, "ch: %d, Sid: %d.\r\n", ch, id);
 	if (ch >= CHANNEL_MAX)
 	{
@@ -446,7 +453,8 @@ start:
 	/*校准完成后关闭充电开关*/
 	Close_StartSignal(&g_Charger[ch]);
 	/*恢复充电调节任务*/
-	osThreadResume(ChargingHandle);
+	// osThreadResume(ChargingHandle);
+	osThreadResumeAll();
 }
 #if (DEBUGGING == 1U)
 SHELL_EXPORT_CMD(SHELL_CMD_PERMISSION(0) | SHELL_CMD_TYPE(SHELL_TYPE_CMD_FUNC), check_adc, Check_ADC, check);

@@ -60,6 +60,7 @@ chargerplus\main.o: ../Core/Inc/Mcp4822.h
 chargerplus\main.o: ../Core/Inc/charger.h
 chargerplus\main.o: ../Core/Inc/clibration.h
 chargerplus\main.o: ../Core/Inc/Flash.h
+chargerplus\main.o: ../Core/Inc/Dwin.h
 chargerplus\main.o: ..\Letter_Shell\Inc\shell_port.h
 chargerplus\main.o: ..\Letter_Shell\Inc\shell.h
 chargerplus\main.o: ..\Letter_Shell\Inc\shell_cfg.h
